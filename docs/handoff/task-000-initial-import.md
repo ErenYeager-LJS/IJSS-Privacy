@@ -4,9 +4,11 @@
 
 `task-000-initial-import`
 
+Initial import commit: `300a1ad`.
+
 ## PR
 
-[Open the comparison and create the PR](https://github.com/ErenYeager-LJS/IJSS-Privacy/compare/main...task-000-initial-import?expand=1).
+[Open the comparison and create the PR](https://github.com/ErenYeager-LJS/IJSS-Privacy/compare/main...task-000-initial-import?expand=1), or use the direct PR creation page: https://github.com/ErenYeager-LJS/IJSS-Privacy/pull/new/task-000-initial-import.
 
 ## Changed files
 

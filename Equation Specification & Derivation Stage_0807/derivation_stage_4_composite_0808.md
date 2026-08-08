@@ -135,7 +135,7 @@ lambda_cl = lambda_min(Q_cl) > 0.
 
 This certificate is sufficient; no claim of mathematical minimality over all admissible bounding choices is made. The already-proved component conditions ES-95, ES-98, and the Privacy Gain Feasibility Condition make the diagonal blocks of `Q_0` positive; `Q_cl ≻ 0` is the remaining graph/gain compatibility test.
 
-Dependencies are explicit: `k_1^V` enters `a_Vz`; `k_2^V` enters `a_Vchi`; `k_1^omega` enters `a_omegaz`; `k_c^V,k_c^omega,K_M^V,K_M^omega,L_c` enter `H`; metric weights and every epsilon enter `Q_0` or `W_D`; private tracking rates and weights enter `a_z,a_r`; and `h_bar` enters the PPC rows of `H`.
+Dependencies are explicit: `k_1^V` enters `a_Vz`; `k_2^V` enters `a_Vchi`; `k_1^omega` enters `a_omegaz`; `k_c^V,k_c^omega,K_M^V,K_M^omega,L_c` enter `H`; metric weights and every epsilon enter `Q_0` or `W_D`; private tracking rates and weights enter `a_z,a_r`; and the ES-98 factor `(h_bar_i^omega)^2` enters `W_D^omega` only. Any genuinely present voltage-side transformation bound remains confined to its frozen `H_V` definition and is separate from the frequency weighting; `H_omega` bounds unscaled `D^omega`.
 
 ## 6. Derivation of ES-102
 

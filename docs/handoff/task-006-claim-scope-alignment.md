@@ -6,7 +6,9 @@
 
 ## PR
 
-Not created yet.
+PR creation page: `https://github.com/ErenYeager-LJS/IJSS-Privacy/pull/new/task-006-claim-scope-alignment`
+
+The branch is pushed. The local environment has neither GitHub CLI nor a usable browser-control runtime, so final submission of the GitHub PR form remains a user action.
 
 ## Changed files
 
@@ -24,7 +26,9 @@ The final decision is `PATH B`: `PO-11`, `PO-16B`, `PO-02B`, and the existing pr
 
 - Read-only source and proof-ledger audit completed.
 - Cross-document stale-claim search completed for theorem, `PO-11`, `PO-16B`, `PO-02B`, ES-102, and ES-103 references.
-- `git diff --check` pending after final edits.
+- `git diff --check` passed.
+- Scope check confirmed that only the report and two handoff files changed.
+- Frozen equation, Blueprint, proof-obligation, traceability, theorem-numbering, simulation, and HIL files were unchanged.
 
 ## Tests not run
 
@@ -42,4 +46,3 @@ Revert the single task commit; no equations, controller files, Blueprint, or pro
 ## Next task
 
 Resolve the non-circular joint exit/continuation condition for `PO-11`/`PO-16B`, then address `PO-02B`, `PO-12`, and `PO-14` before manuscript integration.
-

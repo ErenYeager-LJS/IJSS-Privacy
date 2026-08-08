@@ -500,7 +500,7 @@ dot(r_i)
    - dot(c_i).                                                      (ES-50)
 ```
 
-Because (ES-41) gives `r_i(0)=0`, the positive-weight decay claim for `z_i` is assigned to **PO-01**. Given the command-rate condition of **PO-03**, **PO-02** determines when (ES-50) implies `r_i -> 0`. The residual is therefore a consequence of command tracking and unequal internal coupling; it is not mathematically required for privacy.
+Because (ES-41) gives `r_i(0)=0`, the positive-weight decay claim for `z_i` is assigned to **PO-01**. **PO-02A** uses the finite command-rate bound from **PO-03** to obtain only a local residual convolution bound. **PO-02B**, after the forward closed-loop results, determines when (ES-50) implies `r_i -> 0`. The residual is therefore a consequence of command tracking and unequal internal coupling; it is not mathematically required for privacy.
 
 The frozen physical analysis requires the verified envelopes
 
@@ -511,7 +511,7 @@ gamma_priv,i^V(t) -> 0,
 gamma_priv,i^omega(t) -> 0.                                       (ES-51)
 ```
 
-**Proof Obligation PO-02**, using the explicit command-rate bound from **PO-03**, establishes the convolution/envelope statement (ES-51) from (ES-49)--(ES-50). Until PO-02 is discharged, (ES-51) is a proof-target envelope rather than an assumed residual floor.
+**Proof Obligation PO-02A**, using the explicit command-rate bound from **PO-03**, establishes the finite local convolution estimate from (ES-49)--(ES-50). **PO-02B** is the separate proof target for the decaying envelope (ES-51); until it is discharged, (ES-51) is not available as a theorem consequence and must not be inferred from bounded `dot(c)` alone.
 
 **Derivation-stage condition (2026-08-07):** a merely uniform bound on `dot(c_i)` yields only an ultimate bound for `r_i`; ES-51 additionally requires a known decaying envelope for `dot(c_i)`, either established by later closed-loop analysis or stated as an explicit technical assumption. This condition does not add a controller module or permit a residual floor.
 
@@ -1078,7 +1078,7 @@ bold(e)
 
 **PO-06** uses the algebraic controller equations (ES-28),(ES-31) and condition (ES-21a) to bound `bold(c)` and `bold(e)` by the physical, residual, and decomposition states.
 
-Subject to **PO-06--PO-10**, combining (ES-94),(ES-98),(ES-101), substituting the residual envelopes (ES-51), and bounding the graph errors through `L_c+diag(b_i)` gives the intended form
+Subject to **PO-06--PO-10** and the pre-checked design-domain feasibility **PO-13**, combining (ES-94),(ES-98),(ES-101), substituting the residual envelopes (ES-51), and bounding the graph errors through `L_c+diag(b_i)` gives the intended form
 
 ```text
 dot(mathscr V_cl)
@@ -1101,7 +1101,11 @@ mathscr V_cl(t)
     + integral_0^t exp[-a_cl(t-s)] [d_R+d_priv(s)] ds.             (ES-103)
 ```
 
-After **PO-07** is closed, (ES-103) gives boundedness and a practical ultimate bound. Funnel invariance additionally uses the transformation barrier argument (ES-33)--(ES-39) under **PO-11**; it does not follow from (ES-103) alone.
+After **PO-07** is closed, (ES-103) gives the comparison estimate on the bootstrap domain. Funnel admissibility additionally uses the transformation barrier argument (ES-33)--(ES-39) under **PO-11**; it does not follow from (ES-103) alone. The proof then invokes **PO-16B** to exclude exit through the remaining operating-region boundary and continue the local solution. Local existence/uniqueness needed to start this argument is **PO-16A**, which is proved on the admissible open domain before any invariant-region claim.
+
+### 14.6 Bootstrap/continuation separation
+
+The proof uses a compact bootstrap set `K_0` selected inside the admissible open domain `D_open`. `K_0` is not assumed invariant. **PO-16A** supplies local existence and uniqueness up to the first exit time from `D_open`; **PO-03**, **PO-08**, **PO-09**, and **PO-10** are pointwise estimates on `K_0`. **PO-13** checks actuator and funnel feasibility on the same set before composite gain closure. **PO-07** then closes the composite negative coefficient. **PO-11** excludes a prescribed-performance boundary exit, and **PO-16B** uses that result, the composite closure, and PO-13 to establish forward continuation in the operating region. No equation in ES-1--ES-103 is changed by this separation.
 
 ## 15. Equation-to-result dependency map
 
@@ -1109,10 +1113,10 @@ After **PO-07** is closed, (ES-103) gives boundedness and a practical ultimate b
 |---|---|---|---|---|
 | Definition 1 | ES-1 to ES-16, ES-41 to ES-53 | Plant/interface ownership | Closed-loop specification | Admissible physical/cyber/private system |
 | Definition 2 | ES-16, ES-54 to ES-57 | Passive observation boundary | Exact history equivalence | Public-history indistinguishability target |
-| Assumption 1 | ES-4 to ES-13, ES-22 to ES-23, ES-38, ES-46 | Compact operation, fixed graph, bounded uncertainty, initial funnel, actuator feasibility | Regularity ledger | Well-posed physical/controller model |
+| Assumption 1 | ES-4 to ES-13, ES-22 to ES-23, ES-38, ES-46 | Compact/open operating domain, fixed graph, bounded uncertainty, and initial funnel feasibility; actuator feasibility is checked on `K_0` by PO-13 rather than assumed globally | Regularity ledger | Admissible physical/controller model |
 | Assumption 2 | ES-41 to ES-51, ES-57 to ES-61 | Private bounds, residual decay, nonempty alternative set, passive adversary | Decomposition admissibility | Valid privacy layer |
-| Lemma 1 | ES-41 to ES-61 | Assumption 2 | Linear decay of `z`, stable residual filter, alternative-weight construction | Bounded substates, residual envelope, indistinguishable alternatives |
-| Theorem 1 | ES-62 to ES-73, ES-80 to ES-103 | Assumptions 1-2, Lemma 1, gain inequalities | Composite Lyapunov plus barrier argument | Boundedness and funnel invariance |
+| Lemma 1 | ES-41 to ES-61 | Assumption 2 | Linear decay of `z`, finite residual filter estimate, alternative-weight construction; the decaying ES-51 envelope remains PO-02B | Bounded substates, residual envelope when PO-02B is closed, indistinguishable alternatives |
+| Theorem 1 | ES-62 to ES-73, ES-80 to ES-103 | Assumptions 1-2, Lemma 1, PO-02A, PO-07, PO-11, PO-13, PO-16A, PO-16B, gain inequalities; any asymptotic ES-51 claim additionally requires PO-02B | Composite Lyapunov plus barrier/continuation argument | Boundedness and funnel invariance |
 | Theorem 2 | ES-22 to ES-40, ES-95, ES-98, ES-103 | Theorem 1 | Inverse transformation and deadline schedule | Practical recovery by `T_V`,`T_omega` |
 | Theorem 3 | ES-71 to ES-79 | Assumptions 1-2, Theorem 2 | Equilibrium droop algebra | Exact or bounded sharing |
 | Theorem 4 | ES-54 to ES-61 plus Theorems 1-3 equations | Definitions 1-2, Assumptions 1-2, Lemma 1 | Observation-equivalence construction plus theorem composition | Simultaneous privacy/performance/sharing guarantee |
@@ -1207,11 +1211,11 @@ The Stage-2 dimension audit found a genuine proof-metric inconsistency in the un
 
 ### Open proof obligations
 
-- **PO-01--PO-03:** substate decay, command-rate bound, and the residual envelope (ES-49)--(ES-51).
+- **PO-01--PO-03:** substate decay, bootstrap command-rate bound, finite residual estimate (PO-02A), and the later decaying residual envelope (PO-02B) for (ES-49)--(ES-51).
 - **PO-04--PO-05:** nonempty admissible alternative realization and denominator/weight validity for (ES-58)--(ES-61).
 - **PO-06--PO-07:** graph/algebraic closure and explicit composite-gain conditions for (ES-101a)--(ES-102).
 - **PO-08--PO-12:** voltage, frequency, privacy, barrier-invariance, and practical prescribed-time proof chains.
-- **PO-13--PO-16:** actuator/funnel compatibility, sharing, theorem composition, and closed-loop well-posedness/operating-region invariance.
+- **PO-13:** bootstrap actuator/funnel feasibility before PO-07; **PO-14--PO-15:** sharing and theorem composition; **PO-16A--PO-16B:** local well-posedness and forward operating-region continuation.
 
 The core plant remains lossless. A lossy-network claim would require reopening (ES-6)--(ES-9), not hiding conductance inside `R_i`.
 
@@ -1243,7 +1247,7 @@ The command-tracking rates and proof constants are notation/equation completions
 | G. Plant-interface uniqueness | PASS | ES-12, ES-47, and ES-53 are the sole privacy-to-plant path. |
 | H. Graph consistency | PASS WITH OPEN PROOF OBLIGATION | Electrical/cyber graphs are separated; PO-06 derives the required algebraic bounds. |
 | I. Funnel-domain feasibility | PASS WITH OPEN PROOF OBLIGATION | ES-38--ES-40 are structurally correct; PO-11 proves forward invariance. |
-| J. Actuator feasibility | PASS WITH OPEN PROOF OBLIGATION | Required by Assumption 1; PO-13 jointly checks funnels, gains, and `U_i`. |
+| J. Actuator feasibility | PASS WITH OPEN PROOF OBLIGATION | PO-13 checks funnels, gains, and `U_i` on `K_0`; it is not used as a premise for local existence. |
 | K. Theorem dependency coverage | PASS WITH OPEN PROOF OBLIGATION | Traceability matrix and PO-15 connect privacy, performance, and sharing results. |
 
 ### Revision Log
@@ -1256,11 +1260,12 @@ The command-tracking rates and proof constants are notation/equation completions
 | ER-04 | Algebra/sign audit completed with no equation-text correction. | ES-4, ES-5, ES-10, ES-11, ES-28, ES-31, ES-49, ES-50, ES-52, ES-62--ES-79, ES-84--ES-102 | Direct substitution confirms the specified signs and reconstruction orientation. Remaining gaps are proof closure, not algebraic contradiction. |
 | ER-05 | Added the Stage-1 condition for the decaying residual envelope; no ES formula was changed. | ES-51; Lemma 1; Theorems 1--4 | `derivation_stage_1_0807.md` shows that uniform `dot(c)` boundedness is insufficient. Final theorem use needs a proved or explicitly assumed decaying command-rate envelope. |
 | ER-06 | Repaired Lyapunov metric homogeneity with constant positive diagonal blocks of reserved `P_L`. | ES-83--ES-84, ES-87--ES-88, ES-92, ES-94--ES-95, ES-99--ES-101; ES-89/ES-102 proof constants | The unweighted quadratic sums mixed physical units. The repair changes only proof metrics and derived inequalities; controller, privacy, graph, and ES numbering remain unchanged. |
+| ER-07 | Split the aggregate PO-16 dependency into local well-posedness PO-16A and forward continuation PO-16B; moved PO-13 to a pre-PO-07 bootstrap feasibility check. | Proof dependency map, ES-38--ES-40, ES-80--ES-103 dependency statements | The former PO-16/PO-03/PO-07/PO-13 loop mixed local existence, design feasibility, and global invariance. The split changes proof order only; no ES equation or theorem numbering changes. |
 
 ## Equation Review Verdict
 
 **B. CONDITIONALLY READY FOR EQUATION FREEZE**
 
-The equation architecture is internally consistent under the frozen lossless model, fixed connected undirected cyber graph, nontransparent wrapper, and existence-based passive-eavesdropper privacy claim. ES numbering and controller architecture remain unchanged. Equation Freeze is conditional on discharging the open proof obligations in `proof_obligations_0807.md`; no item in the formal checklist is FAIL.
+The equation architecture is internally consistent under the frozen lossless model, fixed connected undirected cyber graph, nontransparent wrapper, and existence-based passive-eavesdropper privacy claim. The proof dependency structure now separates local well-posedness from forward continuation; ES numbering and controller architecture remain unchanged. Equation Freeze is conditional on discharging the open proof obligations in `proof_obligations_0807.md`; no item in the formal checklist is FAIL.
 
 **Blueprint Reopen Required: NO**

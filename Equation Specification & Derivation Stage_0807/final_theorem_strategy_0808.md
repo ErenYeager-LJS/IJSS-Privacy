@@ -49,6 +49,32 @@ The existing results provide only pieces of this certificate. `K_0` supplies com
 
 Consequently JECFC is unavailable; PO-11 and PO-16B cannot close unconditionally. Because PO-02B depends on the forward closed-loop result, ES-51 residual decay is also unavailable.
 
+### Open proof-obligation classification under Route L
+
+The selection of Route L does not discharge any open proof obligation and does not make every downstream obligation irrelevant. The frozen ledger statuses remain unchanged and are organized for final-theorem planning as follows.
+
+#### OPEN - BLOCKED STRONGER-THEOREM CONTINUATION CHAIN
+
+- `PO-11`
+- `PO-16B`
+- `PO-02B`
+
+These obligations belong to the rejected stronger-theorem continuation chain. They must not be resumed under Route L and are not prerequisites for the local-before-exit theorem. They may re-enter the proof pipeline only if a future Architecture Review reopens Route S.
+
+#### OPEN - CLAIM-DEPENDENT / DOWNSTREAM OBLIGATIONS
+
+- `PO-04`
+- `PO-05`
+- `PO-12`
+- `PO-14`
+- `PO-15`
+
+These obligations remain open because they govern distinct privacy, deadline, sharing, and composite claims. Route L alone does not determine whether each belongs in the final local manuscript. Task-009 must classify every one of them as exactly one of:
+
+- **A. required for the final local manuscript theorem;**
+- **B. required only for a conditional corollary or secondary claim;**
+- **C. outside the final manuscript theorem scope and therefore retained as OPEN but not pursued in the current proof pipeline.**
+
 ## 5. Route L: local final theorem
 
 ### Mathematical validity
@@ -136,7 +162,17 @@ The blocker is not classified as a Proof Bug because no completed local derivati
 
 Freeze the local-before-exit boundary as the manuscript's final theoretical scope. Do not resume PO-11, PO-16B, or PO-02B under an assumed JECFC. Remove or explicitly condition every persistent PPC, all-time continuation, ES-51 decay, deadline, sharing, and simultaneous-composite claim that depends on the open chain.
 
-Recommended next Task: `task-009-local-theorem-wording-alignment` - align the theorem descriptions and manuscript-facing claim ledger with the local-before-exit boundary, without changing theorem numbering, frozen equations, controller architecture, or proof obligations.
+Recommended next Task: `task-009-local-theorem-wording-alignment`.
+
+Task-009 must perform **LOCAL THEOREM CLAIM-SCOPE ALIGNMENT**, not superficial wording edits. It must align:
+
+- manuscript-facing theorem descriptions;
+- the claim ledger;
+- theorem dependency presentation;
+- the relevance of every claim-dependent/downstream OPEN proof obligation to Route L;
+- wording that separates conditional claims from unavailable claims.
+
+Blueprint Freeze Version 2.0 remains frozen. Task-009 must not edit stronger target language inside the frozen Blueprint. It must explicitly distinguish the **Frozen Blueprint target theorem** from the **Final manuscript theorem scope**, preserve the former as historical design intent, and create or update only non-frozen manuscript-facing theorem and claim documents. Theorem numbering, frozen equations, controller architecture, assumptions, and proof-obligation statuses remain unchanged.
 
 ## 10. Modification declaration
 

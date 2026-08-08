@@ -40,9 +40,25 @@ Route S would require a new compactness/invariance/domain-persistence assumption
 
 ## Remaining open proof obligations
 
-The task-authoritative continuation chain remains open: `PO-11`, `PO-16B`, and `PO-02B`.
+### OPEN - BLOCKED STRONGER-THEOREM CONTINUATION CHAIN
 
-The frozen proof ledger also records downstream or separate open obligations: `PO-04`, `PO-05`, `PO-12`, `PO-14`, and `PO-15`. This task changes none of their statuses.
+- `PO-11`
+- `PO-16B`
+- `PO-02B`
+
+These obligations must not be resumed under Route L and are not prerequisites for the local-before-exit theorem. They may be reconsidered only if a future Architecture Review reopens Route S.
+
+### OPEN - CLAIM-DEPENDENT / DOWNSTREAM OBLIGATIONS
+
+- `PO-04`
+- `PO-05`
+- `PO-12`
+- `PO-14`
+- `PO-15`
+
+Their frozen-ledger status remains OPEN. Task-009 must classify each as: **A**, required for the final local manuscript theorem; **B**, required only for a conditional corollary or secondary claim; or **C**, outside the final manuscript theorem scope and retained as OPEN but not pursued in the current proof pipeline.
+
+Choosing Route L does not automatically make these claim-dependent obligations irrelevant and does not discharge any proof obligation.
 
 ## Tests run
 
@@ -66,4 +82,8 @@ Revert the Task-008 documentation commit. No frozen mathematical artifact is mod
 
 ## Exact recommended next task
 
-`task-009-local-theorem-wording-alignment`: align theorem descriptions and the manuscript-facing claim ledger with the final local-before-exit boundary without changing theorem numbering, frozen equations, controller architecture, or proof-obligation statuses.
+`task-009-local-theorem-wording-alignment`: perform **LOCAL THEOREM CLAIM-SCOPE ALIGNMENT**, not superficial wording edits.
+
+Task-009 must align manuscript-facing theorem descriptions, the claim ledger, theorem dependency presentation, downstream OPEN-PO relevance to Route L, and conditional-versus-unavailable claim wording. It must explicitly distinguish the **Frozen Blueprint target theorem** from the **Final manuscript theorem scope**.
+
+Blueprint Freeze Version 2.0 remains frozen. Stronger target language inside the frozen Blueprint must remain untouched as historical design intent. Task-009 may create or update only non-frozen manuscript-facing theorem and claim documents; it must not change theorem numbering, equations, controller architecture, assumptions, or proof-obligation statuses.

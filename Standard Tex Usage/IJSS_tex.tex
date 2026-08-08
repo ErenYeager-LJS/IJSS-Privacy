@@ -1,0 +1,1541 @@
+
+% interactapasample.tex
+
+\documentclass[]{interact}
+
+\usepackage{graphicx}
+\graphicspath{{../IJSS原文/}{../RTlab/IJSS_4DG_PT_Secondary_Reproduction/}{../RTlab/}}
+\usepackage{epstopdf}
+\usepackage[caption=false]{subfig}
+\usepackage{xcolor}
+\usepackage[normalem]{ulem} % 只提供\sout，不改\emph
+
+\usepackage[longnamesfirst,sort]{natbib}
+\bibpunct[, ]{(}{)}{;}{a}{,}{,}
+\renewcommand\bibfont{\fontsize{10}{12}\selectfont}
+
+\theoremstyle{plain}% Theorem-like structures provided by amsthm.sty
+% \newtheorem{theorem}{Theorem}[section]
+% \newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}{Lemma}
+
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{proposition}[theorem]{Proposition}
+
+\theoremstyle{definition}
+\newtheorem{definition}{Definition}
+\newtheorem{example}[theorem]{Example}
+
+\theoremstyle{remark}
+\newtheorem{remark}{Remark}
+\newtheorem{notation}{Notation}
+
+\begin{document}
+
+\articletype{ARTICLE TEMPLATE}
+
+
+\title{Distributed Prescribed Time-Based Secondary Voltage and Frequency Recovery Control of Microgrids}
+
+\author{Jiashun Lu, Xiaojing Lin, Rongjie Zhu, and Yang Yang 
+\thanks
+{The authors are with Nanjing University of Posts and Telecommunications. (Corresponding author: Yang Yang, e-mail: yyang@njupt.edu.cn.)}}
+
+\maketitle
+
+\begin{abstract}
+For islanded microgrids (MGs) with inverters, this paper proposes a secondary control framework combining prescribed-time voltage and frequency recovery, and further enhances it through time funnel constraints. 
+Based on the standard droop control at the primary layer, the prescribed-time control strategy is designed with an error-related scalar transformation. 
+An auxiliary function is constructed for composite nonlinear dynamics, and neural networks are introduced to approximate the dynamics. 
+The proposed control strategy not only ensures accurate active power sharing but also allows the user to specify the convergence time while maintaining a tighter error envelope. 
+A hardware-in-the-loop test consisting of four distributed generators is conducted, and the results demonstrate the effectiveness of the proposed control strategy.  
+\end{abstract}
+
+\begin{keywords}
+Microgrids (MGs); secondary control; prescribed-time control; power control; decoupling control
+\end{keywords}
+
+%==================================================
+\section{Introduction}
+
+Microgrids (MGs) have emerged as an effective solution for improving energy efficiency and sustainability through the integration of renewable energy sources and distributed generation \citep{Thorat2024,Guoping2024,Rosini2024,Lv2026,Chai2026}.
+\textcolor{blue}{In recent years, significant research progress has been made in the field of secondary voltage and frequency restoration control for microgrids. For example, from the perspective of model development, Yu \emph{et al.} \citep{Yu2024} investigated data-driven predictive secondary voltage control methods, reflecting the trend towards a shift in secondary control from traditional model-dependent methods to data-driven approaches. With regard to prescribed-time and fixed-time control, Bu \emph{et al.} \citep{Bu2025}, He \emph{et al.} \citep{He2025} and Cheng \emph{et al.} \citep{Zhiping2023} have investigated the secondary restoration problem in microgrids from the perspectives of prescribed-time, practical prescribed-time and fixed-time control, respectively, indicating that the field is gradually evolving from asymptotic restoration towards restoration control with explicit time performance guarantees. Regarding communication optimisation, engineering validation and robustness enhancement, Rosini \emph{et al.} \citep{Rosini2024} experimentally validated a communication-free voltage and frequency restoration method; Huang \emph{et al.} \citep{Huang2026} investigated an attack-resilient and communication-efficient distributed secondary regulation strategy and conducted hardware-in-the-loop validation; whilst Li \emph{et al.} \citep{Li2026lowbw} proposed a frequency restoration method under low-bandwidth communication conditions. Overall, existing research indicates that secondary voltage and frequency restoration control for microgrids is continuously evolving towards rapid restoration, reduced reliance on communication, and enhanced engineering feasibility. However, there remains a scarcity of approaches capable of simultaneously achieving prescribe-time voltage restoration, frequency coordination, power allocation, and full-process error constraints within a unified distributed framework, whilst maintaining engineering feasibility.}
+ 
+ Usually, the stable operation of the MG relies on primary droop control, secondary control, and a three-level optimization architecture \citep{Wang2024,Zhong2024}. In this situation, the secondary control is responsible for restoring the bus voltage and system frequency to normal values and maintaining the accuracy of power distribution among distributed generators (DGs) \citep{Jabbar2024}.
+
+% \textcolor{blue}{This text is red.}
+
+To achieve the aforementioned goals, a centralized secondary controller is a viable option \citep{Muhammad2023}. However, it has several drawbacks, such as a single point of failure and a high communication requirement, and it is difficult to recover in case of failure resulting in high maintenance costs \citep{Nada2023,Gabriel2023}. 
+To address these issues, distributed secondary control is extensively studied \citep{Kinga2024,Yu2024,Rongrong2024}. By eliminating the traditional central controller and adopting the basic principle of neighbor-point communication, this strategy significantly enhances its scalability and reduces the massive communication overhead \citep{Louassaa2025,Abdurraqeeb2024}. Typical advancements in the distributed strategy include the use of market signals and power management in distributed secondary schemes operating under time-varying electricity prices and internal price-rate mechanisms to enable adaptive operation of MGs \citep{Rueda2024}. In guided communication networks, a prescribed-time distributed secondary control \textcolor{blue}{scheme} has been developed. This scheme ensures that the MG can adjust and restore the voltage and frequency within the time window set by the designer \citep{Chang2024,Hou2025}. Moreover, this time window is largely unaffected by the initial conditions.
+
+Another key issue we are confronted with is the stability of different converter technologies \citep{Marin2025,Lakshmi2025}. Generally, a MG consists of converters that form the grid and feed into the grid. For the stability guarantee of the distributed controller loop, their interaction is a dominant influencing factor \citep{Ali2024,Ahmadi2023}. Xiao Kang \emph{et al.} established the stability conditions for distributed secondary control in such hybrid MGs, providing strict guidance for controller design and parameter selection \citep{Xiaokang2023}. Meanwhile, Lan Tao \emph{et al.} proposed a distributed secondary control method based on simultaneously achieving current sharing and voltage recovery. Based on this, they clarified the actual implementation method in the MG and explained its feasibility \citep{Lantao2019,Li2025}.
+
+In addition to the structural stability of the controller, recent typical developments have also emphasized a prescribed-time or fixed-time convergence guarantee that is independent of the initial conditions. The introduction of a method with a prescribed-time or fixed-time controller has significantly improved the predictability and robustness of the system \citep{Akhijahani2023,Fei2023,Zhiping2023,Wei2023}. 
+Among them, Li \emph{et al.} proposed a prescribed-time consensus framework applicable to MGs, which does not require limiting the initial state and can achieve forced recovery within the prescribed-time range \citep{Li2025_A}. Meanwhile, Pan \emph{et al.} and others successfully designed a fully distributed controller based on fixed-time secondary control. Through the time upper limit set by the controller parameters, they achieved forced convergence within the specified time \citep{Panbao2020}.\textcolor{blue}{Furthermore, mechanisms to ensure smooth switching between multiple controllers have been developed, with the soft-start method being the most widely applied
+\citep{WenSoft2023,Sathish2018,LiSoft2023}.} Their research enhanced the transient performance and recovery ability in wired communication conditions \citep{Chang2024}.
+
+Although the aforementioned progress has achieved remarkable results, there are still some significant challenges in the field of MG control: The foremost issue is that in the literature of the distributed domain, there are still relatively insufficient measures for voltage recovery, frequency regulation, and the synchronization guarantee of achieving precise power distribution within a prescribed-time frame \citep{Louassaa2025,Li2025}. Moreover, for the controller's robustness problems caused by communication delays and model uncertainties, we cannot always solve them in a unified framework \citep{Zhong2024,Rueda2024}. Most designs do not clearly constrain the range of transient errors, making safety certification and subsequent engineering deployment more complex and difficult to control \citep{Hou2025,Lakshmi2025}.   
+
+Due to these aforementioned shortcomings, this paper proposes a prescribed-time control strategy based on prescribed-time voltage restoration, consensus frequency regulation, and prescribed-time funnel constraints \citep{Wang2024,Guoping2024,Kinga2024}. This method maintains decentralization and strong scalability, and enforces the convergence time of voltage and frequency errors as defined by the designer \citep{Chang2024,Fei2023}. It ensures the stability of the system while maintaining the distribution of active power to ensure the implementation of constraints \citep{Abdurraqeeb2024,Rueda2024}.    
+
+The contributions of this paper are listed below.
+\begin{enumerate}  
+    \item An integration of multiple core control objectives in the secondary control of the MG is achieved: the bus voltage can be restored within a prescribed time, ensuring the stability of the MG voltage quality; the use of a consensus control strategy for frequency regulation helps maintain the frequency consistency of multiple MG systems, and at the same time can effectively avoid significant fluctuations and drifts in frequency caused by load fluctuations or sudden changes in power supply input.
+    \item A time-limited funnel constraint strictly limits the convergence process of voltage and frequency errors. Unlike traditional control methods \citep{Chang2024,Fei2023,Wei2023} that only ensure convergence without setting a convergence time, this framework enables designers to predefine the convergence time based on actual operational requirements. By ensuring that the voltage and frequency errors converge within the specified time, the response speed and stability of the system are guaranteed.
+\end{enumerate}
+
+%==================================================
+\section{Preliminaries}
+
+%---------------------------------------------
+\subsection{MG Model}
+The isolated island MG model is mainly composed of two parts: a DG model and a MG network. 
+Each DG is connected to its own local load, and they are integrated together through the MG network. 
+
+\begin{enumerate}
+\item \textit{DG model}\end{enumerate} 
+
+In a typical communication MG system, each distributed power source consists of a direct-current (DC) power supply, a direct-current/alternating-current (DC/AC) inverter, an inductor–capacitor–inductor (LCL) filter, and a resistor–inductor (RL) output connector. When the MG is in islanded operation mode, these inverters operate in voltage control mode. Usually, the main distributed power source control strategy has three control loops, namely the voltage control loop, the current control loop, and the droop control loop. Since the dynamic responses of the LCL filter, the RL output connector, and the voltage and current control loops are faster than the dynamic response of the droop control function, the main control strategy can be modeled by only considering the dynamic response of the droop control function and ignoring the dynamic responses of the other four modules.
+
+The islanded MG model mainly consists of the DG model and the MG network model. Each DG is already connected to its own local load, and they are integrated together through the MG network.
+
+Droop control adjusts the voltage phase angle of the $i$-th DG $\delta_i$ and the voltage amplitude $V_i$ by using the locally measured active power and reactive power information. Therefore, the phase angle  droop of the $i$-th distributed power source \citep{Qian2025} is $\dot{\delta}_i = \omega^d - k_{P_i} (P_i^m - P_i^d)$, and the voltage droop dynamics can be expressed as $k_{V_i} \dot{V}_i = (V^d - V_i) - k_{Q_i} (Q_i^m - Q_i^d)$, where $\omega^d$ and $V^d$ are the desired voltage and current values, respectively, 
+$K_i$ and $Q_i$ are the inverter's control parameters, $P_i^m$ and $Q_i^m$ are the measured power values, and $P_i^d$ and $Q_i^d$ represent the desired power values. The above equations govern the dynamic operation of the system under voltage and power control strategies.
+
+The terms $P_i^m$ and $Q_i^m$ are generated through low-pass filters and can be expressed as $\tau_{P_i} \dot{P}_i^m = -P_i^m + P_i $ and $\tau_{Q_i} \dot{Q}_i^m = -Q_i^m + Q_i$, where $\tau_{P_i}$ and $\tau_{Q_i}$ are the time constants of the two filters, and $P_i$ and $Q_i$ represent the active power and reactive power outputs of the $i$-th DG, respectively.    
+
+Substituting $\tau_{P_i} \dot{P}_i^m$ and  $\tau_{Q_i} \dot{Q}_i^m$ into phase
+angle droop loop and $\dot{\theta}$ yields
+\begin{equation}
+\label{eq:1}
+\left\{
+\begin{aligned}
+    &\tau_{P_i} \dot{\omega}_i + \omega_i - \omega^d + k_{P_i} (P_i - P_i^d) = 0\\
+    &\tau_{Q_i} k_{V_i} \ddot{V}_i + (\tau_{Q_i} + k_{V_i}) \dot{V}_i + V_i - V^d 
+    + k_{Q_i} (Q_i - Q_i^d) = 0,
+\end{aligned}
+\right.
+\end{equation}
+where \( \omega_i \) and \( V_i \) denote the output angular frequency and voltage amplitude of the $i$-th DG, respectively, \( k_{P_i} \) and \( k_{Q_i} \) are the active and reactive power droop coefficients, respectively, and \( k_{V_i} \) denotes the voltage control gain of the $i$-th DG.
+
+
+
+Now the model of the $i$-th DG can be obtained, which is \eqref{eq:1}.
+
+
+
+\begin{enumerate}
+    \setcounter{enumi}{1}
+    \item \textit{Network model}
+\end{enumerate}
+
+The MG distribution network is considered a complex-weighted connected graph \(\mathcal{G} = (\mathcal{V}, \xi) \), where \(\mathcal{V}\) represents DGs (buses), and the edges \(\xi\) represent line impedances. 
+For a network with \(N\) DGs, let \(Y_{ik}\) denote the admittance between the \(i\)-th and \(k\)-th DGs, and its definition is \(Y_{ik} = \mathcal{G}_{ik} + jB_{ik}\), where \(\mathcal{G}_{ik} \in \mathbb{R}\) is the conductance and \(B_{ik} \in \mathbb{R}\) is the susceptance. 
+If there is no connection between the \(i\)-th and \(k\)-th DGs, \(Y_{ik}\) is treated as 0.   
+
+The set of adjacent DGs for the \( i \)-th DG is defined as \( \mathcal{N}_i = \{ k \mid k \in \mathcal{N}, k \neq i, Y_{ik} \neq 0 \} \). Meanwhile, \( \mathcal{G}_{ii} = \sum_{k \in \mathcal{N}_i} \mathcal{G}_{ik} \) and \( B_{ii} = \sum_{k \in \mathcal{N}_i} B_{ik} \) are defined. It is assumed that a local load is connected to each DG, i.e., \( S_{Li} = P_{Li} + Q_{Li} \).
+    
+To combine various types of loads, the impedance–current–power (ZIP) load model is  expressed as $P_{Li} = P_{1i}V_i^2 + P_{2i}V_i + P_{3i}$ and $Q_{Li} = Q_{1i}V_i^2 + Q_{2i}V_i + Q_{3i}$, where \( P_{1i} \) and \( Q_{1i} \) are nominal constant impedance loads, \( P_{2i} \) and \( Q_{2i} \) are nominal constant current loads, and \( P_{3i} \) and \( Q_{3i} \) are nominal constant power loads \citep{Adiche2024}. 
+
+According to the power balance relationship, the active power output and reactive power output of the \( i \)-th DG are
+\begin{equation}
+\label{eq:2}
+\left\{
+\begin{aligned}
+    P_i &= P_{Li} + \sum_{k \in \mathcal{N}_i} V_i V_k |B_{ik}| \sin(\delta_i - \delta_k) \\
+    Q_i &= Q_{Li} + V_i^2 \sum_{k \in \mathcal{N}_i} |B_{ik}| - \sum_{k \in \mathcal{N}_i} V_i V_k |B_{ik}| \cos(\delta_i - \delta_k),
+\end{aligned}
+\right.
+\end{equation}
+where $|B_{ik}|$ denotes the magnitude of the line susceptance between DG $i$ and DG $k$.
+
+From \eqref{eq:1} and \eqref{eq:2}, the dynamics of the overall system is obtained.     
+
+To achieve the secondary control, the secondary control input \( u_i \in U_i \) is introduced, and $U_i$ denotes the admissible set of secondary control inputs for the $i$-th DG.
+
+Specifically, \( u_i \) is incorporated into the model of each DG unit as
+\begin{equation}
+\label{eq:3}
+\left\{
+\begin{aligned}
+    &\tau_{P_i} \dot{\omega}_i + \omega_i - \omega^d + k_{P_i} (P_i - P_i^d) + u_i^\omega = 0 \\
+    &\tau_{Q_i} k_{V_i} \ddot{V}_i + (\tau_{Q_i}+ k_{V_i}) \dot{V_i} + V_i - V^d + k_{Q_i} (Q_i - Q_i^d) + u_i^v = 0,
+\end{aligned}
+\right.
+\end{equation}
+where \( u_i^\omega \) and \( u_i^v \) denote the secondary frequency and voltage control inputs, respectively, and $u_i = [u_i^\omega,\, u_i^v]^T$ represents the secondary control input vector of the $i$-th DG.
+
+
+
+To enable decoupled design of voltage and frequency control, the voltage is first set to its reference value within a prescribed time, and then a frequency restoration control law is designed with a constant voltage amplitude.
+
+
+\begin{remark}
+The dynamic equation of each distributed power generation unit is given by the system represented by \eqref{eq:1}, while the injection amounts of active power and reactive power are determined by the network power flow relationship in equation \eqref{eq:2}. Since the power variables \(P_i\) and \(Q_i\) in equation \eqref{eq:1} are derived from equation \eqref{eq:2} and depend on the voltage amplitude and phase angle, the dynamic behavior of the distributed power generation units is interrelated with the network model.
+\end{remark}
+
+
+
+% \subsection{Practical Prescribed-Time Stability}
+
+% For a nonlinear system
+% \begin{equation}
+% \dot{x}(t) = f(x(t), t), \quad x(t) \in D \subseteq \mathbb{R}^n,
+% \end{equation}
+% where \( x(t) \) denotes the state, and \( f(x(t), t) \) represents a smooth function with the property \( f(0, t) = 0 \). The initial value of the system is given by \( x(t_0) = x_0 \in D \), where the set \( D \) denotes the attractive domain, and \( t_0 \) is the initial time.
+
+% \begin{definition}
+% If for the origin of the system, for any positive definite constants \( k > 0 \) and \( T^* > 0 \), the condition holds: for all \( x(t_0) \in D \), when \( t \geq t_0 + T^* \), \( \|x(t)\| < k \) is satisfied, then the system is said to have practical prescribed-time stability. Here, \( k \) and \( T^* \) represent the prescribed accuracy and prescribed time respectively \citep{Xu2024}.
+% \end{definition}
+
+%---------------------------------------------
+ \subsection{Practical Prescribed-Time Stability}
+
+ For a nonlinear system
+ \begin{equation}
+ \dot{x}(t) = f(x(t), t), \quad x(t) \in D \subseteq \mathbb{R}^n,
+ \end{equation}
+ where \( x(t) \) denotes the state vector,  \( f(x(t), t) \) is a smooth vector field satisfying \( f(0, t) = 0 \), and the origin is an equilibrium point of the system. The initial condition is given by \( x(t_0) = x_0 \in D \), with   \( D \) representing the domain of attraction and \( t_0 \) being the initial time.
+
+\begin{definition}
+\label{def:practical-pt}
+\citep{Xu2024} The system is said to have practical prescribed-time stability if, for any given positive constants \( k > 0 \) and \( T^* > 0 \), and for all initial states \( x(t_0) \in D \), the condition \( \|x(t)\| < k \) holds whenever \( t \geq t_0 + T^* \). Here, \( k \) and \( T^* \) are referred to as the prescribed accuracy and prescribed time, respectively.
+\end{definition}
+
+%---------------------------------------------
+\subsection{Projection Operators}
+
+This paper adopts the adaptive law based on the projection operator which is introduced in Definition~\ref{def:projection} to prevent parameter drift.
+\begin{definition}
+\label{def:projection}
+Let $\hat{\theta}$ be the estimated value of $\theta$ \citep{Wei2024}. The adaptive law desired for $\dot{\hat{\theta}}$ based on the projection operator can be defined as
+\begin{equation}
+\label{eq:proj}
+\dot{\hat{\theta}} = \text{Proj}(\tau) = 
+\begin{cases} 
+0, & {\rm{if}}~\hat{\theta} = \theta_{\min} \text{ and } \tau \leq 0, \\
+0, & {\rm{if}}~\hat{\theta} = \theta_{\max} \text{ and } \tau \geq 0, \\
+\tau, & \text{otherwise},
+\end{cases}
+\end{equation}
+where $\theta_{\min}$ and $\theta_{\max}$ denote the lower and upper bounds of $\theta$, respectively. 
+Moreover, the expression of $\dot{\hat{\theta}}$ can be written as $\operatorname{Proj}(\tau)$ for conciseness\textcolor{blue}{,} although it is a function associated with four parameters, such as $\tau$, $\varphi$, $\theta_{\min}$ and $\theta_{\max}$.  
+\end{definition}
+
+%---------------------------------------------
+\subsection{Control Objective}
+
+In this paper, the control objectives for the islanded MG are
+\begin{enumerate}
+\item Restore the frequency and voltage of the MG to their respective reference values, such as $\lim_{t \to \infty} \omega_i(t) = \omega^{\text{ref}}, \quad \forall i \in \mathcal{N}$ and $\lim_{t \to T^+} V_i(t) = V^{\text{ref}}, \quad V_i(t) = V^{\text{ref}}, \quad \forall t > T, \forall i \in \mathcal{N}$, where $T$ is the prescribed time \citep{Mohamed2020}.
+
+\item Ensure the accuracy of the actual power distribution \citep{Qian2025,Salman2024}, $\frac{P_i}{P_k} = \frac{m_i}{m_k}, \quad \forall i,k \in \mathcal{N}$, where $m_i\in \mathbb{R}^+$ and $m_k \in \mathbb{R}^+$ denote the actual power-sharing gains, 
+which are selected according to the power ratings of the DG units. 
+In primary control, the frequency droop coefficient $k_{p_i}$ 
+is typically chosen as the reciprocal of the rated power of the $i$-th DG unit, which generates
+\begin{equation}
+\label{eq:21}
+\frac{P_i}{P_k} = \frac{m_i}{m_k} = \frac{k_{p_k}}{k_{p_i}}, \quad \forall i,k \in \mathcal{N}.
+\end{equation}
+\end{enumerate}
+
+An adaptive prescribed-time control strategy is designed to ensure that the frequencies and voltages of all subsystems return to the reference values within the prescribed time \( T \). Also, this control strategy guarantees that all tracking errors converge to the prescribed accuracy within the prescribed-time range and remain within the specified error tolerance at all times. 
+
+For the analysis of the following content, the following assumption is imposed, and the subsequent convergence arguments are interpreted in the sense of practical prescribed-time stability in Definition~\ref{def:practical-pt}.     
+
+\newtheorem{assumption}{Assumption}
+\begin{assumption} 
+\label{assump:1}
+When \( t \geq t_0 \geq 0 \), the reference signal \( y_d(t) \) and its derivatives  \( \dot{y}_d(t), \cdots, y_d^{(n)}(t) \) are available, bounded, and continuous, where \( t_0 \) is the initial time.
+\end{assumption} 
+
+\begin{remark}
+Assumption~\ref{assump:1} is standard in prescribed-time and nonlinear tracking control.
+It ensures that the reference signal and its derivatives are sufficiently smooth
+and bounded, which guarantees that all reference-related terms appearing in the
+backstepping design and the error-dependent scalar transformation are well defined. Moreover, this assumption is commonly adopted in practical applications, and the reference voltage and frequency trajectories are typically generated by smooth scheduling
+or supervisory control layers.
+\end{remark}
+
+
+%---------------------------------------------
+\subsection{Error-Related Scalar Transformation}
+This paper employs an error-dependent scalar transformation method, which transforms the original actual prescribed-time control problem into a practical stable control problem. Therefore, before designing the control strategy, it is necessary to construct a model for error-dependent scalar transformation, which is a key factor shaping the design of control schemes. 
+
+Under Assumption~\ref{assump:1}, the reference signal and its derivatives are smooth and bounded, which guarantees the well-definedness of the following error-dependent scalar transformation and its time derivative.
+Firstly, define the time-varying \textcolor{blue}{function} $\gamma_i(t)$, and based on this, define the error-dependent scalar transformation to avoid singularities. Then, derive a lemma that converts the \textcolor{blue}{prescribed-time} control problem into a practical stability problem.
+
+Consider a set of time-varying functions \( \gamma_i(t) \), where \( i = 1, 2, \dots, n \), on the interval \( [t_0, \infty) \). These functions satisfy the following properties:
+\begin{enumerate}
+    \item\( \gamma_i(t) \) is at least  \( (n - i + 1) \)-times continuously differentiable on \( [t_0, \infty) \);
+    \item \( \gamma_i(t) \) is non-decreasing and piecewise smooth, evolving from \( \gamma_i(t_0) = 0 \) to \( \gamma_i(T^* + t_0) = \frac{1}{k_i} \);
+    \item \( \dot{\gamma}_i(t_0) = \dot{\gamma}_i(T^* + t_0) = 0 \);
+   \item\( \gamma_i(t) \equiv \frac{1}{k_i} \) when \( t > T^* + t_0 \). Thus, when \( \dot{\gamma}_i(t) = 0 \), \( t > T^* + t_0 \).
+\end{enumerate}
+Here, \( 0 < k_i < \infty \) and \( 0 < T^* < \infty \) denote the prescribed accuracy and prescribed time respectively.
+
+Based on the varying function \( \gamma_i(t) \), a scalar transformation $\xi_i=\frac{z_i}{\pi_i}$ is defined,  
+where \( \pi_i = 1 - \gamma_i^2 z_i^2 \), and \( z_i \) is the state error variable.
+This transformation is for avoidance of singularities.  
+In this manner,  
+\begin{equation}
+\label{eq:22}
+\dot{\xi}_i = \frac{\dot{z}_i \pi_i - \dot{\pi}_i z_i}{\pi_i^2} = \eta_i z_i + \chi_i,
+\end{equation}
+where the related variables satisfy
+\begin{equation}
+\left\{
+\begin{aligned}
+\dot{\pi}_i &= -2\dot{\gamma}_i \gamma_i z_i^2 - 2 \gamma_i^2 z_i \dot{z}_i ,\\
+\eta_i &= \frac{2 - \pi_i}{\pi_i^2}, \quad 
+\chi_i = \frac{2 \gamma_i^2 z_i^2}{\pi_i^2}.
+\end{aligned}
+\right.
+\label{eq:23}
+\end{equation}
+
+\begin{lemma}
+\label{lemma:lemma_stability}
+For the case of scalar transformations that rely on errors in order to avoid singular points, if \(\xi_i \in \mathcal{L}_\infty\) is satisfied, it means that \(z_i\) lies within the specified performance boundary \(\frac{1}{\gamma_i}\) for all \(t \geq 0\), i.e., \(|z_i| < \frac{1}{\gamma_i}\) for all \(t \geq 0\).
+\end{lemma}
+
+\begin{remark}
+It is worth noting that the boundedness analysis of $\xi_i$ implicitly relies on Assumption~\ref{assump:1}, which ensures that all reference-related terms appearing in the transformed error dynamics remain bounded. \textcolor{blue}{ Specifically, from $\dot{\xi}_i = \frac{\dot{z}_i \pi_i - \dot{\pi}_i z_i}{\pi_i^2}$ and $\dot{\pi}_i = -2\dot{\gamma}_i \gamma_i z_i^2 - 2\gamma_i^2 z_i \dot{z}_i$, it follows that if $z_i$, $\pi_i$, and their derivatives are bounded, $\xi_i$ is always bounded.}
+
+\end{remark}
+
+\begin{proof}
+Given \(\gamma_i(0) > 0\), it follows that \(\pi_i(0) = 1\).  
+Assume, for contradiction, that there exists a time \(t = t_1 > 0\) such that \(\pi_i(t_1) = 0\).
+From the definition \(\xi_i = \frac{\dot{z}_i}{\pi_i}\), this would imply \(|\xi_i| = \infty\), contradicting the boundedness of \(\xi_i \).
+Thus, \(\pi_i \neq 0\) for all \(t \geq 0\).   
+From the continuous property of \(\pi_i\), \(\pi_i \in (0, 1)\) holds.   
+Combining \(\pi_i = 1 - \gamma_i^2 z_i^2\) with \(\gamma_i \geq 0\), when \(\xi_i \in \mathcal{L}_\infty\), we have \(|z_i| < \frac{1}{\gamma_i}\) for all \(t \geq 0\).
+\end{proof}
+
+
+%==================================================
+\section{Prescribed Time-based Secondary Control Strategy Design}
+
+In the secondary control layer, although a distributed control strategy is proposed in \citep{Kr2025}, the consensus performance is  \textcolor{blue}{not guaranteed within} prescribed time.
+Our secondary control strategy adopts time-varying functions \( \gamma_i(t) \) with a prescribed-time technique to develop a local control strategy convergence deployment approach and communicates with neighboring information, as illustrated in Fig. \ref{fig:MG_SC}  
+
+%图片插入
+\begin{figure}[!t]  
+    \centering  
+    \includegraphics[width=0.75\linewidth]{MG_SC_color.eps} 
+    \caption{Distributed secondary control diagram.}
+    \label{fig:MG_SC} 
+\end{figure}
+
+%---------------------------------------------
+\subsection{Voltage Recovery}
+The voltage part of dynamic model \eqref{eq:3} can be rewritten as 
+
+\textcolor{blue}{
+\begin{equation}
+\label{eq:26}
+\dot{x}_{v,i} =
+\begin{pmatrix} \dot{x}_{v1,i} \\ \dot{x}_{v2,i} \end{pmatrix}
+=
+\begin{pmatrix}
+0 & 1 \\
+-\dfrac{1}{\tau_{Q_i}k_{V_i}} & -\dfrac{\tau_{Q_i} + k_{V_i}}{\tau_{Q_i}k_{V_i}}
+\end{pmatrix}
+\begin{pmatrix} x_{v1,i} \\ x_{v2,i} \end{pmatrix}
++
+\begin{pmatrix} 0 \\ -\dfrac{1}{\tau_{Q_i}k_{V_i}} \end{pmatrix} u_i^v .
+\end{equation}
+}
+
+% The original state definition is retained here only for reference:
+% \(x_{v1,i}=V_i\), \(x_{v2,i}=\dot{V}_i\).
+% \begin{equation}
+% \label{eq:26-old}
+% \left\{
+% \begin {aligned}
+% x_{v1,i} &= V_i, \\
+% x_{v2,i} &= \dot{V}_i.
+% \end {aligned}
+% \right.
+% \end{equation}
+
+Taking the derivative of \eqref{eq:26} yields $\dot{x}_{v1,i}= x_{v2,i} + f_{v1,r}(x_{v1,i}, x_{v1,k}) + g_1(x_{v1,i}) u_1^v + R_1$ and $\dot{x}_{v2,i} = f_{v2,r}(x_{v2,i}, x_{v2,k}) + g_2(x_{v2,i}) u_i^v + R_2$, where \( x_{v,i} = \begin{bmatrix} V_i,\dot{V}_i \end{bmatrix}^T \), \( f_{vi,r}(x_{vi,i}, x_{vi,k}) = \begin{bmatrix} x_{v2,i},f_{i2}(x_{v2,i}, x_{v2,k}) \end{bmatrix}^T \) , \( g_i(x_i) = \begin{bmatrix} 0 ,\frac{1}{\tau_{Q_i} k_{V_i}} \end{bmatrix} \) , 
+
+% The earlier compact state definition was replaced by the state-space voltage
+% dynamics above.
+\iffalse
+\begin{equation}
+\label{eq:26}
+\left\{
+\begin {aligned}
+x_{v1,i} &= V_i, \\
+x_{v2,i} &= \dot{V}_i.
+\end {aligned}
+\right.
+\end{equation}
+Taking the derivative of \eqref{eq:26} yields $\dot{x}_{v1,i}= x_{v2,i} + f_{v1,r}(x_{v1,i}, x_{v1,k}) + g_1(x_{v1,i}) u_1^v + R_1$ and $\dot{x}_{v2,i} = f_{v2,r}(x_{v2,i}, x_{v2,k}) + g_2(x_{v2,i}) u_2^v + R_2$, where \( x_{v,i} = \begin{bmatrix} V_i,\dot{V}_i \end{bmatrix}^T \), \( f_{vi,r}(x_{vi,i}, x_{vi,k}) = \begin{bmatrix} x_{v2,i},f_{i2}(x_{v2,i}, x_{v2,k}) \end{bmatrix}^T \) , \( g_i(x_i) = \begin{bmatrix} 0 ,\frac{1}{\tau_{Q_i} k_{V_i}} \end{bmatrix} \) , 
+\fi
+\begin{equation}
+\begin{aligned}[b]
+f_{i2}(x_{v2,i}, x_{v2,k}) &= -\frac{\tau_{Q_i} + k_{V_i}}{\tau_{Q_i} k_{V_i}} x_{v2,i}  - \frac{k_{Q_i} \left( Q_{1i} + \sum_{k \in \mathcal{N}_i} |B_{ik}| \right)}{\tau_{Q_i} k_{V_i}} x_{v1,i}^2  \\
+&\quad + \frac{k_{Q_i}}{\tau_{Q_i} k_{V_i}} \sum_{k \in \mathcal{N}_i} |B_{ik}| V_i V_k \cos(\delta_i - \delta_k)\\
+&\quad - \frac{1 + k_{Q_i} Q_{2i}}{\tau_{Q_i} k_{V_i}} x_{v1,i}  - \frac{k_{Q_i} (Q_{3i} - Q_i^d) - V^d}{\tau_{Q_i} k_{V_i}},
+\end{aligned}
+\end{equation}
+and \( R_i \) is an unknown but bounded disturbance.
+
+The voltage local neighborhood tracking error \citep{Bl2020} is define as
+\begin{equation}
+\label{eq:z_i}
+z_i = \sum_{k \in \mathcal{N}_{c_i}} (V_i - V_k) + g_i^v (V_i - V^{\text{ref}}),
+\end{equation} 
+where \( g_i^v \) is the voltage pinning gain. This gain is non-zero for the DG unit which can directly access the reference voltage value \( V^{\text{ref}} \), and \( \mathcal{N}_{c_i} \) denotes the communication neighborhood set of the \( i \)-th control strategy. Taking the derivative of this error yields $\dot{Z_i}$.
+
+By processing the above error \citep{Yl2025} with the method of error-dependent scalar transformation \eqref{eq:22} and \eqref{eq:23}, the corresponding scalar transformation forms are expressed as $\xi_i = \frac{\sum_{k \in \mathcal{N}_{c_i}} (V_i - V_k) + g_i^v (V_i - V^{\text{ref}})}{\pi_i}$ and
+$\begin{aligned}[b]
+\dot{\xi}_i &= \frac{1}{\pi_i^2} \bigg\{ \bigg[ \sum_{k \in \mathcal{N}_{c_i}} (\dot{V}_i - \dot{V}_k) + g_i^v (\dot{V}_i) \bigg] \pi_i - \bigg[ \sum_{k \in \mathcal{N}_{c_i}} (V_i - V_k) + g_i^v (V_i - V^{\text{ref}}) \bigg] \dot{\pi}_i \bigg\}.
+\end{aligned}$
+
+The state error variables are defined as $z_1 = y - y_d = V_1 - V^{\text{ref}}$ and $z_2 = x_{v2,i} - \alpha_{1}$, where \( \alpha_{1} \) is a virtual controller and it will be introduced below.
+
+To recursively stabilize the voltage dynamics, the control design follows a backstepping framework. In this approach, the first two steps construct the intermediate error variables and their corresponding virtual control inputs, which progressively compensate for the nonlinearities and uncertainties of the system. The detailed procedures are presented below.
+
+To approximate the unknown nonlinear functions encountered in control strategy design, radial basis function neural networks are employed for this purpose due to their universal approximation capability over finite sets \citep{Aysu2023,Lin2025}.
+
+\begin{definition}
+\label{definition:RBFNN}
+\citep{Fm2023} A radial basis function neural network consists of an input layer, a hidden layer composed of radial basis functions, and an output layer. The network output is expressed as 
+$Y_{nn}(\boldsymbol{u}_i) = \boldsymbol{V}^{T} \boldsymbol{\phi}(\boldsymbol{u}_i)$, 
+where $\boldsymbol{u}_i = [u_{i,1}, \dots, u_{i,m}]^{T} \in \mathbb{R}^{m}$ denotes the input vector, $\boldsymbol{V} = [V_{1}, V_{2}, \dots, V_{q}]^{T} \in \mathbb{R}^{q}$ is the weight vector from the hidden layer to the output layer, $\boldsymbol{\phi}(\boldsymbol{u}_i) = [\phi_{1}(\boldsymbol{u}_i), \dots, \phi_{q}(\boldsymbol{u}_i)]^{T} \in \mathbb{R}^{q}$ represents the hidden-layer output vector, and $q$ is the number of hidden neurons.
+
+For $j = 1,2,\dots,q$, each radial basis function is chosen as a Gaussian function
+\begin{equation}
+\phi_j(\boldsymbol{u}_i) = \exp
+\left(
+-\frac{(\boldsymbol{u}_i - \boldsymbol{c}_j)^{T}(\boldsymbol{u}_i - \boldsymbol{c}_j)}{\sigma_j^{2}}
+\right),
+\end{equation}
+where $\boldsymbol{c}_j \in \mathbb{R}^{m}$ denotes the center of the $j$-th basis function and $\sigma_j > 0$ is the corresponding width parameter.
+\end{definition}
+
+For a continuous function $F(\boldsymbol{u}_i)$ defined on a compact set $\Omega \subset \mathbb{R}^m$, the ideal weight vector $\boldsymbol{V}^* \in \mathbb{R}^q$ is defined as
+$\boldsymbol{V}^* =
+\arg\min_{\boldsymbol{V} \in \mathbb{R}^q}
+\left\{
+\sup_{\boldsymbol{u}_i \in \Omega}
+\left|
+F(\boldsymbol{u}_i) - \boldsymbol{V}^{T} \boldsymbol{\phi}(\boldsymbol{u}_i)
+\right|
+\right\}$.
+
+\begin{lemma}
+\label{lemma:RBFNN}
+\citep{Ssa2022,Mohamed2020} Based on the above definition of the ideal weight vector, the following approximation property holds: for any continuous function $F(\boldsymbol{u}_i)$ defined on a compact set $\Omega \subset \mathbb{R}^{m}$ and for any constant $\bar{w} > 0$, there exist an integer $q$ and an ideal constant weight vector 
+$\boldsymbol{V}^{*} = [V_{1}^{*}, \dots, V_{q}^{*}]^{T} \in \mathbb{R}^{q}$ 
+such that the RBFNN defined in Definition~\ref{definition:RBFNN} satisfies
+\begin{equation}
+F(\boldsymbol{u}_i) = \boldsymbol{V}^{*T} \boldsymbol{\phi}(\boldsymbol{u}_i) + w(\boldsymbol{u}_i), 
+\quad \forall \boldsymbol{u}_i \in \Omega,
+\end{equation}
+where $\boldsymbol{V}^{*}$ denotes the ideal constant weight vector, 
+$w(\boldsymbol{u}_i)$ represents the approximation error, 
+and the approximation error satisfies $|w(\boldsymbol{u}_i)| \le \bar{w}$ with $\bar{w} > 0$ being an unknown but bounded constant.
+\end{lemma}
+
+\begin{theorem}
+\label{theorem:1}
+For the dynamic system \eqref{eq:3}, under the conditions of Lemma~\ref{lemma:lemma_stability} and Assumption~\ref{assump:1}, the prescribed time-based voltage secondary control strategy 
+\[
+\alpha_1 = -\frac{\xi_1 \eta_1 \tilde{\Xi} \boldsymbol{\varPsi}_1^T \boldsymbol{\varPsi}_1}{2 \delta_1^2} - \frac{\xi_1 \eta_1}{2} - \frac{B_1 \xi_1}{\eta_1}
+\]
+and
+\[
+u_i^v = -\frac{\xi_2\eta_{2}}{2} - \frac{\xi_2\eta_{2}\hat{\Xi}\boldsymbol{\varPsi}_{2}^{T}\boldsymbol{\varPsi}_{2}}{2\delta_{2}^{2}} - \frac{B_{2}\xi_{2}}{\eta_{2}} - \frac{\xi_{1}\eta_{1}\pi_{2}}{\eta_{2}}
+\]
+guarantee that the voltage of all DGs converges to the reference value within the preset time $T^{*}$, while the voltage tracking errors strictly satisfy the prescribed performance constraints characterized by the preset accuracy $k_i$.
+\end{theorem}
+
+\begin{proof}
+1) To analyze the stability of this subsystem,  a Lyapunov function \citep{Zg2025,Fs2025} is chosen as 
+\begin{equation}
+V_{v1,r} = \frac{1}{2}\xi_1^2,
+\end{equation}
+and $\dot{V}_{v1,r} =  \xi_1 \eta_1 ( x_{v2,i} + f_{v1,r}(x_{v1,i}, x_{v1,k}) + g_1(x_{v1,i}) u_1^v + R_1 - \dot{V}^{\text{ref}} + \frac{\chi_1}{\eta_1} )$. Under the condition of Definition~\ref{definition:RBFNN} and Lemma~\ref{lemma:RBFNN}, define an auxiliary function $F_{v1,r}(\boldsymbol{\mu_1}) = f_{v1,r}(x_{v1,i},x_{v1,k}) + g_1(x_{v1,i})u_1^v + \frac{\chi_1}{\eta_1} - \dot{V}^{\text{ref}}$ which includes the terms related to the nonlinear part to isolate the unknown nonlinear components. By substituting $F_{v1,r}(\boldsymbol{\mu_1})$ into the Lyapunov derivative, the derivative $\dot{V}_{v1,r}$ can be expressed as $ \dot{V}_{v1,r}=\xi_1 \eta_1 \left(
+    x_{v2,i} + \alpha_1 + F_{v1,r}(\boldsymbol{\mu_1}) + R_1
+\right)$. Applying Young's inequality yields $\xi_1 \eta_1 R_1 \le \frac{R_1^2}{2} + \frac{\xi_1^2 \eta_1^2}{2}$ and
+$\xi_1 \eta_1 F_{v1,r}(\boldsymbol{\mu_1})
+\le \frac{\delta_1^2}{2}
++ \frac{\xi_1^2 \eta_1^2 \tilde{\Xi} \boldsymbol{\varPsi}_1^T \boldsymbol{\varPsi}_1}{2\delta_1^2}$, where $\delta_1>0$ is a design parameter, $R_1 = \max\{ R_{1,r} \mid \forall r \in \Delta \}$, $\boldsymbol{\varPsi_1}=[1,\boldsymbol{\phi_1}^T(\boldsymbol{\mu_1})]^T$, $\Xi = \max\left\{ \bar{w}_{i,r}^{2} + \boldsymbol{V}_{i,r}^{*T} \boldsymbol{V}_{i,r}^{*}
+\ \middle|\ i = 1,2,\ldots,n \right\}$, $\hat{\Xi}$ is its online 
+estimate, and $\tilde{\Xi} = \Xi - \hat{\Xi}$ denotes the corresponding estimation error. Substituting the above inequalities into the expression of $\dot{V}_{v1,r}$ yields
+\begin{equation}
+\begin{aligned}
+\label{eq:step1_1}
+\dot{V}_{v1,r}
+\le {} & \xi_1 \eta_1
+\left(
+\alpha_1 + \frac{\xi_1 \eta_1}{2} + \frac{\xi_1 \eta_1 \tilde{\Xi} \boldsymbol{\varPsi}_1^{T} \boldsymbol{\varPsi}_1}{2\delta_1^{2}}
+\right)  + \xi_1 \eta_1 z_2
++ \frac{\xi_1 \eta_1 \tilde{\Xi} \boldsymbol{\varPsi}_1^{T} \boldsymbol{\varPsi}_1}{2\delta_1^{2}} + \frac{R_1^{2}}{2} + \frac{\delta_1^{2}}{2},
+\end{aligned}
+\end{equation}
+where $\alpha_1$ is the virtual controller designed to render the bracketed term multiplied by $\xi_1 \eta_1$ equal to $-B_1 \xi_1^{2}$, with $B_1>0$ being a design parameter. Combining \eqref{eq:step1_1} and $\alpha_1$ yields
+\begin{equation}
+\dot{V}_{v1,r}
+\le -B_1\xi_1^2
+    + \xi_1\eta_1 z_2
+    + \frac{\delta_1^2}{2}
+    + \frac{\xi_1^2 \eta_1^2 \tilde{\Xi} \boldsymbol{\varPsi}_1^T\boldsymbol{\varPsi}_1}{2\delta_1^2}
+    + \frac{R_1^2}{2}.
+\end{equation}
+
+2) Similarly to above step, the Lyapunov function \citep{Zhongqiang2023} we chose in this step is 
+\begin{equation}
+V_{v2,r} = V_{v1,r} + \tfrac{1}{2}\xi_2^2.
+\end{equation}
+
+From the definition $\dot{\xi}_2 = \eta_2 \bigg( u_i^v + f_{v2,r}(x_{v2,i}, x_{v2,k}) + g_2(x_{v2,i}) u_i^v + R_2 - \dot{\alpha}_{1} + \frac{\chi_2}{\eta_2} \bigg)$ and the auxiliary function $F_{v2,r}(\boldsymbol{\mu_2}) = f_{v2,r}(x_{v2,i}, x_{v2,k}) + g_2(x_{v2,i}) u_i^v - u_i^v + \frac{\chi_2}{\eta_2}$ which is defined under the condition of Definition~\ref{definition:RBFNN} and Lemma~\ref{lemma:RBFNN}, $\dot{\xi}_2$ is expressed as   
+\begin{equation}
+\begin{aligned}
+\dot{\xi}_2
+&= \eta_2 \big( u_i^v + F_{v2,r}(\boldsymbol{\mu_2}) + R_2 - \dot{\alpha}_1 \big) \\
+&= \eta_2 \big( u_i^v + F_{v2,r}(\boldsymbol{\mu_2}) + R_2 \big) + \eta_2 \left(
+- \frac{\partial \alpha_1}{\partial \hat{\Xi}}
+\sum_{j=1}^{2}
+\frac{B_j \xi_j^{2} \eta_j^{2} \boldsymbol{\varPsi}_j^{T} \boldsymbol{\varPsi}_j}{2\delta_j^{2}}
+\right).
+\end{aligned}
+\end{equation}
+ 
+Applying the Young's inequality yields   
+$\xi_2 \eta_2 R_2
+\le \frac{R_2^{2}}{2}
++ \frac{\xi_2^{2} \eta_2^{2}}{2}$ and $\xi_2 \eta_2 F_{v2,r}(\boldsymbol{\mu_2}) \le \frac{\delta_2^{2}}{2} + \frac{\xi_2^{2} \eta_2^{2} \Xi \boldsymbol{\varPsi}_2^{T} \boldsymbol{\varPsi}_2}{2\delta_2^{2}}$, where $R_2 = \max\{ R_{2,r} \mid \forall r\in\Delta \}$, $\boldsymbol{\varPsi}_2 = [1,\,\boldsymbol{\phi}_2^T(\boldsymbol{\mu_2})]^T$ and $\delta_2>0$. Furthermore, by substituting the above inequalities into
+ $\dot{V}_{v2,r}$, it yields 
+\begin{equation}
+\begin{aligned}[b]
+\label{eq:step2_1}
+\dot{V}_{v2,r} &\le -B_1 \xi_1^2  
++ \sum_{j=1}^{2} \left( \frac{\delta_j^2}{2} + \frac{R_j^2}{2} \right) + \tilde{\Xi} \sum_{j=1}^{2} 
+\frac{\xi_j^2 \eta_j^2 \boldsymbol{\varPsi}_j^T \boldsymbol{\varPsi}_j}{2\delta_j^2}
++ \xi_2 \eta_2 \\
+&\quad + \xi_2 \eta_2 \left( 
+u_i^v + \frac{\xi_2 \eta_2}{2} 
++ \frac{\xi_2 \eta_2 \tilde{\Xi} \boldsymbol{\varPsi}_2^T \boldsymbol{\varPsi}_2}{2 \delta_2^2}
++ \frac{\xi_1\eta_1\pi_2}{\eta_2}
+\right).
+\end{aligned}
+\end{equation}
+Define $u_i^v$ as the voltage control strategy with $B_2>0$ being a parameter. 
+From \eqref{eq:step2_1} and $u_i^v$, \eqref{eq:step_2} then yields 
+\begin{equation}
+\label{eq:L_V}
+\begin{aligned}[b]
+\dot{V}_{v2,r}
+&\le -\sum_{j=1}^{2}B_j \xi_j^2
++ \xi_2\eta_2  + \tilde{\Xi}\sum_{j=1}^{2}
+\frac{\xi_j^2 \eta_j^2 \boldsymbol{\varPsi}_j^T \boldsymbol{\varPsi}_j}{2\delta_j^2}
++ \sum_{j=1}^{2}\left( \frac{R_j^2}{2} + \frac{\delta_j^2}{2} \right).
+\end{aligned}
+\end{equation}
+
+Recalling the definition of $z_i$ in \eqref{eq:z_i}, it follows from \eqref{eq:L_V} that $\lim_{t \rightarrow T^*} \| z_i \| \le \frac{1}{k_i}$. Therefore, the observation error converges to the predetermined error bound $\frac{1}{k_i}$ of $V^{\text{ref}}$ within the prescribed interval $[0, T^*)$. Moreover, the condition $\| z_i \| \le \frac{1}{k_i}$ is maintained during the subsequent period. This completes the proof.
+\end{proof}
+
+\textcolor{blue}{\begin{remark}
+Theorem 1 establishes the core theoretical result of the proposed voltage secondary control scheme, which guarantees prescribed-time stability with prescribed performance for the closed-loop system. This theorem unifies the distributed control strategy design and rigorous stability analysis, demonstrating two key properties: first, the voltage tracking errors of all DGs are globally prescribed-time stable, meaning they converge to zero within a user-specified time $T^{*}$ independent of initial conditions; second, the tracking errors strictly satisfy the prescribed performance constraints characterized by the prescribed accuracy $k_i$ over the entire transient process.It is necessary to emphasize that this theory remains valid even when there are network coupling terms between the DG units. The proposed control scheme, through the aggregation of auxiliary functions and the neural network approximation mechanism, can effectively compensate for the coupling terms and suppress their adverse coupling effects on the voltage recovery performance. This provides a rigorous theoretical guarantee for the practical engineering implementation of this control strategy in microgrids.
+\end{remark}}
+
+\begin{remark}
+In the voltage dynamics system, the auxiliary functions $F_{v1,r}(\boldsymbol{\mu_1})$ and $F_{v2,r}(\boldsymbol{\mu_2})$ are introduced to collect the unknown nonlinear, coupling, and disturbance-related terms in the first and second subsystems, respectively. 
+\textcolor{blue}{More explicitly, the coupling terms here mainly include the network-induced terms associated with neighboring DG voltages and reactive-power interactions, namely $\sum_{k \in \mathcal{N}_i} |B_{ik}|V_iV_k\cos(\delta_i-\delta_k)$ and the voltage-dependent load terms contained in $Q_i$, which imply that the voltage dynamics of each DG depend not only on its own local state but also on adjacent DG states through the network power-flow relationship.}
+Since these terms are continuous with respect to $\boldsymbol{\mu_1}$ and $\boldsymbol{\mu_2}$ on compact sets, they satisfy the universal approximation condition and can be approximated with bounded errors.
+\end{remark}
+
+
+%-------------------------------------
+\subsection{Frequency Recovery and Power Distribution}
+
+To restore the frequency to the reference value while ensuring the actual power sharing accuracy \eqref{eq:21}, combined with \eqref{eq:3} and \eqref{eq:21}, it can be concluded that there exists a constraint on the frequency control input such as 
+\begin{equation}
+\frac{(u_i^\omega)_s}{(u_k^\omega)_s} = 1, \quad \forall i,k \in \mathcal{N},
+\end{equation}
+where \((u_i^\omega)_s\) is the \(i\)-th frequency control input value in the steady state. 
+\textcolor{blue}{This indicates that all frequency control inputs must converge to the same value at steady state, thereby providing a frequency compensation for all DGs without compromising the original droop-based power sharing mechanism.}
+
+The frequency part of dynamic model \eqref{eq:3} can be rewritten as $x_{\omega,i} = \omega_i$. Taking the derivative of this expression yields the following nonlinear system
+\begin{equation}
+\dot{x}_{\omega,i} = x_{\omega,i} + f_{\omega,r}(x_{\omega,i}, x_{\omega,k}) + g_i(x_{\omega,i}) u_i^\omega + R_\omega,
+\end{equation}
+where \( g_i(x_{\omega,i}) = [0, -\frac{1}{\tau_{p_i}}]^T \), \( f_{\omega,r}(x_{\omega,i}, x_{\omega,k}) = [\omega_i, f_{1i}(x_{\omega,i}, x_{\omega,k})] \), \( f_{1i}(x_{\omega,i}, x_{\omega,k}) \) is
+\begin{equation}
+\begin{aligned}[b]
+f_{1i}(x_{\omega,i}, x_{\omega,k}) &= -\frac{w_i}{\tau_{p_i}} + \frac{\omega^d}{\tau_{p_i}} - \frac{k_{pi}}{\tau_{p_i}} (p_{3i} - p^d) \\
+&\quad - \frac{k_{p_i}}{\tau_{p_i}} \bigg( \sum_{k \in \mathcal{N}_{Ci}} V_i V_k |B_{ik}| \sin(\delta_i - \delta_k)  + P_{1i} V_i^2 + P_{2i} V_i \bigg),
+\end{aligned}
+\end{equation}
+and \( R_\omega \) is a random disturbance.
+Select a desired frequency direction \( \omega^{\text{ref}} \) arbitrarily, the local neighborhood tracking error $z_i$ can be defined as
+\begin{equation}
+\label{eq:z_i_f}
+z_i = \sum_{k \in \mathcal{N}_{Ci}} (w_i - w_k) + g_i^\omega (w_i - \omega^{\text{ref}}),
+\end{equation}
+where \( g_i^\omega \) is the frequency pinning gain. This gain is non-zero for the DG unit which can directly access the reference frequency value \( \omega^{\text{ref}} \).
+
+From \( \xi_i = \frac{z_i}{\pi_i} \), the derivative of $\dot{\xi}_i$ yields 
+\begin{equation}
+\begin{aligned}[b]
+\dot{\xi}_i &= \frac{\dot{z}_i \pi_i - z_i \dot{\pi}_i}{\pi_i^2} \\
+&= \frac{1}{\pi_i^2} \bigg\{\pi_i  \bigg[ \sum_{k \in \mathcal{N}_{Ci}} (\dot{\omega}_i - \dot{\omega}_k) + g_i^\omega( \dot{\omega}_i-0) \bigg] - \dot{\pi}_i \bigg[ \sum_{k \in \mathcal{N}_{Ci}} (w_i - w_k) + g_i^\omega (w_i - \omega^{\text{ref}}) \bigg] \bigg\}.
+\end{aligned}
+\end{equation}
+    
+Define the state error variables as $z_1 = x_{\omega,i} - y_d = w_1 - \omega^{\text{ref}}$.
+To initiate the recursive inverse design of the frequency regulation loop, the main steps involve introducing the main error variable and constructing a virtual control law to compensate for the nonlinear and uncertain terms in the frequency dynamics. The derivation process is presented below.
+
+\begin{theorem}
+For the dynamic system \eqref{eq:3}, under the conditions of Lemma~\ref{lemma:lemma_stability} and Assumption~\ref{assump:1}, the prescribed time-based frequency secondary control strategy
+\[
+u_i^\omega = -\frac{\xi_\omega \eta_1 \tilde{\Xi} \boldsymbol{\varPsi}_1^T \boldsymbol{\varPsi}_1}{2\delta_1^2} - \frac{\xi_\omega \eta_1}{2} - \frac{B_1 \xi_\omega}{\eta_1}
+\]
+guarantees that the frequency of all DGs converges to the reference value within the preset time $T^{*}$, while the frequency tracking errors strictly satisfy the prescribed performance constraints characterized by the preset accuracy $k_i$.
+\end{theorem}
+
+\begin{proof}
+The proof follows a similar procedure to that of Theorem~\ref{theorem:1}. Choose the Lyapunov function $V_{\omega,r} = \frac{1}{2}\xi_\omega^2$ and its time derivative yields $\dot{V}_{\omega,r} = \xi_\omega \dot{\xi}_\omega = \xi_\omega \eta_1 ( x_{\omega,i} + f_{\omega,r}(x_{\omega,i}, x_{\omega,k}) + g_1(x_{\omega,i}) u_i^\omega + R_\omega - \dot{W}^{\text{ref}} + \frac{\chi_1}{\eta_1} )$.
+
+Under the condition of Definition~\ref{definition:RBFNN} and Lemma~\ref{lemma:RBFNN}, to extract the unknown nonlinear components, define an auxiliary function $F_{\omega,r}(\boldsymbol{\mu_1})
+= f_{\omega,r}(x_{\omega,i},x_{\omega,k})
+  + g_1(x_{\omega,i})u_i^\omega - u_i^\omega
+  + \frac{\chi_1}{\eta_1}
+  - \dot{W}^{\text{ref}}$, and the $\dot{V}_{\omega,r}$ can be transformed into $\dot{V}_{\omega,r}
+= \xi_\omega \eta_1 \left(
+    u_i^\omega + F_{\omega,r}(\boldsymbol{\mu_1}) + R_\omega
+\right).$
+
+
+Similarly, by applying Young's inequality to the uncertain terms
+$F_{\omega,r}(\boldsymbol{\mu_1})$ and $R_\omega$, it follows that $\xi_\omega \eta_1 R_\omega
+\le \frac{(R_\omega)^2}{2}
++ \frac{\xi_\omega^2 \eta_1^2}{2}$. Consequently, the time derivative of the Lyapunov function satisfies
+\begin{equation}
+\label{eq:step_2}
+\begin{aligned}
+\dot{V}_{\omega,r}
+\le {} & \xi_\omega \eta_1
+\left(
+u_i^\omega
++ \frac{\xi_\omega \eta_1}{2}
++ \frac{\xi_\omega \eta_1 \tilde{\Xi} \boldsymbol{\varPsi}_1^{T} \boldsymbol{\varPsi}_1}{2\delta_1^{2}}
+\right) + \frac{\xi_\omega \eta_1 \tilde{\Xi} \boldsymbol{\varPsi}_1^{T} \boldsymbol{\varPsi_1}}{2\delta_1^{2}}
++ \frac{(R_\omega)^{2}}{2}
++ \frac{\delta_1^{2}}{2}.
+\end{aligned}
+\end{equation}
+where $u_i^\omega$ is the control strategy designed to render the bracketed term multiplied by $\xi_\omega \eta_1$ equal to $-B_1 \xi_\omega^{2}$, with $B_1>0$ being a design parameter. 
+From \eqref{eq:step_2} and $u_i^\omega$, one has % yields
+\begin{equation}
+\label{eq:L_F}
+\dot{V}_{\omega,r}
+ \le -B_1 \xi_\omega^2
+     + \frac{\delta_1^2}{2}
+     + \frac{\xi_\omega^2 \eta_1^2 \tilde{\Xi}\boldsymbol{\varPsi}_1^T\boldsymbol{\varPsi}_1}{2\delta_1^2}
+     + \frac{(R_\omega)^2}{2}.
+\end{equation}
+This indicates that $\lim_{t \rightarrow T^*} \| z_i \| \le \frac{1}{k_i}$ with Lemma \ref{lemma:lemma_stability}. Here, $z_i$ denotes the frequency-related observation error defined in \eqref{eq:z_i_f}. Therefore, the observation error converges to the predetermined error bound $\frac{1}{k_i}$ of $\omega^{\text{ref}}$ within the prescribed interval $[0, T^*)$. Moreover, the condition $\| z_i \| \le \frac{1}{k_i}$ is maintained during the subsequent period. This completes the proof.
+\end{proof}
+
+\begin{remark}
+$F_{\omega,r}(\boldsymbol{\mu_1})$ gathers the unknown nonlinearities in the frequency regulation
+channel of subsystem $r$, including coupling effects among DG units and the
+reference frequency dynamics.
+\textcolor{blue}{Here, the active power coupling terms refer to $\sum_{k \in \mathcal{N}_i} |B_{ik}| V_i V_k \sin(\delta_i - \delta_k)$, derived from the network power flow relationships; the coupling effects refer to the actual impacts of these terms on frequency consensus and active power sharing performance. Specifically, the frequency dynamics of a single DG are affected by the voltage and phase angle states of neighboring DGs. If not properly handled, these impacts will degrade the prescribed power sharing ratio and frequency restoration performance.} Since these functions are continuous in $\boldsymbol{\mu_1}$
+over a compact domain, they satisfy the universal approximation condition and
+can therefore be approximated by the neural network, with a bounded approximation error.
+\end{remark}
+
+\begin{figure}[!t]
+    \centering  
+    \includegraphics[width=0.8\linewidth]{DPSC_Freq_color.eps}  
+    \caption{\textcolor{blue}{Block diagram of the proposed frequency secondary control strategy.}}  
+    \label{fig:DPSC_Freq}  
+\end{figure}
+
+% As shown in Fig. \ref{fig:DPSC_Freq}, the proposed prescribed-time-based distributed secondary controller comprises two cooperative control channels: a voltage restoration channel and a frequency restoration channel. For each distributed generator, local tracking errors are constructed using local voltage and frequency measurements, along with neighboring information exchanged via the communication network. By combining error-related scalar transformations with time-constrained functions, both voltage and frequency errors are forced to converge within the designer-specified time interval while strictly adhering to predefined performance boundaries.
+
+% Specifically, the voltage secondary controller aims to restore the bus voltage to its reference value within the specified time, thereby ensuring voltage quality and stability within the microgrid. Conversely, the frequency secondary controller achieves frequency restoration within the specified timeframe while ensuring precise active power distribution among distributed generators through a consensus-based mechanism. The decoupled yet coordinated design of the voltage and frequency control loops enables full distributed implementation without reliance on a central controller, while maintaining scalability and robustness against disturbances and load variations.
+
+\textcolor{blue}{As shown in Fig. \ref{fig:DPSC_Freq}, the proposed prescribed time-based distributed secondary frequency control strategy is designed to achieve accurate active power sharing among distributed generators while restoring the system frequency to its rated value within a predefined time interval.}
+
+\textcolor{blue}{For each distributed generator, the primary control layer adopts the conventional P-f droop mechanism as the core of power allocation. The real-time output voltage and current of the DG unit are sampled at the DC bus and fed into the power calculation module to obtain the instantaneous active power. According to the droop characteristic, the droop controller adjusts the frequency reference to realize proportional power sharing among DGs, ensuring that the power allocation performance is not compromised during the subsequent frequency restoration process.}
+
+\textcolor{blue}{In the secondary distributed control layer, local tracking errors are constructed based on the local frequency measurement, the frequency information exchanged with neighboring DGs via the communication network, and the global frequency reference. By introducing the time-constrained function and the error-related scalar transformation, the frequency tracking error is forced to converge to zero within the designer-specified time. The transformed error is then processed by a proportional-integral control structure to generate the frequency compensation signal, which is injected into the primary control loop to correct the frequency reference. This eliminates the steady-state frequency deviation caused by droop control while strictly maintaining the predefined power sharing ratio.}
+
+\textcolor{blue}{The decoupled yet coordinated design of the primary droop power sharing and secondary prescribed-time frequency restoration enables fully distributed implementation without relying on a central control strategy. This structure not only guarantees fast and accurate frequency recovery and precise active power distribution, but also maintains excellent scalability and robustness against load variations and communication delays, which is suitable for the stable operation of microgrids.}
+
+%---------------------------------------------
+\subsection{Stability Analysis}
+\textcolor{blue}{In this section, stability analysis is conducted for the entire coupled system, including voltage and frequency dynamics. This is the core theoretical guarantee of the proposed distributed control scheme in this paper. Based on the stability conclusions at the subsystem level presented in Theorem 1 and Theorem 2, Theorem 3 further establishes the global asymptotic stability of the entire closed-loop system.}
+
+\begin{theorem}
+Consider the dynamic system \eqref{eq:3}, which incorporates both the voltage and frequency dynamics, subject to Assumption~\ref{assump:1}. For voltage restoration, the proposed virtual controller $\alpha_1$ and its actual control input \(u_i^v\) ensure global convergence of all DGs' voltages to the reference value within the preset time \(T^*\), with voltage tracking errors strictly satisfying the prescribed performance constraints characterized by the preset accuracy \(k_i\). For frequency restoration and accurate active power sharing, the designed control strategy \(u_i^\omega\) ensures global convergence of all DGs' frequencies to the reference value within \(T^*\), while strictly complying with the prescribed performance constraints on frequency tracking errors.
+\end{theorem}
+
+\begin{proof}
+The Lyapunov function of the subsystem satisfies
+\begin{equation}
+\label{eq:85}
+\dot{V}_r \leq -bV_r + c,
+\end{equation}
+where \( b = \min\{\beta_2, \beta_4, 2B_1, 2B_2 \} \),
+$\beta_2$ and $\beta_4$ are adaptive parameter adjustment gains, $V_r=V_{\omega,r}+V_{v2,r}$,
+$B_i$ is an error attenuation parameter, 
+and $c = \sum_{j=1}^2 \left( \frac{\delta_j^2}{2} + \frac{\bar{R}_j^2}{2} \right) + \frac{\beta_2}{2\beta_1}\Xi_1^2 + \frac{\beta_4}{2\beta_3}$.
+
+To simplify the derivation, define \( \bar{\omega} = e^{bt}V_r \), whose derivative is $\dot{\bar{\omega}} = be^{bt}V_r + e^{bt}\dot{V}_r $. Combining \eqref{eq:85} yields $\dot{\bar{\omega}} \leq c \cdot e^{bt}$. Integrating \( \dot{\bar{\omega}} \) over the interval \([0,T]\) yields $\bar{\omega}(T^-) - V_r(0) \leq c\cdot\frac{e^{bT} - 1}{b}$, and further derivation leads to $V_r(T^-) \leq V_r(0)e^{-bT} + \frac{c}{b}\cdot(1 - e^{-bT}) $.
+
+To support the proof of the exponential decay of the Lyapunov function, $\varphi \in (0, b)$ is defined. Combining the condition that $t \leq T$ yields $V_r(T^-) \leq Q_2 V_r(0) e^{-\varphi T} + \frac{c}{\varphi} \left( 1 - e^{-\varphi T} \right)$, where the bounded constant \(Q_2 = \max\left\{ 1, \frac{b}{b - \varphi} \right\}\) and \(V_r(0) = \bar{\omega}(0)\).
+
+Combining $\mathcal{M}_r(T, t) \leq \mathcal{M}_{0, r} + \frac{(b_r - \varphi)T_r(T, t)}{\ln S_r}$ and $S_r^{\mathcal{M}_r(T, t)} \leq S_r^{\mathcal{M}_{0, r}} e^{(b_r - \varphi)T_r(T, t)}$\citep{Yk2024,Hs2024} yields
+\begin{equation}
+\label{eq:97}
+V_r(T^-) \leq Q_3 V_r(0) + \frac{c}{\varphi} \prod_{r=1}^p S_r^{\mathcal{M}_{0, r}} + \frac{\ell \prod_{r=1}^p S_r^{\mathcal{M}_{0, r}}}{1 - e^{-\varphi \tau}},
+\end{equation}
+where $Q_3 = \exp\left( \sum_{r=1}^p \mathcal{M}_{0, r} \ln S_r \right)$ is  bounded,  
+and 
+$\ell = \max\{\ell_r\}$ and $\tau = \max\{\tau_r\}$ are also bounded constants.   
+
+According to \eqref{eq:97}, the initial value $V_r(0)$, the term $\prod_{r=1}^{p} S_{r}^{M_{0,r}}$, and the expressions $\frac{\ell}{\varphi}$ and $\frac{\ell}{1 - e^{-\varphi T}}$ are all bounded. Consequently, the Lyapunov function has the property that $V_r(T^{-}) \in \mathcal{L}_{\infty}$. Therefore, from the boundedness of $\xi_1$, $\xi_2$, and $\tilde{\lambda}_r$ for all $r \in \Delta$, and noting that $\Xi$ and $\lambda_r$ are constant parameters, it follows that $\tilde{\Xi}$ and $\tilde{\lambda}_r$ also remain bounded for all $r \in \Delta$. According to Lemma~\ref{lemma:lemma_stability}, the boundedness of these signals guarantees that $z_i\ (i = 1,2)$ remains within its prescribed performance boundary $\frac{1}{\gamma_i}$, i.e., $z_i \in \mathcal{L}_{\infty}$. 
+Hence, the prescribed-time convergence requirement is satisfied.
+
+From the definition $\xi_i=\frac{z_i}{\pi_i}$ and the assumption that $\xi_i \in \mathcal{L}_\infty$, it follows that $\pi_i \neq 0$. Since $\pi_i = 1 - \gamma_i^2 z_i^2 > 0$, we have $|z_i| < \frac{1}{\gamma_i}$. When $t > T^*+t_0$, $\gamma_i(t) = 1/k_i$, which implies $|z_i| < k_i$. Thus, the tracking error satisfies $|V_i - V^{\text{ref}}| < \frac{1}{k_i}$ and $|\omega_i - \omega^{\text{ref}}| < \frac{1}{k_i}$, fulfilling the prescribed performance constraint.
+\end{proof}
+
+
+%==================================================
+\section{Illustrative Simulation}
+
+In this section, simulation results of the proposed distributed secondary control method are presented  \textcolor{blue}{for} an islanded MG system. This MG system consists of multiple distributed generators (DG), each of which is responsible for providing active power to the local load while maintaining the stability of voltage and frequency. The simulation focuses on achieving distributed prescribed-time voltage control and consensus-based distributed frequency control as described in the aforementioned work.
+The topology is shown in Fig. \ref{fig:STS}.
+
+\begin{figure}[!t] 
+    \centering  
+    \includegraphics[width=0.7\linewidth]{STS_color.eps}  
+    \caption{Communication topology.}  
+    \label{fig:STS}  
+\end{figure}
+
+The simulation process is divided into two stages:
+\begin{equation}
+\label{two stage}
+\left\{
+\begin{aligned}
+&\textit{Stage 1} \, (0-5 \, \text{s}): \text{Only primary control is activated} \\
+&\quad\quad\quad\quad\quad\quad\quad\quad\text{at } t = 0 \, \text{s}. \\
+&\textit{Stage 2} \, (5\text{s}-10 \, \text{s}): \text{Prescribed time-based secondary}\\
+&\quad\quad\quad\quad\quad\quad\quad\text{control is on operation from } t = 5 \, \text{s}.
+\end{aligned}
+\right.
+\end{equation}
+
+The period from 5 s to \( T^* \) is the prescribed-time interval.
+The key parameters primarily include the following aspects: System's voltage reference value  \( V_{\text{ref}}\) is 310 V, and the frequency reference value \( f_{\text{ref}} \) is 50 Hz.
+
+The primary control strategy of each DG regulates voltage and frequency through droop control. Key control parameters include the primary filter time constants $\tau_P = 0.5$ s, $\tau_Q = 0.4$ s, the frequency droop gains $k_{P1} = 0.0002$ rad/(s·W), $k_{P2} = 0.00025$ rad/(s·W), $k_{P3} = 0.00033$ rad/(s·W), $k_{P4} = 0.000045$ rad/(s·W), the reactive power droop gains $k_{Q1} = 0.002$ V/var, $k_{Q2} = 0.002$ V/var, $k_{Q3} = 0.002$ V/var, $k_{Q4} = 0.002$ V/var, and the voltage loop proportional gains $k_{V1} = 0.5$, $k_{V2} = 0.5$, $k_{V3} = 0.5$, $k_{V4} = 0.5$.
+
+Secondary control mainly achieves the recovery of voltage and frequency. To achieve this goal, the parameters are set as $\alpha_1 = 0.8$, $\alpha_2 = 0.4$, $k_1 = 800000$, $k_2 = 550000$; for the frequency consensus control, the gains are set as $\alpha_w = 0.4$, $\beta_w = 0.1$ and $\gamma_w = 0.1$.
+
+The active and reactive power loads of each DG exhibit dynamic characteristics, with random noise incorporated to simulate real-world load fluctuations. The loads are defined as $P_1 = 200 + 50 \cdot \text{randn}$ W, $P_2 = 150 + 30 \cdot \text{randn}$ W, $P_3 = [400, 500, 600, 700] + 100 \cdot \text{randn}$ W, $P_4 = [400, 500, 600, 700] + 21 \cdot \text{randn}$ W, $Q_1 = 100 + 20 \cdot \text{randn}$ Var, $Q_2 = 80 + 15 \cdot \text{randn}$ Var, $Q_3 = [120, 140, 160, 180] + 20 \cdot \text{randn}$ Var and $Q_4 = [120, 140, 160, 180] + 35 \cdot \text{randn}$ Var.
+
+The system network is characterized by a weakly coupled line admittance matrix, with key parameters including the line admittances $B_{12} = 10^{-2}$ S, $B_{23} = 10.672 \times 10^{-1}$ S, $B_{34} = 9.823 \times 10^{-1}$ S and the reference nodes with $g_{V1} = 1$, $g_{V2} = 0$, $g_{V3} = 0$, $g_{V4} = 0$, $g_{W1} = 1$, $g_{W2} = 0$, $g_{W3} = 0$, $g_{W4} = 0$. The communication graph between DGs and their neighboring nodes is realized through physical communication edge connections.
+
+These configurations of control strategy and load parameters not only ensure the stable operation of the MG system but also lay the parameter foundation for subsequent simulation work.
+
+\begin{figure}[!t]
+    \centering
+    \includegraphics[width=0.8\linewidth]{V.eps}
+    \caption{Voltage output of the test islanded MG.}
+    \label{fig:v}
+\end{figure}
+
+
+\begin{figure}[!t]
+    \centering
+    \includegraphics[width=0.8\linewidth]{Ve.eps}
+    \caption{Voltage error curve}
+    \label{fig:Ve}
+\end{figure}
+
+\begin{figure}[!t]
+    \centering
+    \includegraphics[width=0.8\linewidth]{power.eps}
+    \caption{Real power output of the test islanded MG.}
+    \label{fig:power}
+\end{figure}
+
+\begin{figure}[!t]
+    \centering
+    \includegraphics[width=0.8\linewidth]{Feq.eps}
+    \caption{Frequency output of the test islanded MG.}
+    \label{fig:Feq}
+\end{figure}
+
+\begin{figure}[!t]
+    \centering
+    \includegraphics[width=0.8\linewidth]{Fe.eps}
+    \caption{Frequency error.}
+    \label{fig:Fe}
+\end{figure}
+
+
+The simulation results are presented in Figs. \ref{fig:v}-\ref{fig:Fe}. 
+As observed from Fig. \ref{fig:v} and Fig. \ref{fig:Feq}, the voltage and frequency outputs are kept within relatively stable ranges in the first stage under the action of droop control, with the voltage varying from 310.2 V to 310.4 V and the frequency ranging from 50.005 Hz to 50.035 Hz, respectively. However, it is not difficult to observe that there is still a slight deviation between the actual output and the expected value, which is also an aspect we need to compensate for. 
+At t = 5 s, the secondary control strategy is activated, with the deviation between the actual outputs and target values decreasing continuously and eventually converging to a nearer steady value where the voltage settles within 310 V to 310.05 V and the frequency within 49.990 Hz to 49.995 Hz. Meanwhile, both voltage and frequency achieve convergence within the specified time frame, with a prescribed convergence time of 1.5 s for voltage and 0.5 s for frequency.
+
+To intuitively verify whether the errors fall within the specified upper and lower bounds, Fig. \ref{fig:Ve} and Fig. \ref{fig:Fe} mark the upper and lower bounds and exclusively display the errors in the first and second stages. It can be observed that before the secondary control strategy is activated, the errors are entirely outside the specified interval. However, after its activation, the errors are able to accurately and persistently converge to the required interval within the prescribed time and remain stable under continuous load fluctuations.
+
+Regarding the active power output, a prescribed power distribution ratio is predefined in the model as \( 0.00020: 0.00024: 0.00026: 0.00028 \approx 1: 1.2: 1.3: 1.4 \). In the actual situation shown in Fig. \ref{fig:power}, the power distribution exhibits significant fluctuations during system startup but attains stability rapidly, with the fluctuation time being negligible. The final actual distribution ratio is \( 1.14: 1.41: 1.48: 1.87\approx 1: 1.23: 1.29: 1.63  \). Under continuous load fluctuations, the ratios of the first three DGs are relatively close to the target values, while DG4 shows a larger deviation, which is an aspect to be improved.
+
+It is easy to obtain that simulation results are almost identical to the preconceived outcome. Meanwhile, all the data transformations are relatively gentle. This can be attributed to the fact that we employed a soft-start mechanism, which ensures a smooth transition of the control strategy and avoids sudden surges or significant fluctuations, making it conducive to our observation of the results and adjustment of the parameters.
+
+
+%==================================================
+\textcolor{blue}{\section{Hardware-in-the-Loop Closed-Loop Test}}
+
+\textcolor{blue}{
+The distributed prescribed-time secondary voltage, frequency restoration and active power cooperative equal-sharing control strategy proposed in this paper is no longer limited to offline digital simulation verification using MATLAB/Simulink. 
+Instead, it utilizes the OPAL-RT OP4512XG industrial-grade real-time simulation device to establish a Hardware-in-the-Loop closed-loop test platform, enabling the deployment of the control algorithm's actual code and the conduct of closed-loop testing across the entire physical chain, thereby facilitating the transition of control logic from simulation models to real-time hardware operation.
+}
+
+% \textcolor{blue}{
+% The complete test hardware setup comprises three types of physical hardware: a host control PC, an OPAL-RT real-time target machine, and a Tektronix measurement oscilloscope. 
+% The RT-LAB compilation environment is utilized to compile simulation models, download code in real time, and facilitate data exchange between the software and hardware. 
+% At the hardware level, the test model is divided into a distributed neighborhood information exchange and communication layer, a microgrid power main circuit layer comprising four DG units, and a visualization output layer for measured data. The topology is shown in Fig. \ref{fig:STS}. 
+% The complete set of control code for droop primary control and prescribed-time distributed secondary control is permanently downloaded to the OPAL-RT hardware chip for online real-time solution. 
+% Neighborhood communication data between DG units and real-time electrical signals are transmitted via physical hardware I/O interfaces, whilst key physical quantities such as system voltage, frequency and branch current are directly acquired from the hardware loop analogue signals via the oscilloscope. 
+% All test waveforms and test data are actual measurement results from the hardware's real-time operation. The hardware topology includes the connections between the Host PC, the OPAL-RT target machine, the four-layer DG and communication links, and the visualization module, providing a clear overview of the composition and hierarchical architecture of the entire HIL test hardware.
+% }
+
+% \begin{figure}[!t] 
+%     \centering  
+%     \includegraphics[width=0.8\linewidth]{STS_color.eps}  
+%     \caption{Communication topology.}  
+%     \label{fig:STS}  
+% \end{figure}
+
+% The test process is divided into two stages:
+% \begin{equation*}
+% \left\{
+% \begin{aligned}
+% &\textit{Stage 1} \, (0-5 \, \text{s}): \text{Only primary control is activated} \\
+% &\quad\quad\quad\quad\quad\quad\quad\quad\text{at } t = 0 \, \text{s}. \\
+% &\textit{Stage 2} \, (5\text{s}-10 \, \text{s}): \text{Prescribed time-based secondary}\\
+% &\quad\quad\quad\quad\quad\quad\quad\text{control is on operation from } t = 5 \, \text{s}.
+% \end{aligned}
+% \right.
+% \end{equation*}
+
+% The period from 5 s to \( T^* \) is the prescribed-time interval.
+% The key parameters primarily include the following aspects: System's voltage reference value  \( V_{\text{ref}}\) is 310 V, and the frequency reference value \( f_{\text{ref}} \) is 50 Hz.
+
+% The primary controller of each DG regulates voltage and frequency through droop control. Key control parameters include the primary filter time constants $\tau_P = 0.5$ s, $\tau_Q = 0.4$ s, the frequency droop gains $k_{P1} = 0.0002$ rad/(s·W), $k_{P2} = 0.00025$ rad/(s·W), $k_{P3} = 0.00033$ rad/(s·W), $k_{P4} = 0.000045$ rad/(s·W), the reactive power droop gains $k_{Q1} = 0.002$ V/var, $k_{Q2} = 0.002$ V/var, $k_{Q3} = 0.002$ V/var, $k_{Q4} = 0.002$ V/var, and the voltage loop proportional gains $k_{V1} = 0.5$, $k_{V2} = 0.5$, $k_{V3} = 0.5$, $k_{V4} = 0.5$.
+
+% Secondary control mainly achieves the recovery of voltage and frequency. To achieve this goal, the parameters are set as $\alpha_1 = 0.8$, $\alpha_2 = 0.4$, $k_1 = 800000$, $k_2 = 550000$; for the frequency consensus control, the gains are set as $\alpha_w = 0.4$, $\beta_w = 0.1$ and $\gamma_w = 0.1$.
+
+% The active and reactive power loads of each DG exhibit dynamic characteristics, with random noise incorporated to simulate real-world load fluctuations. The loads are defined as $P_1 = 200 + 50 \cdot \text{randn}$ W, $P_2 = 150 + 30 \cdot \text{randn}$ W, $P_3 = [400, 500, 600, 700] + 100 \cdot \text{randn}$ W, $P_4 = [400, 500, 600, 700] + 21 \cdot \text{randn}$ W, $Q_1 = 100 + 20 \cdot \text{randn}$ Var, $Q_2 = 80 + 15 \cdot \text{randn}$ Var, $Q_3 = [120, 140, 160, 180] + 20 \cdot \text{randn}$ Var and $Q_4 = [120, 140, 160, 180] + 35 \cdot \text{randn}$ Var.
+
+% The system network is characterized by a weakly coupled line admittance matrix, with key parameters including the line admittances $B_{12} = 10^{-2}$ S, $B_{23} = 10.672 \times 10^{-1}$ S, $B_{34} = 9.823 \times 10^{-1}$ S and the reference nodes with $g_{V1} = 1$, $g_{V2} = 0$, $g_{V3} = 0$, $g_{V4} = 0$, $g_{W1} = 1$, $g_{W2} = 0$, $g_{W3} = 0$, $g_{W4} = 0$. The communication graph between DGs and their neighboring nodes is realized through physical communication edge connections.
+
+% These configurations of controller and load parameters not only ensure the stable operation of the MG system but also lay the parameter foundation for subsequent simulation work.
+
+% \begin{figure}[!t]
+%     \centering
+%     \includegraphics[width=0.8\linewidth]{V.eps}
+%     \caption{Voltage output of the test islanded MG.}
+%     \label{fig:v}
+% \end{figure}
+
+
+% \begin{figure}[!t]
+%     \centering
+%     \includegraphics[width=0.8\linewidth]{Ve.eps}
+%     \caption{Voltage error curve}
+%     \label{fig:Ve}
+% \end{figure}
+
+% \begin{figure}[!t]
+%     \centering
+%     \includegraphics[width=0.8\linewidth]{power.eps}
+%     \caption{Real power output of the test islanded MG.}
+%     \label{fig:power}
+% \end{figure}
+
+% \begin{figure}[!t]
+%     \centering
+%     \includegraphics[width=0.8\linewidth]{Feq.eps}
+%     \caption{Frequency output of the test islanded MG.}
+%     \label{fig:Feq}
+% \end{figure}
+
+% \begin{figure}[!t]
+%     \centering
+%     \includegraphics[width=0.8\linewidth]{Fe.eps}
+%     \caption{Frequency error.}
+%     \label{fig:Fe}
+% \end{figure}
+
+
+% The simulation results are presented in Figs. \ref{fig:v}-\ref{fig:Fe}. 
+% As observed from Fig. \ref{fig:v} and Fig. \ref{fig:Feq}, the voltage and frequency outputs are kept within relatively stable ranges in the first stage under the action of droop control, with the voltage varying from 310.2 V to 310.4 V and the frequency ranging from 50.005 Hz to 50.035 Hz, respectively. However, it is not difficult to observe that there is still a slight deviation between the actual output and the expected value, which is also an aspect we need to compensate for. 
+% At t = 5 s, the secondary controller is activated, with the deviation between the actual outputs and target values decreasing continuously and eventually converging to a nearer steady value where the voltage settles within 310 V to 310.05 V and the frequency within 49.990 Hz to 49.995 Hz. Meanwhile, both voltage and frequency achieve convergence within the specified time frame, with a prescribed convergence time of 1.5 s for voltage and 0.5 s for frequency.
+
+% To intuitively verify whether the errors fall within the specified upper and lower bounds, Fig. \ref{fig:Ve} and Fig. \ref{fig:Fe} mark the upper and lower bounds and exclusively display the errors in the first and second stages. It can be observed that before the secondary controller is activated, the errors are entirely outside the specified interval. However, after its activation, the errors are able to accurately and persistently converge to the required interval within the prescribed time and remain stable under continuous load fluctuations.
+
+% Regarding the active power output, a prescribed power distribution ratio is predefined in the model as \( 0.00020: 0.00024: 0.00026: 0.00028 \approx 1: 1.2: 1.3: 1.4 \). In the actual situation shown in Fig. \ref{fig:power}, the power distribution exhibits significant fluctuations during system startup but attains stability rapidly, with the fluctuation time being negligible. The final actual distribution ratio is \( 1.14: 1.41: 1.48: 1.87\approx 1: 1.23: 1.29: 1.63  \). Under continuous load fluctuations, the ratios of the first three DGs are relatively close to the target values, while DG4 shows a larger deviation, which is an aspect to be improved.
+
+% It is easy to obtain that simulation results are almost identical to the preconceived outcome. Meanwhile, all the data transformations are relatively gentle. This can be attributed to the fact that we employed a soft-start mechanism, which ensures a smooth transition of the controller and avoids sudden surges or significant fluctuations, making it conducive to our observation of the results and adjustment of the parameters.
+
+%==================================================
+
+\textcolor{blue}{\subsection{HIL Experimental Platform}}
+% \textcolor{blue}{In this subsection, the practical performance of the proposed prescribed-time secondary controller is validated through hardware-in-the-loop (HIL) experiments. The HIL experimental platform comprises a Real-Time Digital Simulator (RTDS) and a Texas Instruments TMS320F28379D Digital Signal Processor (DSP). The islanded microgrid model with four distributed generators (DGs) and the communication topology depicted in Fig. \ref{Frame1} are implemented in the RSCAD software running on the RTDS. The proposed prescribed-time secondary controller is coded and executed on the DSP. Analog signals generated by the real-time simulated microgrid model, including bus voltages, frequencies, and output currents, are transmitted to the DSP via the RTDS's Giga Transceiver Analog Output (GTAO) card. After processing these signals, the DSP generates digital PWM control pulses, which are fed back to the RTDS through the Giga-Transceiver Digital Input (GTDI) card to drive the power electronic converters in the simulated microgrid.}
+
+
+\textcolor{blue}{This paper establishes a Hardware-in-the-Loop (HIL) experimental platform based on the OPAL-RT OP4512XG to verify the real-time control performance of the proposed prescribed-time secondary control strategy. The platform primarily consists of a Host PC, Simulink, the RT-LAB real-time simulation environment, the OPAL-RT OP4512XG real-time target, and a digital oscilloscope.}
+
+\begin{figure}[htb]
+	\centering
+	\includegraphics[width=0.85\linewidth]{RTlab.eps}
+	\caption{\color{blue}Architecture of the HIL platform.}
+	\label{fig:RTlab}
+\end{figure}
+
+\textcolor{blue}{Among them, the Host PC serves as the host computer, responsible for establishing the microgrid system model, control strategy design, parameter configuration, and real-time monitoring and storage of experimental data. The microgrid model includes four DG units, transmission lines, loads, and a communication topology, all modeled within the Simulink environment. The topology is shown in Fig. \ref{fig:STS}. RT-LAB acts as the real-time interface platform between Simulink and the OPAL-RT hardware, handling model compilation, code generation, and real-time task deployment.}
+
+\textcolor{blue}{Before the experiment begins, the established microgrid model is first compiled on the Host PC and downloaded to the OP4512XG real-time target through RT-LAB. Subsequently, the OP4512XG runs the entire microgrid system and the proposed prescribed-time secondary control strategy at a fixed real-time step size, enabling real-time simulation of the system’s dynamic processes. Compared to offline simulation, real-time simulation strictly follows the time constraints of actual control systems. Therefore, it provides a more accurate reflection of the control strategy’s operational performance in engineering applications.}
+
+\textcolor{blue}{During real-time operation, the OP4512XG continuously calculates the operating states of each DG unit and the microgrid system, generating key operational data such as frequency, bus voltage and current. This real-time data is transmitted back to the host PC through Ethernet and displayed and recorded online using the monitoring interface provided by RT-LAB.
+}
+\textcolor{blue}{During the experiment, the dynamic adjustment capability, steady-state recovery performance, and multi-DG cooperative control effectiveness of the proposed control strategy are tested. Ultimately, the effectiveness of the proposed prescribed-time secondary control strategy is verified using the real-time frequency recovery curves, voltage recovery curves, and power distribution results which using current to express. 
+}
+
+\begin{figure}[htb]
+	\centering
+	\includegraphics[width=0.6\linewidth]{Frame1.eps}
+	\caption{\textcolor{blue}HIL experimental platform.}
+	\label{fig:Frame1}
+\end{figure}
+
+\textcolor{blue}{The parameters of the microgrid system in the HIL experiments are identical to those in the simulation section. The system voltage reference is set to 310 V, and the frequency reference is 50 Hz. The droop coefficients, control strategy gains, and line impedance parameters are consistent with the simulation settings. The local loads connected to each DG are configured with dynamic characteristics and superimposed with Gaussian white noise to emulate random load fluctuations under real-world operating conditions. The experiment is divided into two stages: from 0 s to 5 s, only the primary droop control is activated; at t = 5 s, the proposed prescribed-time secondary control strategy is enabled to perform voltage and frequency restoration while preserving accurate active power sharing.}
+
+% \textcolor{blue}{Fig. \ref{V_s}(a) presents the voltage output waveforms of the 4 DGs throughout the HIL experiment. It can be observed that during the primary control phase (0–5 s), the bus voltages of all DGs stabilize in the range of 310.2 V to 310.4 V, with a maximum deviation of 0.4 V from the rated value of 310 V. This voltage deviation is an inherent limitation of conventional droop control methods. At t = 5 s, the proposed secondary controller is activated, and the voltages of all DGs begin to converge toward the rated value. Fig. \ref{V_s}(b) provides an enlarged view of the voltage restoration process from 5 s to 7 s, which clearly demonstrates the smooth and monotonic convergence of the voltage waveforms without overshoot or oscillation. 
+
+\textcolor{blue}{\subsection{HIL Results}}
+
+\textcolor{blue}{
+\subsubsection*{Case 1: Voltage Recovery}
+}
+
+\textcolor{blue}{The HIL-measured voltage waveform in Fig. \ref{V_p} quantifies the convergence performance: following the activation of the secondary control strategy, the voltages of all DGs converge to the tolerance band near the rated value within 1.44 s, which aligns precisely with the pre-specified prescribed time of 1.5 s. In steady state, the bus voltages of all DGs remain within 310.0 V to 310.05 V, with a maximum steady-state error of less than 0.05 V, fully satisfying the voltage quality requirements of microgrids.}
+
+% \begin{figure}[htb]
+% 	\centering
+% 	\subfloat[Original simulation plot of voltage recovery]{
+% 		\includegraphics[width=0.48\linewidth]{V_s.eps}
+% 	} \hfill
+% 	\subfloat[Close-up of the voltage waveform]{
+% 		\includegraphics[width=0.48\linewidth]{V_B.eps}
+% 	}
+% 	\caption{ Simulink simulation curve showing voltage recovery}
+% 	\label{V_s}
+% \end{figure}
+
+\begin{figure}[htb]
+	\centering
+	\includegraphics[width=0.8\linewidth]{V_p.eps}
+	\caption{\textcolor{blue}Measured waveforms of the voltage recovery hardware.}
+	\label{V_p}
+\end{figure}
+
+% \textcolor{blue}{Fig. \ref{F_ss}(a) presents the full-time-domain frequency output waveforms of the four DGs. During the primary control phase (0–5 s), due to the inherent characteristics of droop control, the system frequency stabilizes in the range of 50.005 Hz to 50.035 Hz, slightly above the rated frequency of 50 Hz. At t = 5 s, the secondary controller is activated, and the frequency starts to decrease rapidly and converge to the rated value. Fig. \ref{F_ss}(b) provides an enlarged view of the frequency restoration process from 5 s to 6.5 s, illustrating the fast and overshoot-free convergence characteristic of the frequency. 
+
+\textcolor{blue}{\subsubsection*{Case 2: Frequency Recovery}}
+\textcolor{blue}{The HIL-measured frequency waveform in Fig. \ref{F_p} indicates that the frequencies of all DGs converge to the tolerance band near the rated frequency within 0.5 s, which is in perfect agreement with the pre-specified prescribed time of 0.5 s. In steady state, the system frequency remains within 49.990 Hz to 49.995 Hz, with a maximum steady-state frequency deviation of less than 0.01 Hz, meeting the frequency stability requirements of microgrids. }
+
+% % Please ensure that the following packages are included in your document preamble:
+% % \usepackage{subfig}
+% \begin{figure}[htb]
+% 	\centering
+% 	\subfloat[Original simulation plot of frequency recovery]{
+% 		\includegraphics[width=0.48\linewidth]{F_ss.eps}
+% 	} \hfill
+% 	\subfloat[Close-up of the frequency waveform]{
+% 		\includegraphics[width=0.48\linewidth]{F_B.eps}
+% 	}
+% 	\caption{Simulink simulation curve for frequency recovery}
+% 	\label{F_ss}
+% \end{figure}
+
+\begin{figure}[!t]
+	\centering
+	\includegraphics[width=0.8\linewidth]{F_p.eps}
+	\caption{\textcolor{blue}Measured waveforms from the frequency recovery hardware.}
+	\label{F_p}
+\end{figure}
+
+\textcolor{blue}{\subsubsection*{Case 3: Active Power Distribution}}
+\textcolor{blue}{Fig. \ref{P_p} shows the HIL-measured output current waveforms of the 4 DGs under the proposed control strategy. During the experiment, the output currents remain stable despite the presence of load fluctuations, indicating satisfactory steady-state performance and robustness of the microgrid system.
+}
+
+\begin{figure}[htb]
+	\centering
+	\includegraphics[width=0.8\linewidth]{P_p.eps}
+	\caption{\textcolor{blue}Measured active power waveform.}
+	\label{P_p}
+\end{figure}
+
+\textcolor{blue}{
+As observed from Fig. \ref{P_p}, the steady-state output currents of DG1–DG4 are approximately 1.621 A, 1.279 A, 1.214 A, and 1.0 A, respectively. Since all DG units are connected to the same bus and operate under identical voltage conditions, the active power sharing relationship can be directly reflected by the output current amplitudes. Accordingly, the corresponding power sharing ratio is approximately 1.62:1.28:1.21:1.00, which exhibits a certain deviation from the target ratio of 1:1.2:1.3:1.4. The experimental results demonstrate that the proposed prescribed-time secondary control strategy can effectively achieve the desired active power allocation among DG units while maintaining stable system operation under real-time conditions.
+} 
+
+% \begin{figure}[htb]
+% 	\centering
+% 	\includegraphics[width=0.8\linewidth]{P_s.eps}
+% 	\caption{Simulink simulation curve of the active power}
+% 	\label{P_s}
+% \end{figure}
+
+
+\textcolor{blue}{In summary, the HIL test results described above fully validate the feasibility and effectiveness of the proposed prescribed-time secondary control strategy on an actual hardware platform. In practice, this control strategy is capable of restoring the microgrid's voltage and frequency to their rated values within the prescribed time, maintaining them within the rated error limits, while ensuring precise active power distribution.}
+
+%==================================================
+\section{Conclusion}
+The problem of voltage and frequency restoration in islanded MG systems is considered in this paper. A distributed prescribed-time secondary control scheme is proposed to solve this problem. Compared with traditional convergence methods, the characteristic of prescribed-time significantly improves the stability of the system. 
+Meanwhile, it continues to adopt the well-established distributed processing mechanism. To separately design and analyze the prescribed-time secondary control for voltage and frequency, we apply the distributed prescribed-time method to design the voltage control strategy, which enables the voltage to be adjusted within the prescribed time. The frequency recovery problem is addressed through a consensus-based prescribed-time control strategy while maintaining the accuracy of active power distribution. The sufficient local stability conditions of the proposed control strategy are given. HIL test results show that, in the case of random load fluctuations, the proposed control strategy can maintain good accuracy of active power distribution while restoring the voltage and frequency of the entire system within the error range set within the prescribed time of the system.
+
+
+
+%======================================================
+
+
+% \section{Additional features of the \texttt{interact} class file}
+
+% \subsection{Title, authors' names and affiliations, abstracts and article types}
+
+% The title should be generated at the beginning of your article using the \verb"\maketitle" command.
+% In the final version the author name(s) and affiliation(s) must be followed immediately by \verb"\maketitle" as shown below in order for them to be displayed in your PDF document.
+% To prepare an anonymous version for double-blind peer review, you can put the \verb"\maketitle" between the \verb"\title" and the \verb"\author" in order to hide the author name(s) and affiliation(s) temporarily.
+% Next you should include the abstract if your article has one, enclosed within an \texttt{abstract} environment.
+% The \verb"\articletype" command is also provided as an \emph{optional} element which should \emph{only} be included if your article actually needs it.
+% For example, the titles for this document begin as follows:
+% \begin{verbatim}
+% \articletype{ARTICLE TEMPLATE}
+
+% \title{Taylor \& Francis \LaTeX\ template for authors (\textsf{Interact}
+% layout + American Psychological Association reference style)}
+
+% \author{
+% \name{A.~N. Author\textsuperscript{a}\thanks{CONTACT A.~N. Author.
+% Email: latex.helpdesk@tandf.co.uk} and John Smith\textsuperscript{b}}
+% \affil{\textsuperscript{a}Taylor \& Francis, 4 Park Square, Milton
+% Park, Abingdon, UK; \textsuperscript{b}Institut f\"{u}r Informatik,
+% Albert-Ludwigs-Universit\"{a}t, Freiburg, Germany} }
+
+% \maketitle
+
+% \begin{abstract}
+% This template is for authors who are preparing a manuscript for a
+% Taylor \& Francis journal using the \LaTeX\ document preparation system
+% and the \texttt{interact} class file, which is available via selected
+% journals' home pages on the Taylor \& Francis website.
+% \end{abstract}
+% \end{verbatim}
+
+% An additional abstract in another language (preceded by a translation of the article title) may be included within the \verb"abstract" environment if required.
+
+% A graphical abstract may also be included if required. Within the \verb"abstract" environment you can include the code
+% \begin{verbatim}
+% \\\resizebox{25pc}{!}{\includegraphics{abstract.eps}}
+% \end{verbatim}
+% where the graphical abstract is to appear, where \verb"abstract.eps" is the name of the file containing the graphic (note that \verb"25pc" is the recommended maximum width, expressed in pica, for the graphical abstract in your manuscript).
+
+
+% \subsection{Abbreviations}
+
+% A list of abbreviations may be included if required, enclosed within an \texttt{abbreviations} environment, i.e.\ \verb"\begin{abbreviations}"\ldots\verb"\end{abbreviations}", immediately following the \verb"abstract" environment.
+
+
+% \subsection{Keywords}
+
+% A list of keywords may be included if required, enclosed within a \texttt{keywords} environment, i.e.\ \verb"\begin{keywords}"\ldots\verb"\end{keywords}". Additional keywords in other languages (preceded by a translation of the word `keywords') may also be included within the \verb"keywords" environment if required.
+
+
+% \subsection{Subject classification codes}
+
+% AMS, JEL or PACS classification codes may be included if required. The \texttt{interact} class file provides an \texttt{amscode} environment, i.e.\ \verb"\begin{amscode}"\ldots\verb"\end{amscode}", a \texttt{jelcode} environment, i.e.\ \verb"\begin{jelcode}"\ldots\verb"\end{jelcode}", and a \texttt{pacscode} environment, i.e.\ \verb"\begin{pacscode}"\ldots\verb"\end{pacscode}" to assist with this.
+
+
+% \subsection{Additional footnotes to the title or authors' names}
+
+% The \verb"\thanks" command may be used to create additional footnotes to the title or authors' names if required. Footnote symbols for this purpose should be used in the order
+% $^\ast$~(coded as \verb"$^\ast$"), $\dagger$~(\verb"$\dagger$"), $\ddagger$~(\verb"$\ddagger$"), $\S$~(\verb"$\S$"), $\P$~(\verb"$\P$"), $\|$~(\verb"$\|$"),
+% $\dagger\dagger$~(\verb"$\dagger\dagger$"), $\ddagger\ddagger$~(\verb"$\ddagger\ddagger$"), $\S\S$~(\verb"$\S\S$"), $\P\P$~(\verb"$\P\P$").
+
+% Note that any \verb"footnote"s to the main text will automatically be assigned the superscript symbols 1, 2, 3, etc. by the class file.\footnote{If preferred, the \texttt{endnotes} package may be used to set the notes at the end of your text, before the bibliography. The symbols will be changed to match the style of the journal if necessary by the typesetter.}
+
+
+% \section{Some guidelines for using the standard features of \LaTeX}
+
+% \subsection{Sections}
+
+% The \textsf{Interact} layout style allows for five levels of section heading, all of which are provided in the \texttt{interact} class file using the standard \LaTeX\ commands \verb"\section", \verb"\subsection", \verb"\subsubsection", \verb"\paragraph" and \verb"\subparagraph". Numbering will be automatically generated for all these headings by default.
+
+
+% \subsection{Lists}
+
+% Numbered lists are produced using the \texttt{enumerate} environment, which will number each list item with arabic numerals by default. For example,
+% \begin{enumerate}
+%   \item first item
+%   \item second item
+%   \item third item
+% \end{enumerate}
+% was produced by
+% \begin{verbatim}
+% \begin{enumerate}
+%   \item first item
+%   \item second item
+%   \item third item
+% \end{enumerate}
+% \end{verbatim}
+% Alternative numbering styles can be achieved by inserting an optional argument in square brackets to each \verb"item", e.g.\ \verb"\item[(i)] first item"\, to create a list numbered with roman numerals at level one.
+
+% Bulleted lists are produced using the \texttt{itemize} environment. For example,
+% \begin{itemize}
+%   \item First bulleted item
+%   \item Second bulleted item
+%   \item Third bulleted item
+% \end{itemize}
+% was produced by
+% \begin{verbatim}
+% \begin{itemize}
+%   \item First bulleted item
+%   \item Second bulleted item
+%   \item Third bulleted item
+% \end{itemize}
+% \end{verbatim}
+
+
+% \subsection{Figures}
+
+% The \texttt{interact} class file will deal with positioning your figures in the same way as standard \LaTeX. It should not normally be necessary to use the optional \texttt{[htb]} location specifiers of the \texttt{figure} environment in your manuscript; you may, however, find the \verb"[p]" placement option or the \verb"endfloat" package useful if a journal insists on the need to separate figures from the text.
+
+% Figure captions appear below the figures themselves, therefore the \verb"\caption" command should appear after the body of the figure. For example, Figure~\ref{sample-figure} with caption and sub-captions is produced using the following commands:
+% \begin{verbatim}
+% \begin{figure}
+% \centering
+% \subfloat[An example of an individual figure sub-caption.]{%
+% \resizebox*{5cm}{!}{\includegraphics{graph1.eps}}}\hspace{5pt}
+% \subfloat[A slightly shorter sub-caption.]{%
+% \resizebox*{5cm}{!}{\includegraphics{graph2.eps}}}
+% \caption{Example of a two-part figure with individual sub-captions
+%  showing that captions are flush left and justified if greater
+%  than one line of text.} \label{sample-figure}
+% \end{figure}
+% \end{verbatim}
+% \begin{figure}
+% \centering
+% \subfloat[An example of an individual figure sub-caption.]{%
+% \resizebox*{5cm}{!}{\includegraphics{graph1.eps}}}\hspace{5pt}
+% \subfloat[A slightly shorter sub-caption.]{%
+% \resizebox*{5cm}{!}{\includegraphics{graph2.eps}}}
+% \caption{Example of a two-part figure with individual sub-captions
+%  showing that captions are flush left and justified if greater
+%  than one line of text.} \label{sample-figure}
+% \end{figure}
+
+% To ensure that figures are correctly numbered automatically, the \verb"\label" command should be included just after the \verb"\caption" command, or in its argument.
+
+% The \verb"\subfloat" command requires \verb"subfig.sty", which is called in the preamble of the \texttt{interactapasample.tex} file (to allow your choice of an alternative package if preferred) and included in the \textsf{Interact} \LaTeX\ bundle for convenience. Please supply any additional figure macros used with your article in the preamble of your .tex file.
+
+% The source files of any figures will be required when the final, revised version of a manuscript is submitted. Authors should ensure that these are suitable (in terms of lettering size, etc.) for the reductions they envisage.
+
+% The \texttt{epstopdf} package can be used to incorporate encapsulated PostScript (.eps) illustrations when using PDF\LaTeX, etc. Please provide the original .eps source files rather than the generated PDF images of those illustrations for production purposes.
+
+
+% \subsection{Tables}
+
+% The \texttt{interact} class file will deal with positioning your tables in the same way as standard \LaTeX. It should not normally be necessary to use the optional \texttt{[htb]} location specifiers of the \texttt{table} environment in your manuscript; you may, however, find the \verb"[p]" placement option or the \verb"endfloat" package useful if a journal insists on the need to separate tables from the text.
+
+% The \texttt{tabular} environment can be used as shown to create tables with single horizontal rules at the head, foot and elsewhere as appropriate. The captions appear above the tables in the \textsf{Interact} style, therefore the \verb"\tbl" command should be used before the body of the table. For example, Table~\ref{sample-table} is produced using the following commands:
+% \begin{table}
+% \tbl{Example of a table showing that its caption is as wide as
+%  the table itself and justified.}
+% {\begin{tabular}{lcccccc} \toprule
+%  & \multicolumn{2}{l}{Type} \\ \cmidrule{2-7}
+%  Class & One & Two & Three & Four & Five & Six \\ \midrule
+%  Alpha\textsuperscript{a} & A1 & A2 & A3 & A4 & A5 & A6 \\
+%  Beta & B2 & B2 & B3 & B4 & B5 & B6 \\
+%  Gamma & C2 & C2 & C3 & C4 & C5 & C6 \\ \bottomrule
+% \end{tabular}}
+% \tabnote{\textsuperscript{a}This footnote shows how to include
+%  footnotes to a table if required.}
+% \label{sample-table}
+% \end{table}
+% \begin{verbatim}
+% \begin{table}
+% \tbl{Example of a table showing that its caption is as wide as
+%  the table itself and justified.}
+% {\begin{tabular}{lcccccc} \toprule
+%  & \multicolumn{2}{l}{Type} \\ \cmidrule{2-7}
+%  Class & One & Two & Three & Four & Five & Six \\ \midrule
+%  Alpha\textsuperscript{a} & A1 & A2 & A3 & A4 & A5 & A6 \\
+%  Beta & B2 & B2 & B3 & B4 & B5 & B6 \\
+%  Gamma & C2 & C2 & C3 & C4 & C5 & C6 \\ \bottomrule
+% \end{tabular}}
+% \tabnote{\textsuperscript{a}This footnote shows how to include
+%  footnotes to a table if required.}
+% \label{sample-table}
+% \end{table}
+% \end{verbatim}
+
+% To ensure that tables are correctly numbered automatically, the \verb"\label" command should be included just before \verb"\end{table}".
+
+% The \verb"\toprule", \verb"\midrule", \verb"\bottomrule" and \verb"\cmidrule" commands are those used by \verb"booktabs.sty", which is called by the \texttt{interact} class file and included in the \textsf{Interact} \LaTeX\ bundle for convenience. Tables produced using the standard commands of the \texttt{tabular} environment are also compatible with the \texttt{interact} class file.
+
+
+% \subsection{Landscape pages}
+
+% If a figure or table is too wide to fit the page it will need to be rotated, along with its caption, through 90$^{\circ}$ anticlockwise. Landscape figures and tables can be produced using the \verb"rotating" package, which is called by the \texttt{interact} class file. The following commands (for example) can be used to produce such pages.
+% \begin{verbatim}
+% \setcounter{figure}{1}
+% \begin{sidewaysfigure}
+% \centerline{\epsfbox{figname.eps}}
+% \caption{Example landscape figure caption.}
+% \label{landfig}
+% \end{sidewaysfigure}
+% \end{verbatim}
+% \begin{verbatim}
+% \setcounter{table}{1}
+% \begin{sidewaystable}
+%  \tbl{Example landscape table caption.}
+%   {\begin{tabular}{@{}llllcll}
+%     .
+%     .
+%     .
+%   \end{tabular}}\label{landtab}
+% \end{sidewaystable}
+% \end{verbatim}
+% Before any such float environment, use the \verb"\setcounter" command as above to fix the numbering of the caption (the value of the counter being the number given to the preceding figure or table). Subsequent captions will then be automatically renumbered accordingly. The \verb"\epsfbox" command requires \verb"epsfig.sty", which is called by the \texttt{interact} class file and is also included in the \textsf{Interact} \LaTeX\ bundle for convenience.
+
+% Note that if the \verb"endfloat" package is used, one or both of the commands
+% \begin{verbatim}
+% \DeclareDelayedFloatFlavor{sidewaysfigure}{figure}
+% \DeclareDelayedFloatFlavor{sidewaystable}{table}
+% \end{verbatim}
+% will need to be included in the preamble of your .tex file, after the \verb"endfloat" package is loaded, in order to process any landscape figures and/or tables correctly.
+
+
+% \subsection{Theorem-like structures}
+
+% A predefined \verb"proof" environment is provided by the \texttt{amsthm} package (which is called by the \texttt{interact} class file), as follows:
+% \begin{proof}
+% More recent algorithms for solving the semidefinite programming relaxation are particularly efficient, because they explore the structure of the MAX-CUT problem.
+% \end{proof}
+% \noindent This was produced by simply typing:
+% \begin{verbatim}
+% \begin{proof}
+% More recent algorithms for solving the semidefinite programming
+% relaxation are particularly efficient, because they explore the
+% structure of the MAX-CUT problem.
+% \end{proof}
+% \end{verbatim}
+% Other theorem-like environments (theorem, definition, remark, etc.) need to be defined as required, e.g.\ using \verb"\newtheorem{theorem}{Theorem}" in the preamble of your .tex file (see the preamble of \verb"interactapasample.tex" for more examples). You can define the numbering scheme for these structures however suits your article best. Please note that the format of the text in these environments may be changed if necessary to match the style of individual journals by the typesetter during preparation of the proofs.
+
+
+% \subsection{Mathematics}
+
+% \subsubsection{Displayed mathematics}
+
+% The \texttt{interact} class file will set displayed mathematical formulas centred on the page without equation numbers if you use the \texttt{displaymath} environment or the equivalent \verb"\[...\]" construction. For example, the equation
+% \[
+%  \hat{\theta}_{w_i} = \hat{\theta}(s(t,\mathcal{U}_{w_i}))
+% \]
+% was typeset using the commands
+% \begin{verbatim}
+% \[
+%  \hat{\theta}_{w_i} = \hat{\theta}(s(t,\mathcal{U}_{w_i}))
+% \]
+% \end{verbatim}
+
+% For those of your equations that you wish to be automatically numbered sequentially throughout the text for future reference, use the \texttt{equation} environment, e.g.
+% \begin{equation}
+%  \hat{\theta}_{w_i} = \hat{\theta}(s(t,\mathcal{U}_{w_i}))
+% \end{equation}
+% was typeset using the commands
+% \begin{verbatim}
+% \begin{equation}
+%  \hat{\theta}_{w_i} = \hat{\theta}(s(t,\mathcal{U}_{w_i}))
+% \end{equation}
+% \end{verbatim}
+
+% Part numbers for sets of equations may be generated using the \texttt{subequations} environment, e.g.
+% \begin{subequations} \label{subeqnexample}
+% \begin{equation}
+%      \varepsilon \rho w_{tt}(s,t) = N[w_{s}(s,t),w_{st}(s,t)]_{s},
+%      \label{subeqnparta}
+% \end{equation}
+% \begin{equation}
+%      w_{tt}(1,t)+N[w_{s}(1,t),w_{st}(1,t)] = 0,   \label{subeqnpartb}
+% \end{equation}
+% \end{subequations}
+% which was typeset using the commands
+% \begin{verbatim}
+% \begin{subequations} \label{subeqnexample}
+% \begin{equation}
+%      \varepsilon \rho w_{tt}(s,t) = N[w_{s}(s,t),w_{st}(s,t)]_{s},
+%      \label{subeqnparta}
+% \end{equation}
+% \begin{equation}
+%      w_{tt}(1,t)+N[w_{s}(1,t),w_{st}(1,t)] = 0,   \label{subeqnpartb}
+% \end{equation}
+% \end{subequations}
+% \end{verbatim}
+% This is made possible by the \texttt{amsmath} package, which is called by the class file. If you put a \verb"\label" just after the \verb"\begin{subequations}" command, references can be made to the collection of equations, i.e.\ `(\ref{subeqnexample})' in the example above. Or, as the example also shows, you can label and refer to each equation individually -- i.e.\ `(\ref{subeqnparta})' and `(\ref{subeqnpartb})'.
+
+% Displayed mathematics should be given end-of-line punctuation appropriate to the running text sentence of which it forms a part, if required.
+
+% \subsubsection{Math fonts}
+
+% \paragraph{Superscripts and subscripts}
+% Superscripts and subscripts will automatically come out in the correct size in a math environment (i.e.\ enclosed within \verb"\(...\)" or \verb"$...$" commands in running text, or within \verb"\[...\]" or the \texttt{equation} environment for displayed equations). Sub/superscripts that are physical variables should be italic, whereas those that are labels should be roman (e.g.\ $C_p$, $T_\mathrm{eff}$). If the subscripts or superscripts need to be other than italic, they must be coded individually.
+
+% \paragraph{Upright Greek characters and the upright partial derivative sign}
+% Upright lowercase Greek characters can be obtained by inserting the letter `u' in the control code for the character, e.g.\ \verb"\umu" and \verb"\upi" produce $\umu$ (used, for example, in the symbol for the unit microns -- $\umu\mathrm{m}$) and $\upi$ (the ratio of the circumference of a circle to its diameter). Similarly, the control code for the upright partial derivative $\upartial$ is \verb"\upartial". Bold lowercase as well as uppercase Greek characters can be obtained by \verb"{\bm \gamma}", for example, which gives ${\bm \gamma}$, and \verb"{\bm \Gamma}", which gives ${\bm \Gamma}$.
+
+
+%\section*{Acknowledgement(s)}
+%The authors sincerely express their gratitude to Nanjing University of Posts  and Telecommunications for providing a favorable research environment and learning platform. The authors also express their heartfelt gratitude to Professor Yang Yang for his discussion and analysis of the paper content, and for his significant assistance.
+%During the research process, Senior Liu Qidong  provided a lot of sharing about research experience, helping the authors overcome many difficulties. In the meantime, the authors sincerely express gratitude to all the team members for their close collaboration and mutual support during the process of literature review, theoretical analysis, and article writing, which ensured the smooth progress of the research.
+
+
+\section*{Disclosure statement}
+No competing interests were reported by the author(s).
+
+
+\section*{Funding}
+This work was supported by NSFC 62473204.   
+
+
+\section*{Notes on contributor(s)}
+
+The data that underpin the findings of this research are obtainable from the corresponding author upon reasonable request.
+
+
+% \section*{Nomenclature/Notation}
+
+% An unnumbered section, e.g.\ \verb"\section*{Nomenclature}" (or \verb"\section*{Notation}"), may be included if required, before any Notes or References.
+
+
+% \section*{Notes}
+
+% An unnumbered `Notes' section may be included before the References (if using the \verb"endnotes" package, use the command \verb"\theendnotes" where the notes are to appear, instead of creating a \verb"\section*").
+
+
+% \section{References}
+
+% \subsection{References cited in the text}
+
+% References should be cited in accordance with \citepauthor{APA10} (APA) style, i.e.\ in alphabetical order separated by semicolons, e.g.\ `\citep{Ban77,Pia88,VL07}' or `\ldots see Smith (1985, p.~75)'. If there are two or more authors with the same surname, use the first author's initials with the surnames, e.g.\ `\citep{Lig08,Lig06}'. If there are three to five authors, list all the authors in the first citation, e.g.\ `\citep{GSSM91}'. In subsequent citations, use only the first author's surname followed by et al., e.g.\ `\citep{GSSM91}'. For six or more authors, cite the first author's name followed by et al. For two or more sources by the same author(s) in the same year, use lower-case letters (a,~b,~c, \ldots) with the year to order the entries in the reference list and use these lower-case letters with the year in the in-text citations, e.g.\ `(Green, 1981a,b)'. For further details on this reference style, see the Instructions for Authors on the Taylor \& Francis website.
+
+% Each bibliographic entry has a key, which is assigned by the author and is used to refer to that entry in the text. In this document, the key \verb"Nas93" in the citation form \verb"\citep{Nas93}" produces `\citep{Nas93}', and the keys \verb"Koc59", \verb"Han04" and \verb"Cla08" in the citation form \verb"\citep{Koc59,Han04,Cla08}" produce `\citep{Koc59,Han04,Cla08}'. The citation \verb"\citep{Cha08}" produces `\citep{Cha08}' where the citation first appears in the text, and `\citep{Cha08}' in any subsequent citation. The appropriate citation style for different situations can be obtained, for example, by \verb"\citet{Ovi95}" for `\citet{Ovi95}', \verb"\citealp{MPW08}" for `\citealp{MPW08}', and \verb"\citealt{Sch93}" for `\citealt{Sch93}'. Citation of the year alone may be produced by \verb"\citeyear{Sch00}", i.e.\ `\citeyear{Sch00}', or \verb"\citeyearpar{Gra05}", i.e.\ `\citeyearpar{Gra05}', or of the author(s) alone by \verb"\citeauthor{Rit74}", i.e.\ `\citeauthor{Rit74}'. Optional notes may be included at the beginning and/or end of a citation by the use of square brackets, e.g.\ \verb"\citep[p.~31]{Hay08}" produces `\citep[p.~31]{Hay08}'; \verb"\citep[see][pp.~73-–77]{PI51}" produces `\citep[see][pp.~73--77]{PI51}'; \verb"\citep[e.g.][]{Fel81}" produces `\citep[e.g.][]{Fel81}'. A `plain' \verb"\cite" command will produce the same results as a \verb"\citet", i.e.\ \verb"\cite{BriIP}" will produce `\cite{BriIP}'.
+
+
+%\subsection{The list of references}
+
+% References should be listed at the end of the main text in alphabetical order, then chronologically (earliest first), with full page ranges (where appropriate) and issue numbers (essential for journals paginated by issue). If a reference has more than seven named authors, list the first six names, followed by an ellipsis (\ldots), then the last author's name \citep[see for example][]{Gil04}.
+% The following list shows some sample references prepared in the Taylor \& Francis APA style.
+
+\begin{thebibliography}{99}
+
+\bibitem[Thorat et al., 2024]{Thorat2024}
+R. R. Thorat, M. Kumar, S. Das, and D. Magare. (2024). Review on control techniques for power management in smart direct current microgrid. \emph{Journal of Control and Decision}, 1–20.
+
+\bibitem[Guoping et al., 2024]{Guoping2024}
+S. Guoping, Q. Yece, W. Longsheng, L. Yujuan, and Z. Yufeng. (2024). Dispatching isolated off-grid microgrids considering uncertainty: a prediction-decision integrated approach. \emph{Journal of Control and Decision}, 1–17.
+
+\bibitem[Rosini et al., 2024]{Rosini2024}
+A. Rosini, M. Petronijević, F. Filipović, A. Bonfiglio, and R. Procopio. (2024). Frequency and voltage communication-less control for islanded AC microgrids: Experimental validation via rapid control prototyping. \emph{International Journal of Electrical Power and Energy Systems}, 162, 110313.
+
+\bibitem[Lv et al., 2026]{Lv2026}
+C. Lv, J. Zhao, Y. Lv, and Y. Luo. (2026). Data-based optimal microgrid energy management with a discrete iterative reinforcement learning. \emph{Journal of Control and Decision}, 1–11.
+
+\bibitem[Chai et al., 2026]{Chai2026}
+L. Chai, B. Liu, F. Xie, and J. Yi. (2026). Recent advances on privacy-preserving distributed optimisation algorithms and their applications in smart grids. \emph{Journal of Control and Decision}, 1–16.
+
+\bibitem[Wang et al., 2024]{Wang2024}
+E. Wang, L. Yuan, F. Zeng, X. Liu, J. Liu, L. Sun, and M. Zhuang. (2024). Load frequency optimal control of the hydropower-photovoltaic hybrid microgrid system based on the off-policy integral reinforcement learning algorithm. \emph{Frontiers in Energy Research}, 12, 1464722.
+
+\bibitem[Zhong et al., 2024]{Zhong2024}
+C. Zhong, H. Zhao, Y. Liu, and C. Liu. (2024). Learning-based model predictive secondary frequency control of PV-ESS-EV microgrid. \emph{International Journal of Electrical Power and Energy Systems}, 159, 110020.
+
+\bibitem[Jabbar et al., 2024]{Jabbar2024}
+M. A. M. Jabbar, D. T. Tran, and K. H. Kim. (2024). Distributed secondary control of DC microgrid with power management based on time-of-use pricing and internal price rate. \emph{Sustainability}, 16(19), 8705.
+
+\bibitem[Muhammad \& Alsenani, 2023]{Muhammad2023}
+A. Muhammad, and T. R. Alsenani. (2023). Distributed consensus control for voltage tracking and current distribution in DC microgrid. \emph{Ain Shams Engineering Journal}, 14(12), 102363.
+
+\bibitem[Nada et al., 2023]{Nada2023}
+M. Nada, A. R. Omar, T. F. Megahed, W. Rohouma, T. Asano, and S. M. Abdelkader. (2023). An enhanced consensus-based distributed secondary control for voltage regulation and proper current sharing in a DC islanded microgrid. \emph{Frontiers in Energy Research}, 11, 1277198.
+
+\bibitem[Gabriel et al., 2023]{Gabriel2023}
+M. C. Gabriel, E. B. Fábio, F. D. C. Robinson, G. Eric, and W. Martin. (2023). DC voltage ancillary controller for dynamic security of shunt-compensated microgrids. \emph{Automatisierungstechnik}, 71(12), 1040–1050.
+
+\bibitem[Kinga et al., 2024]{Kinga2024}
+S. Kinga, T. F. Megahed, H. Kanaya, and D. E. A. Mansour. (2024). A new voltage sensitivity-based distributed feedback online optimization for voltage control in active distribution networks. \emph{Computers and Electrical Engineering}, 119(PA), 109574.
+
+\bibitem[Yu et al., 2024]{Yu2024}
+W. Yu, Z. Tang, and W. Xiong. (2024). Distributed robust data-enabled predictive control based voltage control for networked microgrid system. \emph{Electric Power Systems Research}, 231, 10360.
+
+\bibitem[Shan et al., 2024]{Rongrong2024}
+R. Shan, Z. Ma, and H. Lu. (2024). A voltage control method for distribution networks based on TCN and MPGA under cloud edge collaborative architecture. \emph{Measurement and Sensors}, 31, 100969.
+
+\bibitem[Louassaa et al., 2025]{Louassaa2025}
+K. Louassaa, J. M. Guerrero, M. Boukerdja, A. Chouder, B. Khan, A. Cherifi, and M. Z. Yousaf. (2025). A novel hierarchical control strategy for enhancing stability of a DC microgrid feeding a constant power load. \emph{Scientific Reports}, 15(1), 7061.
+
+\bibitem[Abdurraqeeb et al., 2024]{Abdurraqeeb2024}
+A. M. Abdurraqeeb, A. A. Al Shamma'a, A. Alkuhayli, M. Alharbi, and H. M. H. Farh. (2024). Stabilization of constant power loads and dynamic current sharing in DC microgrid using robust control technique. \emph{Electric Power Systems Research}, 230, 110258.
+
+\bibitem[Rueda et al., 2024]{Rueda2024}
+M. M. Rueda, J. E. C. Becerra, and F. E. Hoyos. (2024). Second-Order Sliding-Mode Control Applied to Microgrids: DC \& AC Buck Converters Powering Constant Power Loads. \emph{Energies}, 17(11), 2701.
+
+\bibitem[Chang et al., 2024a]{Chang2024}
+ S. Chang, C. Wang, X. Luo, and X. Guan. (2024). Distributed predefined-time secondary control under directed networks for DC microgrids. \emph{Applied Energy}, 374, 123993.
+
+\bibitem[Hou et al., 2025]{Hou2025}
+R. Hou, J. Liu, W. Chen, and J. Liu. (2025). Enhancing stability of wind power generation in microgrids via integrated adaptive filtering and power allocation strategies within hybrid energy storage systems. \emph{Journal of Energy Storage}, 111, 115392.
+
+\bibitem[Marin et al., 2025]{Marin2025}
+S. A. R. Marin, A. G. Ruiz, A. F. C. Borray, A. P. Basante, and J. E. R. Seco. (2025). Model-predictive control with admittance matrix estimation for the optimal power sharing in isolated DC microgrids. \emph{Electric Power Systems Research}, 241, 111380.
+
+\bibitem[Lakshmi \& Premalatha, 2025]{Lakshmi2025}
+P. P. Lakshmi, and L. Premalatha. (2025). Optimal power distribution in DC/AC microgrids with electric vehicles using flow direction algorithm tuned CNN. \emph{Energy Reports}, 13, 196–216.
+
+\bibitem[Ali et al., 2024]{Ali2024}
+M. Ali, G. Rasoul, B. Feifei, J. M. Guerrero, M. Mirsaeed, and L. Junwei. (2024). Adaptive power-sharing strategy in hybrid AC/DC microgrid for enhancing voltage and frequency regulation. \emph{International Journal of Electrical Power and Energy Systems}, 156, 109696.
+
+\bibitem[Ahmadi et al., 2023]{Ahmadi2023}
+F. Ahmadi, Y. Batmani, and H. Bevrani. (2023). On design of power sharing for VSC-based islanded AC microgrids: An adaptive MIMO controller equipped with a predictor. \emph{IET Generation, Transmission \& Distribution}, 17(18), 4161–4171.
+
+\bibitem[Liu et al., 2023]{Xiaokang2023}
+X. K. Liu, Y. W. Wang, Z. W. Liu, and Y. Huang. (2023). On the stability of distributed secondary control for DC microgrids with grid-forming and grid-feeding converters. \emph{Automatica}, 155, 111143.
+
+\bibitem[Xing et al., 2020]{Lantao2019}
+L. Xing, Y. Mishra, F. Guo, P. Lin, Y. Yang, G. Ledwich, and Y. C. Tian. (2020). Distributed secondary control for current sharing and voltage restoration in DC microgrid. \emph{IEEE Transactions on Smart Grid}, 11(3), 2487–2497.
+
+\bibitem[Li et al., 2025a]{Li2025}
+X. Li, T. Ma, Z. Zhang, D. Zhang, Y. Xu, and K. Wang. (2025). A black start recovery strategy for a PV-based energy storage microgrid, considering the state of charge of energy storage. \emph{Electronics}, 14(9), 1696.
+
+\bibitem[Akhijahani \& Purry, 2023]{Akhijahani2023}
+A. H. Akhijahani, and K. L. B. Purry. (2023). A review on black-start service restoration of active distribution systems and microgrids. \emph{Energies}, 17(1), 100.
+
+\bibitem[Han et al., 2023]{Fei2023}
+F. Han, X. Lao, H. Dong, E. Yang, and Y. Zhang. (2023). Distributed fixed-time secondary control for islanded microgrids: Tackling abnormal data. \emph{Journal of the Franklin Institute}, 360(7), 4830–4851.
+
+\bibitem[Cheng et al., 2023]{Zhiping2023}
+Z. Cheng, J. Liu, Z. Li, J. Si, and S. Xu. (2023). Distributed fixed-time secondary control for voltage restoration and economic dispatch of DC microgrids. \emph{Sustainable Energy Grids and Networks}, 34, 101042.
+
+\bibitem[Feng \& Liu, 2023]{Wei2023}
+Y. W. Feng, and J. L. Liu. (2023). Distributed fixed time control for DC microgrid with input delay. \emph{International Transactions on Electrical Energy Systems}, 2023, 8837110.
+
+\bibitem[Li et al., 2025b]{Li2025_A}
+W. Li, Z. Xu, M. Chen, and Q. Wu. (2025). Distributed cooperative control for DC microgrids: A prescribed-time consensus method. \emph{Energy Reports}, 14, 792–802. 
+
+\bibitem[Wang et al., 2020]{Panbao2020}
+P. Wang, R. Huang, M. Zaery, W. Wang, and D. Xu. (2020). A fully distributed fixed-time secondary controller for DC microgrids. \emph{IEEE Transactions on Industry Applications}, 56(6), 6586–6597.
+
+\bibitem[Qian et al., 2025]{Qian2025}
+Y. Qian, Z. Lin, and Y. A. Shamash. (2025). Distributed secondary control of energy storage units in a droop-controlled DC microgrid. \emph{Results in Engineering}, 28, 107036.
+
+\bibitem[Adiche et al., 2024]{Adiche2024}
+S. Adiche, M. Larbi, D. Toumi, R. Bouddou, M. Bajaj, N. Bouchikhi, A. Belabbes, and I. Zaitsev. (2024). Advanced control strategy for AC microgrids: A hybrid ANN-based adaptive PI controller with droop control and virtual impedance technique. \emph{Scientific Reports}, 14(1), 31057.
+
+\bibitem[Xu et al., 2024]{Xu2024}
+H. Xu, D. Yu, S. Sui, B. Xu, and C. L. P. Chen. (2024). A practical predefined-time stability criterion and its application to uncertain nonlinear systems. \emph{Journal of Systems Science and Complexity}, 37(6), 2556–2578.
+
+\bibitem[Wei et al., 2024]{Wei2024}
+Y. Wei, M. Gao, L. Sheng, Y. Ma, and Z. Chen. (2024). Adaptive control of constrained nonlinear systems with intermittent faults: A fixed-time fault-tolerant framework based on projection operator. \emph{International Journal of Adaptive Control and Signal Processing}, 39(2), 292–307.
+
+\bibitem[Lin et al., 2025]{Lin2025}
+X. Lin, J. Li, Y. Song, C. Liu, and T. Yang. (2025). Improved fast non-singular adaptive super-twisting sliding mode control based on radial basis function neural network approximation for robot joint module. \emph{ISA Transactions}, 64.
+
+\bibitem[Mostajeran \& Hosseini, 2023]{Fm2023}
+F. Mostajeran, and S. M. Hosseini. (2023). Radial basis function neural network (RBFNN) approximation of Cauchy inverse problems of the Laplace equation. \emph{Computers and Mathematics with Applications}, 141, 129–144.
+
+\bibitem[Ismayilova \& Ismayilov, 2023]{Aysu2023}
+A. Ismayilova, and M. Ismayilov. (2023). On the universal approximation property of radial basis function neural networks. \emph{Annals of Mathematics and Artificial Intelligence}, 92(3), 691–701.
+
+\bibitem[Shanthi \& Sathiyapriya, 2022]{Ssa2022}
+A. S. Shanthi, and G. Sathiyapriya. (2022). Universal approximation theorem for a radial basis function fuzzy neural network. \emph{Materials Today: Proceedings}, 51(P8), 2355–2358.
+
+\bibitem[Ghazzali et al., 2020]{Mohamed2020}
+M. Ghazzali, M. Haloua, and F. Giri. (2020). Fixed-time observer-based distributed secondary voltage and frequency control of islanded AC microgrids. \emph{International Journal of Electrical and Computer Engineering (IJECE)}, 10(5), 4522–4533.
+
+\bibitem[Harasis, 2024]{Salman2024}
+S. Harasis. (2024). Controllable transient power sharing of inverter-based droop controlled microgrid. \emph{International Journal of Electrical Power and Energy Systems}, 155(PB).
+
+\bibitem[Reddy et al., 2025]{Kr2025}
+K. J. Reddy, G. Veeresh, L. Kansal, S. Sharma, T. Al Rubaye, and V. Arun. (2025). Optimizing distributed energy storage deployment in smart grids for enhanced grid performance and energy management. \emph{E3S Web of Conferences}, 616(3108), 13.
+
+\bibitem[Lin et al., 2020]{Bl2020}
+B. Lin, T. Zhang, B. Zhu, and K. Qin. (2020). Distributed trajectory tracking and formation control without velocity measurements by the notion of prior bounded local neighborhood synchronization error. \emph{Measurement and Control}, 53(3–4), 577–588.
+
+\bibitem[Yang \& Li, 2025]{Yl2025}
+J. Yang, and Z. Li. (2025). A predefined-time convergent low-computational-complexity zeroing neural network for equality-constrained time-varying quadratic programming. \emph{Expert Systems with Applications}, 293, 128692.
+
+\bibitem[Li et al., 2025]{Zg2025}
+X. Li, T. Ma, Z. Zhang, D. Zhang, Y. Xu, and K. Wang. (2025). A Lyapunov function-based switched control method for power source. \emph{Journal of Physics: Conference Series}, 2963(1), 012014.
+
+\bibitem[Mohan \& Sasidharan, 2025]{Fs2025}
+F. Mohan, and N. Sasidharan. (2025). Lyapunov function based optimized controller for voltage stabilization of a DC–DC converter in a solar-powered DC nanogrid. \emph{Journal of Power Electronics}, 25(9), 1–12.
+
+\bibitem[Wu \& Cheng, 2023]{Zhongqiang2023}
+Z. Wu, and H. Cheng. (2023). Fixed-time control of distributed secondary voltage and frequency for microgrids considering state-constrained. \emph{Electrical Engineering}, 106(3), 2637–2649.
+
+\bibitem[Meng et al., 2025]{Tm2025}
+T. Meng, X. Abuduwayiti, J. Kang, L. Chen, Y. Zhou, and M. Niyazi. (2025). Stability analysis of photovoltaic storage microgrid systems based on electric energy router. \emph{Journal of Physics: Conference Series}, 3033(1), 012027.
+
+\bibitem[Li et al., 2024a]{Yl2024}
+Y. Li, J. Liu, Y. Liu, S. Yang, and Z. (2024). Du Transient stability analysis of virtual synchronous generator with current saturation by multiple Lyapunov functions method. \emph{IET Generation, Transmission \& Distribution}, 18(5), 1014–1025.
+
+\bibitem[Kang et al., 2025]{Yk2024}
+Y. Kang, X. Li, G. Lu, M. Chen, J. Chang, and S. Li. (2024). Stability analysis of dual-bus DC microgrid with constant power load. \emph{Electric Power Systems Research}, 241, 111354.
+
+\bibitem[Patel \& Shah, 2024]{Hs2024}
+H. Patel, A. Shah. (2024). Lyapunov stability analysis and FIL implementation for boundary-based hybrid controller in boost converter. \emph{Advanced Control for Applications: Engineering and Industrial Systems}, 6(3), e216.
+
+\bibitem[Wen et al., 2023]{WenSoft2023}
+W. Wen, R. Lyu, B. Li, H. Cao, J. Yu, B. Li, and M. Popov. (2023). A soft start-up method for DC micro-grid based on improved two-level VSC with DC fault ride-through capability. \emph{Frontiers in Energy Research}, 11, 1079099.
+
+\bibitem[Sathishkumar et al., 2018]{Sathish2018}
+P. Sathishkumar, T. N. V. Krishna, Himanshu, M. A. Khan, K. Zeb, and H.-J. Kim. (2018). Digital soft start implementation for minimizing start up transients in high power DAB-IBDC converter. \emph{Energies}, 11(4), 956.
+
+\bibitem[Li et al., 2023b]{LiSoft2023}
+C. Li, Y. Yang, W. Li, and H. Li. (2023). A soft-start-based method for active suppression of magnetizing inrush current in transformers. \emph{Electronics}, 12(14), 3114.
+
+\bibitem[Bu et al., 2025]{Bu2025}
+S. Bu, Q. Teng, and H. Li. (2025). Distributed prescribed-time secondary control for islanded microgrids under adaptive dynamic event-triggered mechanism. \emph{Electric Power Systems Research}, 252, 112433.
+
+\bibitem[He et al., 2025]{He2025}
+H. He, Y. Zhou, G. Jiang, and L. Wang. (2025). Distributed practical prescribed-time secondary control of microgrid under event-triggered communication. \emph{Journal of Nonlinear Dynamics and Applications}, 1(1), 36–51.
+
+\bibitem[Huang et al., 2026]{Huang2026}
+X. Huang, Y. Zhang, Y. Chen, D. Qi, and S. Yang. (2026). Attack-resilient and communication-efficient distributed secondary control of distributed energy resources in microgrids: Methods and hardware-in-the-loop validations. \emph{Applied Energy}, 410, 127521.
+
+\bibitem[Li et al., 2026]{Li2026lowbw}
+L. Li, Y. Sun, K. Zhou, X. Hou, and M. Su. (2026). A frequency restoration control scheme of series-parallel-type microgrids with local low bandwidth communication. \emph{Scientific Reports}, 16, 7618.
+
+\end{thebibliography}
+
+\end{document}

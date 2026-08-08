@@ -1,5 +1,5 @@
 # Latest Handoff
 
-Current task: [task-004-joint-exit-continuation.md](task-004-joint-exit-continuation.md)
+Current task: `task-005-theory-boundary-resolution`
 
-Final gate: the Joint Exit-Continuation Lemma is derived conditionally on JECFC; PO-11, PO-16B, and PO-02B remain OPEN pending verification of the compact sublevel/margin condition.
+Final gate: Category B. The frozen theory currently supports only a local-before-exit Theorem 1 boundary; PO-11, PO-16B, and PO-02B remain OPEN.

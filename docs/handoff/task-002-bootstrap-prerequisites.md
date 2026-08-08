@@ -10,20 +10,21 @@
 
 ## PR
 
-To be created from this branch into `main` after push.
+[Create PR into `main`](https://github.com/ErenYeager-LJS/IJSS-Privacy/pull/new/task-002-bootstrap-prerequisites)
 
 ## Changed files
 
 - `Equation Specification & Derivation Stage_0807/derivation_stage_3_bootstrap_0808.md`
 - `Equation Specification & Derivation Stage_0807/proof_obligations_0807.md`
+- `Equation Specification & Derivation Stage_0807/equation_spec_0807.md`
 - `docs/handoff/latest.md`
 - this task handoff
 
-The traceability matrix and equation specification already contain the PO-02A/PO-02B repair from the merged task-001 baseline; no ES formula was changed in this task.
+The traceability matrix already contains the PO-02A/PO-02B repair from the merged task-001 baseline; this task adds only proof-level coordinate and uncertainty-regularity clarification to the equation specification. No ES formula was changed.
 
 ## What changed
 
-PO-16A is proved as local existence/uniqueness of the frozen ES-1--ES-82 vector field on the explicitly defined open domain `D_open`, with a compact non-invariant bootstrap construction `K_0`. The proof checks PPC atanh regularity, quintic deadline regularity, ES-43 switching, and local Lipschitzness of the actual product `g_i z_i`.
+PO-16A is proved as local existence/uniqueness of a reduced Caratheodory ODE on the explicitly defined open domain `D_min` of independent coordinates, with a compact non-invariant bootstrap construction `K_0`. ES-81 is retained as an augmented bookkeeping vector; algebraically dependent entries are reconstructed. The proof checks PPC atanh regularity, quintic deadline regularity, ES-43 switching, and local Lipschitzness of the actual product `g_i z_i`. The uncertainty regularity is stated as measurable and locally essentially bounded, not continuous.
 
 Using PO-16A, PO-03, PO-02A, PO-08, and PO-09 are closed locally on `K_0`. PO-10 has its local algebra and private-weight/epsilon condition recorded but remains `PARTIAL` because the condition is not yet a concrete admissible design-region clause. PO-13 has explicit symbolic funnel, gain, residual, and actuator-margin inequalities but remains `PARTIAL` because no numerical actuator/gain/deadline tuple or equivalent strict-margin certificate is declared.
 

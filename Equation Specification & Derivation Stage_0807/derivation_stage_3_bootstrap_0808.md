@@ -5,20 +5,48 @@
 > Blueprint Freeze Version 2.0
 > Frozen: 2026-08-07
 
-This document derives only local well-posedness, finite bootstrap estimates, and the pre-PO-07 feasibility conditions. It does not prove PO-07, ES-102, Theorem 1, PO-11, PO-16B, or PO-02B. The compact set `K_0` below is a proof construction and is never treated as invariant.
+This document derives only local well-posedness, finite bootstrap estimates, and the pre-PO-07 feasibility conditions. It does not prove PO-07, ES-102, Theorem 1, PO-11, PO-16B, or PO-02B. The compact set `K_0` below is a proof construction and is never treated as invariant. ES-81 is used only as an augmented bookkeeping vector; it is not the independent ODE coordinate vector.
+
+## 0. Independent and derived coordinates
+
+The minimal independent state is
+
+```text
+X_min = col_i(V_i, dot(V_i), omega_i, delta_i,
+             p_i^V, q_i^V, p_i^omega, q_i^omega) in R^(8N).
+```
+
+The following quantities are derived functions of `(t,X_min)`:
+
+| Variable | Independent state? | Definition or role |
+|---|---|---|
+| `V_i`, `dot(V_i)`, `omega_i`, `delta_i` | Yes | ES-1--ES-3 physical state coordinates |
+| `p_i^V`, `q_i^V`, `p_i^omega`, `q_i^omega` | Yes | ES-44--ES-45 privacy tracker states |
+| `e_{i,0}^nu` | No | `V_i-V_ref` or `omega_i-omega_ref` from ES-17 |
+| `sigma_i^nu` | No | `e_{i,0}^nu/rho_i^nu(t)` from ES-24 |
+| `zeta_i^nu` | No | `atanh(sigma_i^nu)` from ES-25 |
+| `chi_i^V` | No | `dot(V_i)-alpha_i^V` from ES-26 |
+| `chi_i^omega` | No | No retained frequency backstepping state exists |
+| `z_i^nu` | No | `p_i^nu-q_i^nu` from ES-42 |
+| `c_i^nu` | No | Algebraic nominal command ES-28/ES-31 evaluated from derived physical and public states |
+| `hat(c)_i^nu`, `r_i^nu` | No | ES-47 and `r_i^nu=(p_i^nu+q_i^nu)/2-c_i^nu` |
+| `e_i^nu` | No | ES-20--ES-21 graph/pinning map |
+| `F_i^nu`, `alpha_i^nu`, `h_i^nu` | No | Algebraic/time-dependent expressions ES-8--ES-11 and ES-26--ES-37 |
+
+Any displayed differential equation for a derived quantity is a consistency identity or proof equation, not an additional independent state equation.
 
 ## 1. Admissible open domain
 
-Let `X_cl` denote the frozen ES-1--ES-82 closed-loop state. Define `D_open` as the set of states and public design data satisfying all conditions needed to evaluate the retained vector field:
+Define `D_min` as the set of independent states `X_min` and public data satisfying all conditions needed to evaluate the retained vector field:
 
 1. Every physical time constant, droop coefficient, filter coefficient, and input-affine coefficient appearing in ES-4--ES-11 is strictly positive where positivity is required, and every physical state is in the interior of the declared operating region `Delta`.
 2. For each channel `nu in {V,omega}`, `rho_i^nu(t)>0` and `|sigma_i^nu|<1` for every state in the domain. Consequently `atanh(sigma_i^nu)`, `h_i^nu`, and the denominators in ES-33--ES-37 are finite.
-3. Each load and power-flow function in ES-6--ES-7 is defined and continuously differentiable on a neighborhood of the physical projection of `D_open`; the phase differences and all trigonometric terms are therefore regular there.
+3. Each load and power-flow function in ES-6--ES-7 is defined and continuously differentiable on a neighborhood of the physical projection of `D_min`; the phase differences and all trigonometric terms are therefore regular there.
 4. Every denominator explicitly used by the retained controller is nonzero, including `tau_Pi`, `tau_Qi k_Vi`, `rho_i^nu`, `1-(sigma_i^nu)^2`, and the plaintext algebraic inverse condition in ES-21a.
 5. Privacy variables satisfy the admissible ownership and initialization conditions in ES-41--ES-53. The private weights have strict margins `0<underline(w)_i^nu <= w_{i,12}^nu,w_{i,21}^nu <= bar(w)_i^nu`, and `gamma_priv,i^nu(t)>0` on every finite time interval considered locally.
 6. The time-dependent funnel schedule and all derivatives required by ES-26--ES-37 are finite. The quintic schedule in ES-22--ES-23 is `C^2` at `T_nu` and constant after the deadline.
 
-`D_open` is open in the state variables because all inequalities are strict. Actuator membership is deliberately not part of local well-posedness; it is checked later by PO-13.
+`D_min` is open in the independent state variables because all state inequalities are strict. Algebraic identities for derived coordinates are not imposed as constraints defining this set. Actuator membership is deliberately not part of local well-posedness; it is checked later by PO-13.
 
 ## 2. PO-16A: local well-posedness
 
@@ -40,29 +68,61 @@ phi_gamma(z) = g(z) z = z,                    |z| <= gamma,
                  gamma sign(z),              |z| > gamma.
 ```
 
-This is continuous and globally 1-Lipschitz in the scalar `z`: its slope is 1 in the inner interval and 0 on each outer interval, with matching values at `z=+-gamma`. Thus the vector-field products `g_i z_i` in ES-44--ES-50 are locally Lipschitz even though the separate quotient representation of `g_i` must be treated piecewise. On `D_open`, `gamma_priv,i^nu(t)>0`; the switching surfaces `|z_i|=gamma_priv,i^nu(t)` are therefore not singular. The separate factor `g_i` is bounded by 1 and is continuous across the switching surface, but its derivative need not exist there. The ODE needs local Lipschitzness of the vector-field product, not differentiability of `g_i` itself.
+This is continuous and globally 1-Lipschitz in the scalar `z`: its slope is 1 in the inner interval and 0 on each outer interval, with matching values at `z=+-gamma`. Thus the vector-field products `g_i z_i` in ES-44--ES-50 are locally Lipschitz even though the separate quotient representation of `g_i` must be treated piecewise. On `D_min`, `gamma_priv,i^nu(t)>0`; the switching surfaces `|z_i|=gamma_priv,i^nu(t)` are therefore not singular. The separate factor `g_i` is bounded by 1 and is continuous across the switching surface, but its derivative need not exist there. The ODE needs local Lipschitzness of the vector-field product, not differentiability of `g_i` itself. We require `gamma_priv,i^nu` to be measurable and locally essentially bounded in time; continuity is not silently assumed.
 
 ### 2.4 Componentwise local Lipschitz audit
 
-The physical drift terms ES-6--ES-11 are compositions of `C^1` load/power-flow functions, polynomial/trigonometric functions, and affine uncertainty inputs, hence are continuous in time and locally Lipschitz in `X_cl`. ES-20--ES-21 are affine graph maps. ES-24--ES-25 and ES-33--ES-37 are locally Lipschitz on the strict PPC interior. ES-26--ES-32 are finite sums and products of those maps and their declared schedule derivatives. ES-41--ES-50 are affine tracking equations plus the locally Lipschitz products `phi_gamma(z)`. ES-53 and ES-62--ES-70 are algebraic compositions through the unique interface ES-12. ES-80--ES-82 stack these component fields and introduce no new operation. Therefore the complete frozen vector field `f(t,X_cl)` is continuous in `t` and locally Lipschitz in `X_cl` on `D_open`.
+The physical drift terms ES-6--ES-11 are compositions of `C^1` load/power-flow functions, polynomial/trigonometric functions, and the uncertainty inputs. ES-20--ES-21 are affine graph maps. ES-24--ES-25 and ES-33--ES-37 are locally Lipschitz on the strict PPC interior. ES-26--ES-32 are finite sums and products of those maps and their declared schedule derivatives. ES-41--ES-50 are affine tracker equations plus the locally Lipschitz products `phi_gamma(z)`. ES-53 and ES-62--ES-70 are algebraic compositions through the unique interface ES-12. Thus the actual reduced vector field `f_min(t,X_min)` is measurable in `t`, continuous in `X_min` for almost every `t`, locally bounded by an integrable function, and locally Lipschitz in `X_min` with an integrable local Lipschitz modulus, provided `R_i^nu(t)` and `gamma_priv,i^nu(t)` are measurable and locally essentially bounded.
 
 The condition `det(I_N-k_c^nu L_c)!=0` from ES-21a is a fixed design condition, not a state denominator. Once it holds, it contributes a finite constant to the local field and does not create a state singularity.
 
 ### 2.5 Local theorem and maximal interval
 
-Apply the nonautonomous Picard-Lindelof theorem for a vector field continuous in time and locally Lipschitz in the state on an open domain. For every finite `X_cl(0) in D_open`, there is a `tau_0>0` and a unique solution on `[0,tau_0]`. Let `[0,tau_max)` be the maximal interval obtained by continuation. By the continuation alternative, if `tau_max` is finite then the solution leaves every compact subset of `D_open`; equivalently, it approaches the boundary of `D_open` or becomes unbounded. Until the first exit time, uniqueness and the defining inequalities of `D_open` hold. This proves local existence/uniqueness only and does not exclude a later exit.
+Apply the Caratheodory local existence and uniqueness theorem: if `f_min(t,x)` is measurable in `t`, continuous in `x` for almost every `t`, locally integrably bounded, and locally Lipschitz in `x` with an integrable modulus, then every `X_min(0) in D_min` has a unique absolutely continuous solution on some interval. Let `[0,tau_max)` be its maximal interval and define
+
+```text
+tau_exit = inf{ t>0 : X_min(t) notin D_min },
+```
+
+with `tau_exit=infinity` when the set is empty. The solution remains in `D_min` on `[0,min(tau_max,tau_exit))`; if the maximal interval ends at a finite time, the continuation alternative is an exit from every compact subset of `D_min`. This proves local existence/uniqueness only and does not exclude a later exit.
 
 ### 2.6 Construction of `K_0`
 
-Because `D_open` is open and `X_cl(0)` is finite and belongs to it, there exists `epsilon_0>0` such that the closed Euclidean ball
+Because `D_min` is open and `X_min(0)` is finite and belongs to it, there exists `epsilon_0>0` such that the closed Euclidean ball
 
 ```text
-K_0 = { X : ||X-X_cl(0)|| <= epsilon_0 }
+K_0 = { X : ||X-X_min(0)|| <= epsilon_0 }
 ```
 
-is compact, contains `X_cl(0)` in its interior, and satisfies `K_0` compactly contained in `D_open`. Every continuous coefficient and every locally Lipschitz modulus of the frozen vector field has a finite supremum on `K_0`. `K_0` is not asserted to be forward invariant. Actuator feasibility is not part of this construction.
+is compact, contains `X_min(0)` in its interior, and satisfies `K_0` compactly contained in `D_min`. Every coefficient and every local Lipschitz modulus of the reduced vector field has a finite essential supremum or integrable bound on `K_0`. `K_0` is not asserted to be forward invariant. Actuator feasibility is not part of this construction.
 
 **PO-16A verdict: PROVED.**
+
+## 2.7 Reduced ODE and consistency of augmented coordinates
+
+The independent ODE consists of ES-3--ES-5 for `(V,dot(V),omega,delta)` and ES-44--ES-45 for `(p^V,q^V,p^omega,q^omega)`, after substituting the algebraic maps ES-6--ES-12, ES-17, ES-20--ES-21, ES-24--ES-37, and ES-47. In the privacy-enabled equations, `c^nu(t,X_min)` is evaluated directly from the public graph state `p^nu` and physical derived quantities. The plaintext inverse condition ES-21a guarantees the separate counterfactual baseline solve whenever ES-18--ES-19 are invoked; it is not an unresolved algebraic loop in the privacy-enabled reduced ODE.
+
+The derived-coordinate identities are consistent with the frozen equations:
+
+1. From `sigma=e_0/rho` and `zeta=atanh(sigma)`, the chain rule gives ES-33--ES-34. Substitution of ES-29 or ES-32 gives ES-36--ES-37, and substitution into the plant input relation gives ES-65 and ES-70.
+2. With `z=p-q` and `r=(p+q)/2-c`, subtraction of ES-44--ES-45 gives
+
+```text
+dot(z) = -[lambda_tr+w_12+w_21 g]z,
+```
+
+which is ES-49. Averaging ES-44--ES-45 and differentiating the algebraic residual gives
+
+```text
+dot(r) = -lambda_tr r + 0.5(w_12-w_21 g)z - dot(c),
+```
+
+which is ES-50. These are identities along the reduced solution, not independent equations for `z` or `r`.
+3. `hat(c)=(p+q)/2`, `r=hat(c)-c`, and ES-20--ES-21 reconstruct `e` directly. ES-81 may therefore stack these quantities for Lyapunov bookkeeping, but its coordinates lie on the image of the derived-coordinate map from `X_min`.
+
+## 2.8 Uncertainty regularity clarification
+
+The frozen boundedness statements for `R_i^V` and `R_i^omega` are interpreted at the minimal regularity needed by the local ODE theorem: each `R_i^nu(t)` is measurable and locally essentially bounded. The time-varying private weights and `gamma_priv,i^nu(t)` are likewise required to be measurable and locally essentially bounded within their declared positive bounds. This is a proof-level clarification, not a new controller state or a continuity claim. Under this interpretation the Caratheodory hypotheses above hold; no step uses pointwise time continuity of `R_i^nu`.
 
 ## 3. Local obligations discharged by PO-16A
 

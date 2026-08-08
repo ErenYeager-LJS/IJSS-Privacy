@@ -156,7 +156,7 @@ with the recorded positive epsilon choices and the PO-10 private-weight conditio
 
 ## 6. Verification audit
 
-- Proof DAG: 18 nodes, 32 directed edges, 0 nontrivial SCCs, topological order exists and follows `PO-16A -> PO-03 -> PO-02A -> PO-13 -> PO-07` with PO-06/PO-08/PO-09/PO-10 side prerequisites.
+- Proof DAG: 18 nodes, 33 directed edges, 0 nontrivial SCCs, topological order exists and follows `PO-16A -> PO-03 -> PO-02A -> PO-13 -> PO-07` with PO-06/PO-08/PO-09/PO-10 side prerequisites.
 - Active bare aggregate references: no active bare `PO-02` or `PO-16` dependency remains; historical revision notes are classified as historical.
 - PO-13 dependencies: no PO-07, ES-102, PO-16B, PO-02B, or ES-51-decay prerequisite.
 - ES equations changed: **NO**. Only proof-level status and dependency prose changed.

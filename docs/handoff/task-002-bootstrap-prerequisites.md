@@ -31,7 +31,7 @@ The PO-07 gate is therefore **LOCKED**. PO-02B remains `OPEN` and downstream of 
 
 ## Tests run
 
-- Proof-DAG audit: 18 nodes, 32 edges, 0 nontrivial SCCs, successful topological ordering.
+- Proof-DAG audit: 18 nodes, 33 edges, 0 nontrivial SCCs, successful topological ordering.
 - Active dependency text audit: no bare aggregate `PO-02` or `PO-16` dependency remains; historical references are retained only in revision notes.
 - PO-13 dependency audit: no PO-07, ES-102, PO-16B, PO-02B, or ES-51-decay prerequisite.
 - `git diff --check`: passed.

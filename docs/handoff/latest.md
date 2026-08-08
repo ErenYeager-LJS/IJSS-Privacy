@@ -1,5 +1,5 @@
 # Latest Handoff
 
-Current task: [task-004-joint-exit-continuation.md](task-004-joint-exit-continuation.md)
+Current task: [task-005a-state-coverage-audit.md](task-005a-state-coverage-audit.md)
 
-Final gate: the Joint Exit-Continuation Lemma is derived conditionally on JECFC; PO-11, PO-16B, and PO-02B remain OPEN pending verification of the compact sublevel/margin condition.
+Final gate: state coverage is not the JECFC blocker under the frozen compact-`Delta` contract; forward operating-region and actuator-margin closure remain unaudited by task-005a.

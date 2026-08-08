@@ -1,7 +1,7 @@
 # Latest Handoff
 
-Current task: `task-006-claim-scope-alignment`
+Current task: `task-007-jecfc-boundary-resolution`
 
-Final gate: `PATH B`. The claim audit confirms that the frozen theory currently supports only a local-before-exit Theorem 1 boundary. `PO-11`, `PO-16B`, `PO-02B`, and existing privacy/sharing obligations remain open for the intended stronger theorem set.
+Final decision: the required continuation domain is a JECFC-admissible compact Lyapunov tube/sublevel domain in the full independent state space, embedded in `D_min` with strict PPC, physical, denominator, compactness, and actuator margins. `K_0`, `D_min`, `Delta`, and a bare `mathscr V_cl` sublevel are insufficient.
 
-Task handoff: `docs/handoff/task-006-claim-scope-alignment.md`
+Architect recommendation: **Revise theorem wording**. The theory remains local-before-exit until the existence of that tube is established. Blueprint Reopen Required: **NO**.

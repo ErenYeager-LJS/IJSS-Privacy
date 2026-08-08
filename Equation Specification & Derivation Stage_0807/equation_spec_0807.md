@@ -500,7 +500,7 @@ dot(r_i)
    - dot(c_i).                                                      (ES-50)
 ```
 
-Because (ES-41) gives `r_i(0)=0`, the positive-weight decay claim for `z_i` is assigned to **PO-01**. Given the command-rate condition of **PO-03**, **PO-02** determines when (ES-50) implies `r_i -> 0`. The residual is therefore a consequence of command tracking and unequal internal coupling; it is not mathematically required for privacy.
+Because (ES-41) gives `r_i(0)=0`, the positive-weight decay claim for `z_i` is assigned to **PO-01**. **PO-02A** uses the finite command-rate bound from **PO-03** to obtain only a local residual convolution bound. **PO-02B**, after the forward closed-loop results, determines when (ES-50) implies `r_i -> 0`. The residual is therefore a consequence of command tracking and unequal internal coupling; it is not mathematically required for privacy.
 
 The frozen physical analysis requires the verified envelopes
 
@@ -511,7 +511,7 @@ gamma_priv,i^V(t) -> 0,
 gamma_priv,i^omega(t) -> 0.                                       (ES-51)
 ```
 
-**Proof Obligation PO-02**, using the explicit command-rate bound from **PO-03**, establishes the convolution/envelope statement (ES-51) from (ES-49)--(ES-50). Until PO-02 is discharged, (ES-51) is a proof-target envelope rather than an assumed residual floor.
+**Proof Obligation PO-02A**, using the explicit command-rate bound from **PO-03**, establishes the finite local convolution estimate from (ES-49)--(ES-50). **PO-02B** is the separate proof target for the decaying envelope (ES-51); until it is discharged, (ES-51) is not available as a theorem consequence and must not be inferred from bounded `dot(c)` alone.
 
 **Derivation-stage condition (2026-08-07):** a merely uniform bound on `dot(c_i)` yields only an ultimate bound for `r_i`; ES-51 additionally requires a known decaying envelope for `dot(c_i)`, either established by later closed-loop analysis or stated as an explicit technical assumption. This condition does not add a controller module or permit a residual floor.
 
@@ -1115,8 +1115,8 @@ The proof uses a compact bootstrap set `K_0` selected inside the admissible open
 | Definition 2 | ES-16, ES-54 to ES-57 | Passive observation boundary | Exact history equivalence | Public-history indistinguishability target |
 | Assumption 1 | ES-4 to ES-13, ES-22 to ES-23, ES-38, ES-46 | Compact/open operating domain, fixed graph, bounded uncertainty, and initial funnel feasibility; actuator feasibility is checked on `K_0` by PO-13 rather than assumed globally | Regularity ledger | Admissible physical/controller model |
 | Assumption 2 | ES-41 to ES-51, ES-57 to ES-61 | Private bounds, residual decay, nonempty alternative set, passive adversary | Decomposition admissibility | Valid privacy layer |
-| Lemma 1 | ES-41 to ES-61 | Assumption 2 | Linear decay of `z`, stable residual filter, alternative-weight construction | Bounded substates, residual envelope, indistinguishable alternatives |
-| Theorem 1 | ES-62 to ES-73, ES-80 to ES-103 | Assumptions 1-2, Lemma 1, PO-07, PO-11, PO-13, PO-16A, PO-16B, gain inequalities | Composite Lyapunov plus barrier/continuation argument | Boundedness and funnel invariance |
+| Lemma 1 | ES-41 to ES-61 | Assumption 2 | Linear decay of `z`, finite residual filter estimate, alternative-weight construction; the decaying ES-51 envelope remains PO-02B | Bounded substates, residual envelope when PO-02B is closed, indistinguishable alternatives |
+| Theorem 1 | ES-62 to ES-73, ES-80 to ES-103 | Assumptions 1-2, Lemma 1, PO-02A, PO-07, PO-11, PO-13, PO-16A, PO-16B, gain inequalities; any asymptotic ES-51 claim additionally requires PO-02B | Composite Lyapunov plus barrier/continuation argument | Boundedness and funnel invariance |
 | Theorem 2 | ES-22 to ES-40, ES-95, ES-98, ES-103 | Theorem 1 | Inverse transformation and deadline schedule | Practical recovery by `T_V`,`T_omega` |
 | Theorem 3 | ES-71 to ES-79 | Assumptions 1-2, Theorem 2 | Equilibrium droop algebra | Exact or bounded sharing |
 | Theorem 4 | ES-54 to ES-61 plus Theorems 1-3 equations | Definitions 1-2, Assumptions 1-2, Lemma 1 | Observation-equivalence construction plus theorem composition | Simultaneous privacy/performance/sharing guarantee |
@@ -1211,7 +1211,7 @@ The Stage-2 dimension audit found a genuine proof-metric inconsistency in the un
 
 ### Open proof obligations
 
-- **PO-01--PO-03:** substate decay, bootstrap command-rate bound, and the residual envelope (ES-49)--(ES-51).
+- **PO-01--PO-03:** substate decay, bootstrap command-rate bound, finite residual estimate (PO-02A), and the later decaying residual envelope (PO-02B) for (ES-49)--(ES-51).
 - **PO-04--PO-05:** nonempty admissible alternative realization and denominator/weight validity for (ES-58)--(ES-61).
 - **PO-06--PO-07:** graph/algebraic closure and explicit composite-gain conditions for (ES-101a)--(ES-102).
 - **PO-08--PO-12:** voltage, frequency, privacy, barrier-invariance, and practical prescribed-time proof chains.

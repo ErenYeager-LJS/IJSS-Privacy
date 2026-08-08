@@ -1,3 +1,3 @@
 # Latest Handoff
 
-Current task: [task-000-initial-import.md](task-000-initial-import.md)
+Current task: [task-001-proof-dependency-decycle.md](task-001-proof-dependency-decycle.md)

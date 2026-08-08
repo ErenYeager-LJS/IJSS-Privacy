@@ -1,17 +1,19 @@
 # Latest Handoff
 
-Current task: `task-010-po04-privacy-alternative-existence`
+Current task: `task-011-privacy-construction-architecture-review`
 
-Branch: `task-010-po04-privacy-alternative-existence`
+Branch: `task-011-privacy-construction-architecture-review`
 
-PR: [Create or review the Task-010 PR](https://github.com/ErenYeager-LJS/IJSS-Privacy/pull/new/task-010-po04-privacy-alternative-existence)
+PR: [Create or review the Task-011 PR](https://github.com/ErenYeager-LJS/IJSS-Privacy/pull/new/task-011-privacy-construction-architecture-review)
 
-Status: **B. PO-04 BLOCKED — ARCHITECTURE REVIEW REQUIRED**
+Decision: **B. MINIMAL ASSUMPTION / DOMAIN REVISION REQUIRED**
 
-The frozen class permits the nominal split `p_i(0)=q_i(0)=c_i(0)`, which gives `z_i(t)=0`. Any nonzero protected initialization perturbation with the same public initial state has `z_i'(0)=-2epsilon`. Equality of the public trajectories forces ES-59 and therefore a negative `w_{i,21}'` on a short common local interval, contradicting the positive ES-46 lower bound. This is an interval-level contradiction and does not depend on evaluating a Caratheodory equation only at `t=0`.
+The Task-010 zero-split sign contradiction is independently confirmed and the counterexample is genuinely admitted by the frozen domain. No proof-only alternative exists. The least invasive viable resolution is an explicit privacy design-domain restriction requiring nonzero initial split separation and interior ES-46 weight margins on every affected network channel.
 
-PO-05 was not started and cannot resolve this sign conflict. Blueprint, controller, equations, privacy mechanism, Lyapunov design, states, assumptions, theorem numbering, proof-obligation statuses, simulation, and HIL are unchanged.
+Adopting that resolution requires controlled Blueprint/Assumption-2 reopening but no ES formula change. Task-011 itself changed no Blueprint, equation, controller, privacy mechanism, Lyapunov design, state, assumption, theorem number, proof-obligation status, simulation, or HIL artifact.
 
-Full handoff: [task-010-po04-privacy-alternative-existence.md](task-010-po04-privacy-alternative-existence.md)
+PO-04 remains blocked until the domain revision is approved and propagated. PO-05 remains inactive until the revised PO-04 closes.
 
-Recommended next task: `task-011-privacy-construction-architecture-review`
+Full handoff: [task-011-privacy-construction-architecture-review.md](task-011-privacy-construction-architecture-review.md)
+
+Recommended next task: `task-012-privacy-admissible-domain-revision`

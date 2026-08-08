@@ -39,6 +39,7 @@ No plant, controller, privacy, PPC, metric, or ES algebra was changed.
 - Physical/actuator exits require the explicit JECFC strict-margin clauses.
 - No PO-02B, PO-12, PO-14, or PO-15 derivation.
 - Proof dependency graph remains acyclic; Joint Exit-Continuation Lemma has inputs `PO-07, PO-13, PO-16A, JECFC` and outputs `PO-11, PO-16B`.
+- DAG audit: 19 proof nodes (18 POs plus the proof-only lemma), 38 edges, 0 nontrivial SCCs; JECFC is an external unverified design condition, not a PO node.
 - `git diff --check`: pending final commit verification.
 
 ## Final status

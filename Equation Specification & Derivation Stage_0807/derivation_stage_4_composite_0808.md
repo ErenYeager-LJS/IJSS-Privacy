@@ -28,7 +28,7 @@ positive metric weights give finite local constants `m_V,M_V>0` on `K_0` such th
 m_V ||xi||^2 <= mathscr V_cl <= M_V ||xi||^2.
 ```
 
-Thus the candidate is positive definite and radially unbounded with respect to the analysis coordinates within the local admissible region. This is local coercivity, not a global or invariant-region claim. The candidate is differentiable along the absolutely continuous Caratheodory solution almost everywhere; the privacy product `g_i z_i` is locally Lipschitz.
+Thus the candidate is quadratically coercive (norm-equivalent) on `K_0`; no global coercivity claim is made. The candidate is differentiable along the absolutely continuous Caratheodory solution almost everywhere; the privacy product `g_i z_i` is locally Lipschitz.
 
 ## 2. Existing component inequalities
 
@@ -74,7 +74,7 @@ bold(D)^V <= d_V^R + H_V |xi|,
 bold(D)^omega <= d_omega^R + H_omega |xi|.
 ```
 
-`H_V,H_omega` contain only existing constants: `k_c^V,k_c^omega`, `K_M^V,K_M^omega`, `||L_c||`, `h_bar`, the metric weights, the PPC gains, and the PO-06 graph/pinning bounds. Residual coordinates occur in `xi`, so graph and residual terms are not counted as external inputs twice. `d_V^R,d_omega^R` contain only the bounded physical uncertainty and fixed compact-region offsets.
+`H_V,H_omega` bound the unscaled disturbances `D^V,D^omega` themselves and contain only existing constants: `k_c^V,k_c^omega`, `K_M^V,K_M^omega`, `||L_c||`, the metric weights, the PPC gains, and the PO-06 graph/pinning bounds. Any transformation bound already present in an existing PPC quantity remains inside that quantity's bound; the ES-98 Young factor `(h_bar_i^omega)^2` is introduced only through `W_D^omega`. Residual coordinates occur in `xi`, so graph and residual terms are not counted as external inputs twice. `d_V^R,d_omega^R` contain only the bounded physical uncertainty and fixed compact-region offsets.
 
 PO-03 gives the finite local command-rate constants
 
@@ -93,16 +93,25 @@ It is finite but not claimed to decay; ES-51 and PO-02B are not used.
 
 ## 4. Exact composite assembly
 
-Set
+Set the stacked disturbance vector and its weights as
 
 ```text
-W_D = blkdiag((p_chi^V)^2/(2 eps_V2) I,
-              1/(2 eps_omega) I),
+bold(D) = col(bold(D)^V,bold(D)^omega),
+W_D^V = (p_chi^V)^2/(2 eps_V2) I,
+W_D^omega = 1/(2 eps_omega)
+             diag((h_bar_1^omega)^2,...,(h_bar_N^omega)^2),
+W_D = blkdiag(W_D^V,W_D^omega),
 H = col(H_V,H_omega),
 d_R = col(d_V^R,d_omega^R),
 Q_0 = diag(a_Vz I,a_Vchi I,a_omegaz I,
            a_z I,a_z I,a_r I,a_r I).
 ```
+
+If `bold(D)^omega <= d_omega^R + H_omega |xi|`, then
+`(bold(D)^omega)^T W_D^omega bold(D)^omega`
+is exactly `sum_i (h_bar_i^omega)^2 [D_i^omega]^2/(2 eps_omega)`.
+The voltage block similarly reproduces
+`sum_i (p_chi^V)^2 [D_i^V]^2/(2 eps_V2)`. Both blocks are positive semidefinite because all epsilons are positive and all squared transformation gains are nonnegative.
 
 Adding ES-94, ES-98, and ES-101 exactly once gives
 
@@ -115,16 +124,16 @@ dot(mathscr V_cl)
 
 The voltage, frequency, privacy, graph, physical-uncertainty, residual, and Young terms each occur once in this expression. There are no frozen cross-channel terms. The graph contribution enters only through `H`, as required by PO-06.
 
-## 5. Minimal gain certificate
+## 5. Compact sufficient gain certificate
 
-The minimal sufficient composite condition is
+The compact sufficient composite certificate is
 
 ```text
 Q_cl = Q_0 - H^T W_D H ≻ 0,
 lambda_cl = lambda_min(Q_cl) > 0.
 ```
 
-This is the non-redundant matrix certificate. The already-proved component conditions ES-95, ES-98, and the Privacy Gain Feasibility Condition make the diagonal blocks of `Q_0` positive; `Q_cl ≻ 0` is the remaining graph/gain compatibility test.
+This certificate is sufficient; no claim of mathematical minimality over all admissible bounding choices is made. The already-proved component conditions ES-95, ES-98, and the Privacy Gain Feasibility Condition make the diagonal blocks of `Q_0` positive; `Q_cl ≻ 0` is the remaining graph/gain compatibility test.
 
 Dependencies are explicit: `k_1^V` enters `a_Vz`; `k_2^V` enters `a_Vchi`; `k_1^omega` enters `a_omegaz`; `k_c^V,k_c^omega,K_M^V,K_M^omega,L_c` enter `H`; metric weights and every epsilon enter `Q_0` or `W_D`; private tracking rates and weights enter `a_z,a_r`; and `h_bar` enters the PPC rows of `H`.
 
@@ -149,11 +158,13 @@ d_R^* = d_R^T W_D d_R
 d_priv(t) = d_priv^loc.
 ```
 
+For consistency with ES-102, the scalar notation is `d_R := d_R^*` after this definition.
+
 Then
 
 ```text
 dot(mathscr V_cl)
- <= -a_cl mathscr V_cl + d_R^* + d_priv(t),
+    <= -a_cl mathscr V_cl + d_R + d_priv(t),
 ```
 
 which is ES-102 obtained from ES-94, ES-98, ES-101, and PO-06 rather than cited. Every constant is traceable to an existing local inequality or a finite PO-03/PO-06 bound.
@@ -170,7 +181,8 @@ ES-102 proves a **local Lyapunov comparison inequality on `K_0`**. It does not p
 - Negative terms: `a_Vz,a_Vchi,a_omegaz,a_z,a_r`, reduced by `H^T W_D H`.
 - Remaining disturbances: `d_R^*` and finite local `d_priv^loc`.
 - Gain certificate: `Q_cl ≻ 0` plus the already-proved component feasibility conditions.
-- Proof DAG: 18 nodes, 34 edges, 0 nontrivial SCCs.
+- Frequency weight: `W_D^omega` contains each `(h_bar_i^omega)^2` exactly once.
+- Proof DAG: 18 nodes, 43 edges, 0 nontrivial SCCs.
 - ES equations changed: **NO**.
 - Blueprint Reopen Required: **NO**.
 - Recommended next task: `task-004-po11-funnel-barrier`.

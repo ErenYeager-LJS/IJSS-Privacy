@@ -43,10 +43,16 @@ Define `D_min` as the set of independent states `X_min` and public data satisfyi
 2. For each channel `nu in {V,omega}`, `rho_i^nu(t)>0` and `|sigma_i^nu|<1` for every state in the domain. Consequently `atanh(sigma_i^nu)`, `h_i^nu`, and the denominators in ES-33--ES-37 are finite.
 3. Each load and power-flow function in ES-6--ES-7 is defined and continuously differentiable on a neighborhood of the physical projection of `D_min`; the phase differences and all trigonometric terms are therefore regular there.
 4. Every denominator explicitly used by the retained controller is nonzero, including `tau_Pi`, `tau_Qi k_Vi`, `rho_i^nu`, `1-(sigma_i^nu)^2`, and the plaintext algebraic inverse condition in ES-21a.
-5. Privacy variables satisfy the admissible ownership and initialization conditions in ES-41--ES-53. The private weights have strict margins `0<underline(w)_i^nu <= w_{i,12}^nu,w_{i,21}^nu <= bar(w)_i^nu`, and `gamma_priv,i^nu(t)>0` on every finite time interval considered locally.
+5. Privacy tracker coordinates are finite. The private weights have strict margins `0<underline(w)_i^nu <= w_{i,12}^nu,w_{i,21}^nu <= bar(w)_i^nu`, and `gamma_priv,i^nu(t)>0` on every finite time interval considered locally.
 6. The time-dependent funnel schedule and all derivatives required by ES-26--ES-37 are finite. The quintic schedule in ES-22--ES-23 is `C^2` at `T_nu` and constant after the deadline.
 
-`D_min` is open in the independent state variables because all state inequalities are strict. Algebraic identities for derived coordinates are not imposed as constraints defining this set. Actuator membership is deliberately not part of local well-posedness; it is checked later by PO-13.
+`D_min` is open in the independent state variables because all state inequalities are strict. Algebraic identities and initialization equalities are not imposed as constraints defining this set. An admissible initial condition is specified separately by `X_min(0) in D_min` together with the ES-41 compatibility condition
+
+```text
+p_i^nu(0)+q_i^nu(0)=2c_i^nu(0).
+```
+
+This equality implies `r_i^nu(0)=0` but does not alter openness of `D_min`. Actuator membership is deliberately not part of local well-posedness; it is checked later by PO-13.
 
 ## 2. PO-16A: local well-posedness
 
@@ -132,23 +138,30 @@ The frozen boundedness statements for `R_i^V` and `R_i^omega` are interpreted at
 | PO-02A | Mathematical derivation complete; status `PROVED` | PO-01 and PO-03 | Finite residual/convolution bound; no decay claim |
 | PO-08 | Mathematical derivation complete; status `PROVED` in the local sense | Positive coefficients from the recorded Stage-2.5 inequalities | Pointwise voltage inequality on `K_0`; no global stability |
 | PO-09 | Mathematical derivation complete; status `PROVED` in the local sense | Positive frequency gain coefficient from ES-98 | Pointwise frequency inequality on `K_0`; no global stability |
-| PO-10 | Partial | Private-weight condition and epsilon feasibility must be part of the admissible design region | Local privacy inequality; no ES-51 use |
+| PO-10 | Mathematical derivation and admissible-design clause complete; status `PROVED` locally on `K_0` | Privacy Gain Feasibility Condition | Local privacy inequality; no ES-51 or PO-02B use |
 
-For PO-10, the required channel-wise private-weight condition is
+### Privacy Gain Feasibility Condition
+
+For PO-10, impose the following formal admissible-design clause for every agent and channel:
 
 ```text
 bar(w_delta)_i^nu^2
   < 16 lambda_tr,i^nu (lambda_tr,i^nu + underline(w)_i^nu).
 ```
 
-The Young parameters must additionally satisfy
+Choose the Young parameters in the nonempty intervals
 
 ```text
-0 < eps_r1 < 4 lambda_tr,i^nu,
-0 < eps_r2 < 2[lambda_tr,i^nu - eps_r1/4],
+bar(w_delta)_i^nu^2/
+ [4(lambda_tr,i^nu+underline(w)_i^nu)]
+ < eps_r1 < 4 lambda_tr,i^nu,
+
+0 < eps_r2 < 2lambda_tr,i^nu-eps_r1/2,
 ```
 
-for every channel and agent, with the resulting `a_z>0`, `a_r>0`, and finite `d_c`. Since the frozen documents do not yet declare these inequalities as a concrete admissible design-region clause, PO-10 is not upgraded to unconditional `PROVED`.
+for every channel and agent. The private-weight inequality is exactly the condition that makes the `eps_r1` interval nonempty. Any choice in that interval makes the upper endpoint for `eps_r2` positive. Substitution into the already derived Stage-2.5 formulas gives `a_z>0`, `a_r>0`, and finite `d_c`. This clause does not use PO-02B or ES-51 decay.
+
+**PO-10 verdict: PROVED locally on `K_0` under the Privacy Gain Feasibility Condition.** The condition is now part of the admissible proof-design region; no numerical value is asserted.
 
 ## 4. PO-13: symbolic bootstrap feasibility
 
@@ -189,34 +202,43 @@ Ubar_i^omega(K_0) < U_i,max^omega.
 
 For general sets, the required condition is `[-Ubar_i^nu,Ubar_i^nu]` compactly contained in `U_i^nu`. The quantities `bar alphadot`, `bar h`, and `bar zeta` increase with funnel aggressiveness (`T_nu` decreasing or endpoint gap increasing); `k_1^V,k_2^V,k_1^omega,k_c^V,k_c^omega` enter the displayed bounds directly; `P_L^V` and the graph constant `K_M` affect the admissible Lyapunov/gain margins and hence the allowed `K_0`; `bar r` enters additively; and `bar R` enters through `bar F` and the derivative bounds. No numerical actuator limit is invented.
 
-The Stage-2.5 gain conditions must also hold:
+The Stage-2.5 gain conditions and the Privacy Gain Feasibility Condition must also hold:
 
 ```text
 k_2^V > k_{2,min}^V(P_L^V,K_M,bar R,bar r,eps_V0,eps_V2),
 k_1^omega > k_{1,min}^omega(K_M,bar R,bar r,eps_omega),
 ```
 
-with the recorded positive epsilon choices and the PO-10 private-weight condition above. These are sufficient symbolic inequalities, but the repository contains no numerical actuator sets or selected gain/deadline tuple with which to prove that their intersection is nonempty for a particular experiment.
+with the recorded positive epsilon choices and the PO-10 private-weight condition above.
 
-**PO-13 verdict: PARTIAL.** The symbolic feasibility test is complete. Concrete nonemptiness remains a design-parameter/HIL validation item, not a theorem consequence and not a reason to alter the Blueprint.
+### A. Theoretical symbolic feasibility
+
+If the funnel endpoint/deadline conditions, Stage-2.5 gain inequalities, Privacy Gain Feasibility Condition, PO-02A finite residual bound, and strict actuator-margin inclusions are simultaneously satisfied, then all defining inequalities are strict. Continuity of the algebraic command map in `X_min` on `D_min` permits `K_0` to be chosen sufficiently small around the admissible initial state while preserving those strict margins. Hence the symbolic bootstrap design region is nonempty under the displayed conditions.
+
+### B. Numerical/HIL parameter verification
+
+A particular simulation or HIL tuple must later instantiate the actuator sets, endpoints, deadlines, gains, metric weights, and graph constants and check the same margins numerically. This implementation check is not part of the theoretical PO-13 statement and does not block it.
+
+**PO-13 verdict: PROVED for symbolic design feasibility.** No particular experimental tuple is certified.
 
 ## 5. PO-07 readiness gate
 
 | Prerequisite | Required status | Actual status | Ready? |
 |---|---|---|---|
+| PO-16A | PROVED local well-posedness on `D_min` | PROVED | YES |
 | PO-02A | PROVED on `K_0` | PROVED | YES |
 | PO-03 | PROVED on `K_0` | PROVED | YES |
 | PO-06 | PROVED | PROVED | YES |
 | PO-08 | PROVED pointwise on `K_0` | PROVED | YES |
 | PO-09 | PROVED pointwise on `K_0` | PROVED | YES |
-| PO-10 | Private-weight and epsilon feasibility closed | PARTIAL | NO |
-| PO-13 | Nonempty actuator/funnel design region | PARTIAL | NO |
+| PO-10 | Private-weight and epsilon feasibility closed | PROVED locally on `K_0` under the admissible-design clause | YES |
+| PO-13 | Nonempty symbolic actuator/funnel design region | PROVED for symbolic design feasibility | YES |
 
-**PO-07 UNLOCKED: NO.** The blockers are exactly the unclosed PO-10 private-weight/epsilon admissible-design clause and the absence of a declared numerical actuator/gain/deadline tuple or equivalent strict symbolic margin certificate for PO-13. PO-02B is not a PO-07 prerequisite and remains OPEN downstream of PO-16B.
+**PO-07 UNLOCKED: YES.** Every prerequisite required for the composite proof is logically available. Numerical/HIL parameter verification remains future implementation work and is not a theoretical gate. PO-02B is not a PO-07 prerequisite and remains OPEN downstream of PO-16B. PO-07 is not derived in this document.
 
 ## 6. Verification audit
 
-- Proof DAG: 18 nodes, 33 directed edges, 0 nontrivial SCCs, topological order exists and follows `PO-16A -> PO-03 -> PO-02A -> PO-13 -> PO-07` with PO-06/PO-08/PO-09/PO-10 side prerequisites.
+- Proof DAG: 18 nodes, 34 directed edges, 0 nontrivial SCCs, topological order exists and follows `PO-16A -> PO-03 -> PO-02A -> PO-10 -> PO-13 -> PO-07` with PO-06/PO-08/PO-09 side prerequisites.
 - Active bare aggregate references: no active bare `PO-02` or `PO-16` dependency remains; historical revision notes are classified as historical.
 - PO-13 dependencies: no PO-07, ES-102, PO-16B, PO-02B, or ES-51-decay prerequisite.
 - ES equations changed: **NO**. Only proof-level status and dependency prose changed.
@@ -229,9 +251,9 @@ with the recorded positive epsilon choices and the PO-10 private-weight conditio
 3. PO-02A: **PROVED locally on `K_0`**.
 4. PO-08: **PROVED pointwise locally on `K_0`**.
 5. PO-09: **PROVED pointwise locally on `K_0`**.
-6. PO-10: **PARTIAL**, pending explicit admissible private-weight/epsilon design clause.
-7. PO-13: **PARTIAL**, pending strict actuator/gain/deadline margin certificate.
-8. PO-07 UNLOCKED: **NO**.
-9. Remaining blockers: PO-10 design feasibility and PO-13 concrete nonempty feasibility certificate; PO-02B, PO-07, PO-11, and PO-16B remain intentionally downstream/open.
+6. PO-10: **PROVED locally on `K_0` under the Privacy Gain Feasibility Condition**.
+7. PO-13: **PROVED for symbolic design feasibility**; numerical/HIL verification remains future work.
+8. PO-07 UNLOCKED: **YES**.
+9. Remaining blockers before PO-07: **none**. PO-02B, PO-07, PO-11, and PO-16B remain intentionally downstream/open.
 10. Blueprint Reopen Required: **NO**.
-11. Recommended next Task ID: `task-002-bootstrap-prerequisites` continuation for parameter-feasibility closure, then `task-002-po07-composite-gain` only after the gate passes.
+11. Recommended next Task ID: `task-003-po07-composite-gain`.

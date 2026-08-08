@@ -1,7 +1,9 @@
 # Latest Handoff
 
-Current task: `task-007-jecfc-boundary-resolution`
+Current task: `task-008-final-theorem-strategy`
 
-Final decision: the required continuation domain is a JECFC-admissible compact Lyapunov tube/sublevel domain in the full independent state space, embedded in `D_min` with strict PPC, physical, denominator, compactness, and actuator margins. `K_0`, `D_min`, `Delta`, and a bare `mathscr V_cl` sublevel are insufficient.
+Final Architect Recommendation: **A. FREEZE LOCAL THEOREM**. The final theoretical boundary is local-before-exit. Route S is not a proof-only closure under the frozen assumptions and requires Architecture Review if retained.
 
-Architect recommendation: **Revise theorem wording**. The theory remains local-before-exit until the existence of that tube is established. Blueprint Reopen Required: **NO**.
+No Blueprint, controller, equation, Lyapunov, state-definition, theorem-numbering, simulation, HIL, proof-obligation, or assumption change was made.
+
+Task handoff: `docs/handoff/task-008-final-theorem-strategy.md`

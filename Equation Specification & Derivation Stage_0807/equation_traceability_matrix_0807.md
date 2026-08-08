@@ -55,7 +55,7 @@
 | ES-96--ES-98 | LYA | Frequency Young bounds | `D_i^omega,eps_omega,h_bar_i,k_1^omega` | A1 bounded `R`; PO-06 graph bounds | PO-09, PO-07 | Thm. 1 | Frequency proof estimates | Proof-only auxiliary |
 | ES-99--ES-101 | LYA/PRI | Privacy Young bounds and aggregate derivative | `w_delta_bar,eps_r1,eps_r2,p_c^V,p_c^omega,a_z,a_r,d_c,dot c` | A2 Privacy Gain Feasibility Condition; PO-03 command-rate bound; repaired `P_L^priv` | PO-10, PO-07, PO-13 | Lemma 1; Thm. 1 | Privacy proof estimates | Proof-only auxiliary |
 | ES-101a | LYA/CYB | Exact graph relation under reconstruction | `e,e_0,c,r,z,L_c,b_i` | A1 fixed graph; A2 reconstruction identity | PO-06 | Thm. 1 | Cross-layer proof closure | Frozen candidate |
-| ES-102 | LYA | Intended composite comparison inequality | `mathscr V_cl,a_cl,d_R,d_priv` | A1--A2; all preceding local bounds; PO-13 design feasibility | PO-02A, PO-07--PO-10, PO-13 | Thm. 1; Thm. 2 | Main stability comparison | Open derivation |
+| ES-102 | LYA | Composite comparison inequality from the assembled local quadratic certificate | `mathscr V_cl,Q_cl,a_cl,d_R,d_priv` | A1--A2; PO-02A, PO-03, PO-06, PO-08--PO-10, PO-13; `Q_cl` positive definite | PO-07 | Thm. 1; Thm. 2 | Main stability comparison | Proof-derived local inequality |
 | ES-103 | LYA | Comparison solution and practical bound | `mathscr V_cl,a_cl,d_R,d_priv` | Positive `a_cl`; locally integrable disturbances | PO-07, PO-12 | Thm. 1; Thm. 2 | Stability/performance conclusion | Open derivation |
 
 ## Coverage check

@@ -1080,7 +1080,7 @@ bold(e)
 
 **PO-06** uses the algebraic controller equations (ES-28),(ES-31) and condition (ES-21a) to bound `bold(c)` and `bold(e)` by the physical, residual, and decomposition states.
 
-Subject to **PO-06--PO-10** and the pre-checked design-domain feasibility **PO-13**, combining (ES-94),(ES-98),(ES-101), substituting the residual envelopes (ES-51), and bounding the graph errors through `L_c+diag(b_i)` gives the intended form
+Subject to **PO-06--PO-10** and the pre-checked design-domain feasibility **PO-13**, combining (ES-94),(ES-98),(ES-101), using the finite PO-02A residual bound, and bounding the graph errors through `L_c+diag(b_i)` gives the form
 
 ```text
 dot(mathscr V_cl)
@@ -1137,7 +1137,7 @@ The proof uses a compact bootstrap set `K_0` selected inside the admissible open
 | ES-71--ES-79 | PASS WITH OPEN PROOF OBLIGATION | Equilibrium substitution and pairwise subtraction give the displayed droop relation and triangle bound. PO-14 establishes the limiting conditions. |
 | ES-84, ES-86, ES-88 | PASS WITH PROOF-METRIC UPDATE | ES-84 now contains `(p_zeta^V-p_chi^V)h zeta chi`; exact cancellation remains only for equal metric entries. ES-88 is scaled by the channel proof weight. PO-08--PO-10 close the weighted bounds. |
 | ES-90--ES-98 | PASS WITH OPEN PROOF OBLIGATION | The gain upper bound and Young inequalities have the stated directions. PO-08--PO-09 verify invariant-set and coefficient conditions. |
-| ES-101a, ES-102 | PASS WITH OPEN PROOF OBLIGATION | Substitution `p=c+r+0.5z` into ES-20--ES-21 gives ES-101a exactly. PO-06--PO-07 supply the nontrivial graph and gain closure. |
+| ES-101a, ES-102 | PASS | Substitution `p=c+r+0.5z` into ES-20--ES-21 gives ES-101a exactly. PO-06 and the `Q_cl` certificate in PO-07 supply the graph and gain closure locally on `K_0`; continuation remains downstream. |
 | ES-83, ES-87 | PASS WITH PROOF-METRIC UPDATE | Constant positive diagonal blocks of the reserved `P_L` supply reciprocal-unit weights; no controller equation changes. |
 
 ### Symbol audit
@@ -1215,7 +1215,7 @@ The Stage-2 dimension audit found a genuine proof-metric inconsistency in the un
 
 - **PO-01--PO-03:** substate decay, bootstrap command-rate bound, finite residual estimate (PO-02A), and the later decaying residual envelope (PO-02B) for (ES-49)--(ES-51).
 - **PO-04--PO-05:** nonempty admissible alternative realization and denominator/weight validity for (ES-58)--(ES-61).
-- **PO-06--PO-07:** graph/algebraic closure and explicit composite-gain conditions for (ES-101a)--(ES-102).
+- **PO-06:** graph/algebraic closure; **PO-07:** composite-gain certificate and local derivation of (ES-102).
 - **PO-08--PO-12:** voltage, frequency, privacy, barrier-invariance, and practical prescribed-time proof chains.
 - **PO-13:** bootstrap actuator/funnel feasibility before PO-07; **PO-14--PO-15:** sharing and theorem composition; **PO-16A--PO-16B:** local well-posedness and forward operating-region continuation.
 
@@ -1243,7 +1243,7 @@ The command-tracking rates and proof constants are notation/equation completions
 | A. Architecture consistency | PASS | Retained modules only; forbidden modules do not appear. |
 | B. Symbol completeness | PASS WITH PROOF-METRIC UPDATE | Constant entries of reserved `P_L` are defined in the Lyapunov Metric Convention and have no controller role. |
 | C. Dimension consistency | PASS WITH OPEN PROOF OBLIGATION | ES-83/ES-87 are repaired by the constant diagonal metric; PO-13 still verifies actuator units. |
-| D. Equation dependency consistency | PASS WITH OPEN PROOF OBLIGATION | ES dependencies are mapped; PO-06--PO-07 close graph/comparison dependencies. |
+| D. Equation dependency consistency | PASS | ES dependencies are mapped; PO-06 and PO-07 close graph/comparison dependencies locally, with PO-11/PO-16B still downstream. |
 | E. Proof-obligation completeness | PASS | All unresolved derivations are assigned in `proof_obligations_0807.md`. |
 | F. Privacy observation consistency | PASS WITH OPEN PROOF OBLIGATION | Public history/payload are explicit; PO-04--PO-05 and PO-15 prove existence-based equivalence. |
 | G. Plant-interface uniqueness | PASS | ES-12, ES-47, and ES-53 are the sole privacy-to-plant path. |

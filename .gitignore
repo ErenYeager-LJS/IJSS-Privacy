@@ -1,0 +1,19 @@
+# Project-local scratch and generated checks
+buffer/
+
+# LaTeX compiler intermediates
+*.aux
+*.bbl
+*.blg
+*.fdb_latexmk
+*.fls
+*.log
+*.out
+*.synctex.gz
+*.toc
+
+# OS/editor metadata
+.DS_Store
+Thumbs.db
+*.swp
+*.tmp

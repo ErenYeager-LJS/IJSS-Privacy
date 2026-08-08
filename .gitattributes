@@ -1,0 +1,5 @@
+* text=auto
+*.md text eol=lf working-tree-encoding=UTF-8
+*.tex text eol=lf working-tree-encoding=UTF-8
+*.bib text eol=lf working-tree-encoding=UTF-8
+*.json text eol=lf working-tree-encoding=UTF-8

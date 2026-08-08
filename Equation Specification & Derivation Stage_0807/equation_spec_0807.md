@@ -851,6 +851,8 @@ dot(X_cl)
 
 with `P_i,Q_i` supplied by (ES-6)-(ES-7), distributed errors by (ES-20)-(ES-21), and commands by (ES-28),(ES-31). Each term in (ES-82) therefore has a unique source equation.
 
+**Proof-level coordinate clarification:** ES-81 is an augmented analysis/bookkeeping vector. The independent ODE coordinates are the physical coordinates `(V_i,dot(V_i),omega_i,delta_i)` and privacy tracker states `(p_i^V,q_i^V,p_i^omega,q_i^omega)`. The entries `e_{i,0}`, `zeta_i`, `chi_i`, and `r_i` in ES-81 are reconstructed algebraically from those coordinates and time. ES-82 is therefore interpreted as the consistency derivative of the augmented image, not as an unconstrained Euclidean ODE with all ES-81 entries independent. This clarification changes no equation or identifier.
+
 ## 13. Lyapunov structure
 
 ### Lyapunov Metric Convention
@@ -1105,7 +1107,7 @@ After **PO-07** is closed, (ES-103) gives the comparison estimate on the bootstr
 
 ### 14.6 Bootstrap/continuation separation
 
-The proof uses a compact bootstrap set `K_0` selected inside the admissible open domain `D_open`. `K_0` is not assumed invariant. **PO-16A** supplies local existence and uniqueness up to the first exit time from `D_open`; **PO-03**, **PO-08**, **PO-09**, and **PO-10** are pointwise estimates on `K_0`. **PO-13** checks actuator and funnel feasibility on the same set before composite gain closure. **PO-07** then closes the composite negative coefficient. **PO-11** excludes a prescribed-performance boundary exit, and **PO-16B** uses that result, the composite closure, and PO-13 to establish forward continuation in the operating region. No equation in ES-1--ES-103 is changed by this separation.
+The proof uses a compact bootstrap set `K_0` selected inside the admissible open domain `D_min` of the independent coordinates. `K_0` is not assumed invariant. **PO-16A** supplies Caratheodory local existence and uniqueness up to the first exit time from `D_min`; **PO-03**, **PO-08**, **PO-09**, and **PO-10** are pointwise estimates on `K_0`. Algebraically dependent quantities in ES-81 are reconstructed from the independent state and are not treated as independent Euclidean coordinates. **PO-13** checks actuator and funnel feasibility on the same set before composite gain closure. **PO-07** then closes the composite negative coefficient. **PO-11** excludes a prescribed-performance boundary exit, and **PO-16B** uses that result, the composite closure, and PO-13 to establish forward continuation in the operating region. No equation in ES-1--ES-103 is changed by this separation.
 
 ## 15. Equation-to-result dependency map
 
@@ -1113,8 +1115,8 @@ The proof uses a compact bootstrap set `K_0` selected inside the admissible open
 |---|---|---|---|---|
 | Definition 1 | ES-1 to ES-16, ES-41 to ES-53 | Plant/interface ownership | Closed-loop specification | Admissible physical/cyber/private system |
 | Definition 2 | ES-16, ES-54 to ES-57 | Passive observation boundary | Exact history equivalence | Public-history indistinguishability target |
-| Assumption 1 | ES-4 to ES-13, ES-22 to ES-23, ES-38, ES-46 | Compact/open operating domain, fixed graph, bounded uncertainty, and initial funnel feasibility; actuator feasibility is checked on `K_0` by PO-13 rather than assumed globally | Regularity ledger | Admissible physical/controller model |
-| Assumption 2 | ES-41 to ES-51, ES-57 to ES-61 | Private bounds, residual decay, nonempty alternative set, passive adversary | Decomposition admissibility | Valid privacy layer |
+| Assumption 1 | ES-4 to ES-13, ES-22 to ES-23, ES-38, ES-46 | Compact/open operating domain, fixed graph, measurable locally essentially bounded uncertainty, and initial funnel feasibility; actuator feasibility is checked on `K_0` by PO-13 rather than assumed globally | Regularity ledger | Admissible physical/controller model |
+| Assumption 2 | ES-41 to ES-51, ES-57 to ES-61 | Measurable locally essentially bounded private weights, Privacy Gain Feasibility Condition for PO-10, residual-decay target, nonempty alternative set, passive adversary | Decomposition admissibility | Valid privacy layer |
 | Lemma 1 | ES-41 to ES-61 | Assumption 2 | Linear decay of `z`, finite residual filter estimate, alternative-weight construction; the decaying ES-51 envelope remains PO-02B | Bounded substates, residual envelope when PO-02B is closed, indistinguishable alternatives |
 | Theorem 1 | ES-62 to ES-73, ES-80 to ES-103 | Assumptions 1-2, Lemma 1, PO-02A, PO-07, PO-11, PO-13, PO-16A, PO-16B, gain inequalities; any asymptotic ES-51 claim additionally requires PO-02B | Composite Lyapunov plus barrier/continuation argument | Boundedness and funnel invariance |
 | Theorem 2 | ES-22 to ES-40, ES-95, ES-98, ES-103 | Theorem 1 | Inverse transformation and deadline schedule | Practical recovery by `T_V`,`T_omega` |

@@ -4,7 +4,7 @@
 
 `task-001-proof-dependency-decycle`
 
-Implementation commits: `775184c`, plus the residual-envelope repair commit for this review.
+Implementation commits: `775184c`, `7866ed3`, and residual-envelope repair `df545ac`.
 
 ## PR
 

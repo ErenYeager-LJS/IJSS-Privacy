@@ -1,11 +1,13 @@
 # Latest Handoff
 
-Current task: `task-008-final-theorem-strategy`
+Current task: `task-009-local-theorem-wording-alignment`
 
-Final Architect Recommendation: **A. FREEZE LOCAL THEOREM**. The final theoretical boundary is local-before-exit. Route S is not a proof-only closure under the frozen assumptions and requires Architecture Review if retained.
+Final manuscript theorem scope: **LOCAL-BEFORE-EXIT**. The frozen Blueprint target theorem remains historical design intent and was not edited.
 
-OPEN obligations are separated into: (1) blocked stronger-theorem continuation chain `PO-11`, `PO-16B`, `PO-02B`; and (2) claim-dependent/downstream obligations `PO-04`, `PO-05`, `PO-12`, `PO-14`, `PO-15`. Route L discharges none of them. Task-009 must classify the second group against the final local manuscript scope.
+PO-04 and PO-05 are required for the retained local privacy claim and must close before Proof Freeze. PO-12, PO-14, and PO-15 remain OPEN but are outside the final manuscript theorem scope. PO-11, PO-16B, and PO-02B remain OPEN and inactive under Route L.
 
-No Blueprint, controller, equation, Lyapunov, state-definition, theorem-numbering, simulation, HIL, proof-obligation, or assumption change was made.
+Exact next task: `task-010-po04-privacy-alternative-existence`.
 
-Task handoff: `docs/handoff/task-008-final-theorem-strategy.md`
+No frozen mathematical, controller, proof-status, simulation, or HIL artifact was changed.
+
+Task handoff: `docs/handoff/task-009-local-theorem-wording-alignment.md`

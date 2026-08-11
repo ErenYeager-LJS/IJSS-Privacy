@@ -6,32 +6,37 @@
 
 ## PR
 
-[Create or review the Task-015 PR](https://github.com/ErenYeager-LJS/IJSS-Privacy/pull/new/task-015-po04-privacy-alternative-existence-v2-2-domain)
+[Task-015 PR #18](https://github.com/ErenYeager-LJS/IJSS-Privacy/pull/18)
 
 ## Changed files
 
 - `Equation Specification & Derivation Stage_0807/derivation_stage_5_po04_0808.md`
+- `Equation Specification & Derivation Stage_0807/proof_obligations_0807.md`
+- `Equation Specification & Derivation Stage_0807/equation_traceability_matrix_0807.md`
+- `Equation Specification & Derivation Stage_0807/local_theorem_claim_scope_alignment_0808.md`
 - `docs/handoff/task-015-po04-privacy-alternative-existence-v2-2-domain.md`
 - `docs/handoff/latest.md`
 
 ## Result
 
-**Outcome B — PO-04 remains OPEN; architecture review required.** Version 2.2 removes the schedule-reciprocal obstruction, but the frozen assumptions do not establish local command-initialization reachability or the coupled network construction required for a non-nominal alternative. No positive perturbation radius is proved.
+**Outcome A — PO-04 is PROVED locally.** The corrected complete ES-31 frequency command map is nonconstant in the physical frequency initial state. An admissible physical perturbation induces `S' != S`; ES-58--ES-61 and the strict Version 2.2 margins then provide a coupled local family and positive physical perturbation radius before first exit.
 
 ## Proof status
 
-- `PO-04`: `OPEN / NOT PROVED`
+- `PO-04`: `PROVED` locally under Version 2.2
 - `PO-05`: `OPEN / NOT STARTED`
 
 ## Frozen components
 
-Controller, ES equations, Lyapunov design, state definitions, observation model, theorem scope, and PO ledger are unchanged.
+Controller, ES equations, Lyapunov design, state definitions, observation model, theorem scope, and Blueprint are unchanged. The PO ledger changes only PO-04 from `OPEN` to `PROVED` as authorized by the completed proof.
 
 ## Tests run
 
 - Frozen ES-41--ES-46, ES-49--ES-50, and ES-54--ES-61 audit
 - ES-14--ES-16 complete public-history audit
-- ES-28/ES-31 command-to-physical-state reachability audit
+- Complete ES-31 omega-dependence and `d alpha/d omega` audit
+- ES-28 voltage-channel non-rank requirement audit
+- Physical-initial-perturbation-to-induced-`S'` construction
 - Coupled network and first-exit scope audit
 - `git diff --check`
 
@@ -41,6 +46,6 @@ No PO-05 proof, architecture repair, equation modification, simulation, or HIL r
 
 ## Next task
 
-`task-016-privacy-command-reachability-architecture-review`
+`task-016-po05-alternative-denominator-validity`
 
-Decide whether a defensible local reachability/domain condition can be added without changing ES-58--ES-61, or whether the privacy target must be narrowed. Do not begin PO-05.
+Prove the downstream validity and continuation of the alternative denominators in ES-60--ES-61. Do not change ES-58--ES-61.

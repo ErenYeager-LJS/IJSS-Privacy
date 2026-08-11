@@ -4,22 +4,22 @@ Current task: `task-015-po04-privacy-alternative-existence-v2-2-domain`
 
 Branch: `task-015-po04-privacy-alternative-existence-v2-2-domain`
 
-PR: [Create or review the Task-015 PR](https://github.com/ErenYeager-LJS/IJSS-Privacy/pull/new/task-015-po04-privacy-alternative-existence-v2-2-domain)
+PR: [Task-015 PR #18](https://github.com/ErenYeager-LJS/IJSS-Privacy/pull/18)
 
 Full handoff: [task-015-po04-privacy-alternative-existence-v2-2-domain.md](task-015-po04-privacy-alternative-existence-v2-2-domain.md)
 
 ## Current result
 
-**OUTCOME B — PO-04 STILL BLOCKED; ARCHITECTURE REVIEW REQUIRED**
+**OUTCOME A — PO-04 PROVED LOCALLY**
 
-Blueprint Version 2.2 removes the Task-013 schedule-reciprocal obstruction, but the frozen assumptions do not establish local command-initialization reachability or the coupled network command-map construction required for a non-nominal alternative.
+The corrected complete ES-31 frequency command map is nonconstant in the physical frequency initial state. An admissible physical perturbation induces `S' != S`; ES-58--ES-61 and the strict Version 2.2 margins provide a coupled local family and positive physical perturbation radius before first exit.
 
-No non-nominal admissible alternative or positive perturbation radius is proved. PO-05 remains downstream and was not started.
+PO-04 is proved only before the finite-seed/regular-domain first exit. PO-05 remains downstream and was not started.
 
-Controller, ES equations, Lyapunov design, states, observation model, theorem scope, and the proof-obligation ledger are unchanged. PO-04 remains `OPEN / NOT PROVED`; PO-05 remains `OPEN / NOT STARTED`.
+Controller, ES equations, Lyapunov design, states, observation model, theorem scope, and Blueprint are unchanged. PO-04 is `PROVED` locally; PO-05 remains `OPEN / NOT STARTED`.
 
 ## Next task
 
-`task-016-privacy-command-reachability-architecture-review`
+`task-016-po05-alternative-denominator-validity`
 
-Decide whether a defensible local command-initialization reachability/domain condition can be added without changing ES-58--ES-61, or whether the privacy target must be narrowed. Do not begin PO-05.
+Prove downstream validity and continuation of the ES-60--ES-61 alternative denominators. Do not change ES-58--ES-61.

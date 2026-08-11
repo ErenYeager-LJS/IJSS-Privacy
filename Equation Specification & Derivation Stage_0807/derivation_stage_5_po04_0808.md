@@ -1,122 +1,118 @@
-# Derivation Stage 5: PO-04 Privacy Alternative Existence Audit
+# Derivation Stage 5: PO-04 Privacy Alternative Existence Audit (Major Revision)
 
 > Task ID: `task-015-po04-privacy-alternative-existence-v2-2-domain`
 > Active architecture: Blueprint Version 2.2, Privacy-Schedule Regularity Revision
 > Theorem boundary: `LOCAL-BEFORE-EXIT`
-> Scope: PO-04 only; PO-05 is not started
+> Scope: PO-04 only; PO-05 remains downstream
 
-## 1. PO-04 statement and verdict
+## 1. Final result
 
-PO-04 asks whether, for a nominal admissible realization, there is a coupled local family containing a genuinely non-nominal protected initialization `S' != S`, with identical complete passive public history and admissible private weights before the earliest finite-seed or regular-domain exit.
+**Outcome A — PO-04 PROVED locally on the Version 2.2 schedule-regular domain.**
 
-**Outcome B — PO-04 remains blocked; architecture review required.** The Version 2.2 schedule margin repairs the Task-013 reciprocal-schedule obstruction, but the frozen assumptions do not establish a nonzero reachable perturbation of the protected command initialization for the same plant/controller. No alternative realization or positive perturbation radius is therefore proved, and the proof-obligation ledger remains unchanged.
+The previous reachability objection is withdrawn. It incorrectly treated an arbitrary preassigned `S_i+delta` as necessary and used an incomplete frequency derivative that omitted the `-tau_Pi alpha_i^omega` term. The correct construction starts with an admissible physical initial perturbation, evaluates the same frozen controller, and defines the induced protected value `S_i'`.
 
-## 2. Exact assumptions used
+PO-04 is proved for a nonempty local family before the earliest finite-seed/regular-domain first exit. PO-05 remains `OPEN / NOT STARTED`; no denominator continuation beyond this local interval is claimed.
 
-The audit uses only the existing Version 2.2 contracts:
+## 2. Weakest required quantifier
 
-- nominal `|z_j^nu(0)| >= eta_{z,j}^nu > 0` on affected pairs;
-- nominal private weights have strict ES-46 interior margin `eta_{w,j}^nu`;
-- `gamma_priv,j^nu(t) >= eta_{gamma,j}^nu > 0` on `I_s=[0,T_s]`;
-- the residual regularity/decay target and passive-eavesdropper observation model;
-- Assumption 1 plant regularity, initial funnel feasibility, fixed graph, and local operating-domain regularity.
+ES-55--ES-57 state an existential privacy target: at least one `S_i' != S_i` with an admissible private realization and identical observation history. The ledger additionally requires a positive local perturbation radius. The proof establishes the stronger, useful local statement: there is `epsilon_*>0` such that every nonzero physical perturbation `epsilon` in a punctured sufficiently small interval, excluding only the nominal zero, generates an admissible alternative family on a common local interval. No arbitrary global `delta` or universal initialization claim is made.
 
-These are nominal/domain conditions. None asserts an alternative initial plant state, a command-map rank condition, a nonzero perturbation radius, or invariance of the alternative trajectory.
+## 3. Exact frequency command map
 
-## 3. Perturbation parameterization
-
-For affected channels, write
+At time zero, perturb only `omega_i(0)` to `omega_i'(0)=omega_i(0)+epsilon`, keep the voltage/phase states, schedules, references, powers at their instantaneous values, and all public `p(0)` values fixed. Since power flow does not depend on angular velocity instantaneously, `P_i(0)` is fixed in this partial derivative. From ES-8, ES-19, ES-21, ES-24, ES-25, ES-30, and ES-31,
 
 ```text
-S_i' = S_i + delta_i,
-delta_i = [delta_i^V, delta_i^omega]^T.
+C_i(omega)
+ = -[(omega-omega_ref)+k_Pi(P_i-P_i^d)]
+   - tau_Pi alpha_i^omega(omega)
+   + k_c^omega[b_i(omega-omega_ref)
+       + sum_j a_ij(p_i^omega(0)-p_j^omega(0))].
 ```
 
-ES-58 and ES-41 then force
+Write `sigma=(omega-omega_ref)/rho` and `zeta=atanh(sigma)`. With rho and its time derivatives fixed at time zero,
 
 ```text
-p_i'(0) = p_i(0),
-q_i'(0) = 2S_i' - p_i(0) = q_i(0) + 2delta_i,
-z_i'(0) = p_i'(0)-q_i'(0) = z_i(0)-2delta_i,
-c_i'(0) = c_i(0)+delta_i.
+d alpha_i^omega/d omega
+ = dot(rho_i^omega)/rho_i^omega
+   - k_1^omega[1-2 sigma_i^omega zeta_i^omega].
 ```
 
-Consequently `r_i'(0)=0` whenever the alternative physical/controller initial state actually realizes `c_i'(0)=S_i'`. This last realization condition is the unresolved step; it is not implied by ES-58.
-
-For `|delta_i^nu| < eta_{z,i}^nu/2`, the algebraic candidate satisfies `|z_i'^nu(0)| >= eta_{z,i}^nu/2`. This is only zero-time candidate feasibility.
-
-## 4. Zero-time ES-60 audit
-
-At `delta=0`, the candidate is nominal and ES-60 returns `w_{i,21}'(0)=w_{i,21}(0)` whenever the nominal denominator is legal. If a genuine alternative physical initial state depended continuously on `delta`, then the Version 2.2 lower margin and the split margin would give, on a sufficiently short candidate interval,
+Therefore
 
 ```text
-|g_i' z_i'| >= min(eta_{z,i}^nu/4, eta_{gamma,i}^nu) > 0.
+d C_i/d omega
+ = -1 - tau_Pi dot(rho_i^omega)/rho_i^omega
+   + tau_Pi k_1^omega[1-2 sigma_i^omega zeta_i^omega]
+   + k_c^omega b_i.
 ```
 
-The strict nominal ES-46 interior margin would then make the quotient continuous at `delta=0`, provided `c_i'`, `z_i'`, and the selected private path are continuous in `delta`. Version 2.2 supplies the denominator schedule margin, but it does not supply the required physical initial-state-to-command map or its continuity/rank property.
+For the frozen quintic schedule, `dot(rho_i^omega)(0)=0` when the initial time is the schedule origin. At `sigma_i^omega(0)=0` and `k_c^omega b_i=1`, this becomes `tau_Pi k_1^omega != 0`. The earlier cancellation argument was therefore wrong because it omitted `-tau_Pi alpha_i^omega`.
 
-## 5. Zero-time ES-61 audit
+The derivative can vanish at an isolated point for other admissible values of `sigma`, gains, or schedule slope. That does not make `C_i` locally constant: the analytic factor `1-2 sigma atanh(sigma)` is nonconstant on `(-1,1)`, and `k_1^omega>0`. Hence `C_i` is a nonconstant analytic function of omega on every admissible neighborhood. There are arbitrarily small `epsilon != 0` with `C_i(omega_i+epsilon) != C_i(omega_i)`. This proves the weakest needed non-nominality without requiring local surjectivity onto every prescribed delta.
 
-ES-61 gives
+## 4. Voltage channel audit
+
+No independent voltage rank condition is needed. PO-04 protects the vector `S_i=[c_i^V(0),c_i^omega(0)]^T`; a change in one component is enough for `S_i' != S_i`. The frequency perturbation above already changes the omega component. ES-28 remains the same frozen command map and is evaluated along the resulting local alternative physical trajectory; no voltage perturbation is imposed.
+
+## 5. ES-58 initial feasibility
+
+Define the induced perturbation
 
 ```text
-w_{i,12}'(0)
- = [dot(q_i'(0))-lambda_tr,i(c_i'(0)-q_i'(0))]/z_i'(0).
+delta_i(epsilon)=C_i(omega_i(0)+epsilon)-C_i(omega_i(0)),
+S_i'=S_i+[0,delta_i(epsilon)]^T.
 ```
 
-At the nominal point this equals `w_{i,12}(0)` if `dot(q_i'(0))=dot(q_i(0))`. A continuous choice of `dot(q_i')` with this nominal value would preserve the strict ES-46 interior margin for sufficiently small `delta`. However, the frozen equations do not prescribe a free private path independently of the actual alternative command trajectory; the path and its derivative must coexist with the same coupled plant/controller. Thus this is a conditional local quotient argument, not an existence proof.
-
-There is no unavoidable jump caused by the Version 2.2 schedule margin. The remaining issue is existence of a compatible alternative trajectory, not the pointwise value of `gamma_priv`.
-
-## 6. Conditional continuity and radius calculation
-
-Suppose, in addition to the frozen documents, that a coupled initial-state selection map `X_0(delta)` existed with
+Set
 
 ```text
-c(X_0(delta),p(0)) = c(0)+delta,
+p_i'(0)=p_i(0),
+q_i'(0)=2S_i'-p_i(0),
+z_i'(0)=z_i(0)-2[0,delta_i(epsilon)]^T.
 ```
 
-and that the resulting reduced vector field and private-path construction were continuous in `(delta,t)` on a common local nonsingular tube. Then the maps `delta -> c'(t;delta)`, `delta -> z'(t;delta)`, `delta -> w_21'(t;delta)`, and `delta -> w_12'(t;delta)` would be continuous at `delta=0`.
+Because `delta_i(epsilon)->0` and `|z_i^omega(0)|>=eta_{z,i}^omega`, choose `epsilon_*` so that the alternative initial split remains at least `eta_{z,i}^omega/2`. The unchanged voltage component has the nominal split. The initialization gives `r_i'(0)=0` in the perturbed channel and keeps all public initial messages unchanged.
 
-Let `m_z=eta_z/2`, `m_gamma=eta_gamma`, and `m_w=eta_w` denote the available strict margins after selecting a compact candidate tube. A positive radius could then be defined by the first `delta` for which any of `|z'|-m_z`, `|g'z'|-min(m_z/2,m_gamma)`, `w_12'-underline(w)-m_w`, or `bar(w)-m_w-w_21'` reaches zero. This would be a legitimate `delta_* > 0` only after the missing initial-state selection and coupled trajectory maps had been constructed. The current theory supplies none of these maps, so this conditional radius cannot be reported as a proved constant.
+## 6. Local physical trajectory and network coupling
 
-## 7. Missing command-initialization reachability
+Fix the nominal public trajectory `p(t)` as the public input to the alternative construction. Choose a `C^1` private path
 
-The protected datum is the value of the controller command itself, but ES-28 and ES-31 define that command from physical states, funnel variables, distributed errors, and public messages. The frozen assumptions require regularity and admissibility of those states; they do not require that the map from admissible physical initial states to `c(0)` have a nonzero local image in every protected channel.
+```text
+q_i'(t)=q_i(t)+2[0,delta_i(epsilon)]^T phi(t),
+phi(0)=1,
+```
 
-This is a genuine logical gap. For example, in an admissible frequency specialization with constant power terms and `k_c^omega b_i=1`, the coefficient of `(omega_i(0)-omega_ref)` in ES-31 cancels between `tau_Pi F_i^omega` and the pinned error term. With public `p` fixed, the command can therefore be locally insensitive to the physical frequency initial state. The frozen assumptions do not exclude this rank-degenerate case. Hence they cannot imply the existence of any `delta_i^omega != 0` satisfying `c_i'(0)=c_i(0)+delta_i^omega`.
+with `phi` fixed and bounded on a sufficiently short interval; other agents/channels use the nominal path initially. The same frozen plant equations ES-1--ES-12 are then solved from the perturbed physical initial state, with `hat(c)'=(p+q')/2` as their only plant input. PO-16A local well-posedness and continuous dependence apply on a compact tube inside the open domain. The resulting `c'(t)` is the actual controller command, not an algebraic counterfactual.
 
-The same issue is not repaired by choosing `q_i'(0)` in ES-58: that changes the private decomposition but does not change the physical/controller command generated by ES-28/ES-31.
+The perturbation is not treated as isolated after time zero. Electrical coupling can change neighboring physical states and commands. All agents and channels are included in the construction; their private paths are kept nominal or perturbed by the same continuous extension as required. The public `p_j` values are fixed network-wide, so ES-20--ES-21 and all neighbor terms are evaluated consistently. No smaller affected subset is assumed closed.
 
-## 8. Coupled network and public-history audit
+## 7. ES-60 and ES-61 feasibility
 
-Changing one protected command generally changes physical trajectories and therefore commands at electrically and cyber-coupled agents. Complete public-history equality requires `p_j'=p_j` for every agent and channel, because ES-14--ES-16 expose the network-wide message history. The required family is therefore a coupled network construction unless a smaller affected set is proved closed.
+At `epsilon=0`, the actual alternative trajectory, private paths, and weights equal the nominal ones. On a finite nominal local interval `[0,T_0]` before first exit, PO-01 and the nonzero initial split give a positive minimum `m_z` for each nominal `|z_j^nu|`. Version 2.2 gives `gamma_priv>=eta_gamma>0`, and the nominal weights have strict ES-46 margin `eta_w`.
 
-The current assumptions retain network-wide affected scope but provide neither a joint command-map surjectivity/rank condition nor a proof that the algebraic/dynamic constraints induced by all neighboring agents have a nonzero solution. Treating one agent as isolated would contradict ES-20--ES-21 and the explicit Version 2.2 affected-scope rule.
+The alternative physical solution, `q'`, `z'=p-q'`, `c'`, and `dot(q')` depend continuously on `epsilon` on a possibly smaller common interval. Therefore there is `epsilon_*>0` such that, for `|epsilon|<epsilon_*`,
 
-The actual observation map also includes `H_c`, graph/reference/schedule metadata, and public controller parameters. Physical sensor histories and private memory are excluded. Matching one `p_i` is insufficient, and no metadata change may hide a failure of ES-59.
+```text
+|z_j'^nu(t)| >= m_z/2,
+|g_j'^nu z_j'^nu| >= min(m_z/2,eta_gamma,j^nu),
+```
 
-## 9. Plant/controller compatibility and PO-05 boundary
+for all affected pairs and times in that interval. The ES-60 and ES-61 quotients are consequently continuous in `epsilon` at the nominal weights. Define `epsilon_*` as the minimum of the initial-domain radius, the first-exit continuity radius, and the radii at which either quotient reaches an ES-46 interior boundary. Strict nominal margins make this minimum positive.
 
-PO-16A supplies local existence for a selected admissible initial state of the frozen system. It does not prove that an admissible initial state with a prescribed nonzero command displacement exists, nor does it solve the coupled initial-value reachability problem above. Algebraically selecting `p'`, `q'`, and quotient weights without such a state would not be an alternative realization of ES-1--ES-12.
+## 8. Public-history equality
 
-If a reachable initial state and coupled local solution were supplied, the nonzero `z'(0)` margin plus local continuity could define a short first-exit interval on which ES-60--ES-61 are legal. That local construction is the PO-04 boundary. General denominator continuation, isolated-zero extensions, or persistence beyond that interval remain PO-05 and are not used here.
+For every agent/channel, define `w_{j,21}'` by ES-60 and `w_{j,12}'` by ES-61 on the common local interval. ES-61 makes the chosen `q_j'` satisfy ES-45. ES-60 makes the right-hand side of ES-44 equal to the nominal `dot(p_j)`, while `p_j'(0)=p_j(0)`. Thus `p_j'(t)=p_j(t)` for the complete network and both channels on the local interval.
 
-## 10. Quantifier result
+The remaining elements of ES-16 (`H_c`, graph, references, schedules, and public controller parameters) are unchanged. Physical sensor histories and private memory are not observed. Hence the complete passive public history, not merely one local message, is identical.
 
-The current theory establishes neither a nonzero radius `delta_*` for every `0<|delta|<delta_*` nor even one non-nominal admissible `delta` for the frozen coupled plant/controller. The nominal point `delta=0` is not sufficient because it is not a privacy alternative.
+## 9. PO-04 / PO-05 separation
 
-## 11. Architecture and proof status
+PO-04 is closed only on the constructed local interval: a genuine non-nominal induced `S'`, admissible ES-58 initialization, bounded ES-60/61 weights, identical public history, and a positive physical perturbation radius exist before first exit. PO-05 is not used to obtain this local result. Any continuation through later zeros of `z'`, isolated denominator extensions, or persistence beyond the local interval remains PO-05.
 
-- **Outcome:** **B — PO-04 STILL BLOCKED, ARCHITECTURE REVIEW REQUIRED**.
-- **Architecture changed in Task-015:** **NO**.
-- **Controller, ES equations, Lyapunov design, state definitions, observation model:** unchanged.
-- **PO-04:** **OPEN / NOT PROVED**.
-- **PO-05:** **OPEN / NOT STARTED**, downstream of PO-04.
-- **Blueprint Reopen Required:** **YES**, but only for a future review of a defensible command-initialization reachability/domain condition. No such condition is introduced here.
+## 10. Final status and next task
 
-## 12. Recommended next task
-
-`task-016-privacy-command-reachability-architecture-review`
-
-That task should decide whether a mathematically legitimate local reachability/domain condition can be added without changing ES-58--ES-61, or whether the privacy target must be narrowed. It must not begin PO-05.
+- **Outcome:** **A — PO-04 PROVED locally.**
+- **PO-04:** **PROVED** on the Version 2.2 schedule-regular local domain.
+- **PO-05:** **OPEN / NOT STARTED**.
+- **Architecture reopening:** **NO**. No Blueprint, controller, ES, Lyapunov, state, observation, or theorem-scope change is required.
+- **Recommended next task:** `task-016-po05-alternative-denominator-validity`.

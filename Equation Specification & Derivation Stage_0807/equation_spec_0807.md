@@ -1,7 +1,8 @@
 # Equation Specification 0807
 
-> Blueprint Version 2.1
-> Privacy-Domain Revision: 2026-08-11
+> Blueprint Version 2.2
+> Privacy-Schedule Regularity Revision: 2026-08-11
+> Predecessor: Blueprint Version 2.1, Privacy-Domain Revision
 > Historical baseline: Blueprint Freeze Version 2.0, frozen 2026-08-07
 
 ## Status and authority
@@ -21,7 +22,7 @@ The following symbols are unavoidable equation-level auxiliaries and have been a
 - input-affine drifts `F_i^V`, `F_i^omega` and voltage backstepping error `chi_i^V`;
 - decomposition differences `z_i^V`, `z_i^omega` and correction factors `g_i^V`, `g_i^omega`;
 - public message vector `mathbf m_i`, command-tracking rates, uncertainty bounds, controller gains, and private-weight bounds.
-- channel-consistent privacy-domain margins `eta_{z,i}^V`, `eta_{z,i}^omega`, `eta_{w,i}^V`, and `eta_{w,i}^omega`.
+- channel-consistent privacy-domain margins `eta_{z,i}^V`, `eta_{z,i}^omega`, `eta_{w,i}^V`, `eta_{w,i}^omega`, `eta_{gamma,i}^V`, and `eta_{gamma,i}^omega`, together with the common finite privacy seed interval `I_s=[0,T_s]`.
 
 Channel-suppressed notation in Parts 4-8 and 13-14 is specification shorthand only. Every such equation represents two equations obtained by restoring superscript `V` or `omega`; the shorthand is not a third channel or a manuscript symbol family.
 
@@ -418,9 +419,9 @@ Thus the claim is practical prescribed-time recovery, with final tolerances sele
 
 ## 5. Privacy-preserving virtual-state mechanism
 
-### 5.0 Blueprint Version 2.1 regular privacy domain
+### 5.0 Blueprint Version 2.2 schedule-regular privacy domain
 
-The ES formulas in this section are unchanged from Blueprint Version 2.0. Version 2.1 restricts only the domain on which the alternative-realization proof may be attempted.
+The ES formulas in this section are unchanged from Blueprint Versions 2.0 and 2.1. Version 2.2 adds only the finite-seed schedule regularity needed for the alternative-realization proof.
 
 For every agent/channel pair affected through the frozen physical/electrical coupling by a candidate alternative construction, Assumption 2 requires
 
@@ -429,12 +430,17 @@ For every agent/channel pair affected through the frozen physical/electrical cou
 
 underline(w)_j^nu + eta_{w,j}^nu
  <= w_{j,12}^nu(t), w_{j,21}^nu(t)
- <= bar(w)_j^nu - eta_{w,j}^nu
+ <= bar(w)_j^nu - eta_{w,j}^nu,
+
+gamma_priv,j^nu(t) >= eta_{gamma,j}^nu > 0,
+                         t in I_s=[0,T_s]
 ```
 
-on a declared common local seed interval, with `nu in {V,omega}` and `2eta_{w,j}^nu < bar(w)_j^nu-underline(w)_j^nu`. The margins carry the units of their corresponding channel quantities. Unless PO-04 proves that a smaller affected subset is closed, the condition is applied network-wide along the coupled model.
+with `nu in {V,omega}`, `T_s>0`, and `2eta_{w,j}^nu < bar(w)_j^nu-underline(w)_j^nu`. The margins carry the units of their corresponding channel quantities. Unless PO-04 proves that a smaller affected subset is closed, the condition is applied network-wide along the coupled model. The new schedule condition is equivalent to bounded `1/gamma_priv,j^nu` on `I_s`; pointwise positivity without a uniform local lower bound is insufficient.
 
-These inequalities are nominal design-domain data. They do not posit `S_i'`, `q_i'`, `w_i'`, `p_i'=p_i`, a compatible alternative trajectory, or a positive perturbation radius. PO-04 must construct those objects and prove that some nonzero perturbation remains inside these margins. PO-05 remains downstream and must validate the divisions used by ES-60--ES-61.
+For affected pairs, the privacy singular set relevant to ES-60--ES-61 is the union of `z_j^nu=0` and `gamma_priv,j^nu=0`. Version 2.2 separates the prescribed schedule from the second stratum on `I_s`. The exact ES-49 nominal solution and the Version 2.1 initial split margin provide nominal finite-interval separation from the first stratum; PO-04 must still establish the alternative separation needed by its construction.
+
+These inequalities are nominal design-domain data. They do not posit `S_i'`, `q_i'`, `w_i'`, `p_i'=p_i`, a compatible alternative trajectory, or a positive perturbation radius. The local privacy claim stops at the earliest of `T_s` and the first exit from the regular privacy/physical domain. This is a stopping boundary, not a claim that the domain is invariant. PO-04 must construct the alternative and prove that some nonzero perturbation remains admissible before that stop. PO-05 remains downstream and must validate the divisions used by ES-60--ES-61.
 
 ### 5.1 Initialization and ownership
 
@@ -563,7 +569,7 @@ with residual dynamics (ES-50) and envelope (ES-51).
 
 ### Equation-level decision
 
-Blueprint Versions 2.0 and 2.1 both implement Case B. Version 2.1 changes only the privacy-admissible design domain. Case A is algebraically possible only under the extra constraint (ES-52), which is not part of the private-parameter contract and cannot be assumed globally under bounded weights. This conclusion is based on (ES-50), not on intuition.
+Blueprint Versions 2.0--2.2 all implement Case B. Versions 2.1--2.2 change only the privacy-admissible design domain. Case A is algebraically possible only under the extra constraint (ES-52), which is not part of the private-parameter contract and cannot be assumed globally under bounded weights. This conclusion is based on (ES-50), not on intuition.
 
 ## 7. Privacy observation map and target
 
@@ -633,7 +639,7 @@ w_{i,12}'(t)
 
 whenever `z_i'(t) != 0`.
 
-The admissible alternative set `A_i(S_i)` consists only of alternatives constructed from a nominal realization in the Version 2.1 regular privacy domain and for which:
+The admissible alternative set `A_i(S_i)` consists only of alternatives constructed from a nominal realization in the Version 2.2 schedule-regular privacy domain and for which:
 
 1. the denominators in (ES-60)-(ES-61) do not vanish before their numerators;
 2. the resulting weights satisfy (ES-46);
@@ -644,7 +650,7 @@ The admissible alternative set `A_i(S_i)` consists only of alternatives construc
 
 This construction adapts the Privacy paper's “same public state, adjusted private weights” idea. Equations (ES-59)-(ES-61), command-tracking terms, plant compatibility, and the admissible-set restrictions are new.
 
-The construction targets local/existence-based ambiguity on the regular privacy domain, not ambiguity for every arbitrary `S_i'` or every initialization in the historical Version 2.0 bounded class. **PO-04** must establish nonemptiness of `A_i(S_i)` beyond the nominal realization and quantify a nonzero perturbation radius from the declared margins; **PO-05** remains downstream and establishes the denominator conditions used by (ES-60)--(ES-61).
+The construction targets local/existence-based ambiguity before the Version 2.2 stopping boundary, not ambiguity for every arbitrary `S_i'`, every initialization in the historical Version 2.0 bounded class, or after the seed interval/domain exit. **PO-04** must establish nonemptiness of `A_i(S_i)` beyond the nominal realization and quantify a nonzero perturbation radius from the declared margins; **PO-05** remains downstream and establishes the denominator conditions used by (ES-60)--(ES-61).
 
 ## 9. Voltage closed-loop equations
 
@@ -1136,7 +1142,7 @@ The proof uses a compact bootstrap set `K_0` selected inside the admissible open
 | Definition 1 | ES-1 to ES-16, ES-41 to ES-53 | Plant/interface ownership | Closed-loop specification | Admissible physical/cyber/private system |
 | Definition 2 | ES-16, ES-54 to ES-57 | Passive observation boundary | Exact history equivalence | Public-history indistinguishability target |
 | Assumption 1 | ES-4 to ES-13, ES-22 to ES-23, ES-38, ES-46 | Compact/open operating domain, fixed graph, measurable locally essentially bounded uncertainty, and initial funnel feasibility; actuator feasibility is checked on `K_0` by PO-13 rather than assumed globally | Regularity ledger | Admissible physical/controller model |
-| Assumption 2 | ES-41 to ES-51, ES-57 to ES-61 | Measurable locally essentially bounded private weights, Privacy Gain Feasibility Condition for PO-10, residual-decay target, nonempty alternative set, passive adversary | Decomposition admissibility | Valid privacy layer |
+| Assumption 2 | ES-41 to ES-51, ES-57 to ES-61 | Nominal nonzero-split margin, nominal private-weight interior margin, finite-seed positive lower margin for `gamma_priv`, Privacy Gain Feasibility Condition for PO-10, residual regularity/decay target, and passive adversary; existence of a non-nominal admissible alternative is a PO-04 conclusion, not an Assumption 2 premise | Decomposition admissibility | Valid privacy layer |
 | Lemma 1 | ES-41 to ES-61 | Assumption 2 | Linear decay of `z`, finite residual filter estimate, alternative-weight construction; the decaying ES-51 envelope remains PO-02B | Bounded substates, residual envelope when PO-02B is closed, indistinguishable alternatives |
 | Theorem 1 | ES-62 to ES-73, ES-80 to ES-103 | Assumptions 1-2, Lemma 1, PO-02A, PO-07, PO-11, PO-13, PO-16A, PO-16B, gain inequalities; any asymptotic ES-51 claim additionally requires PO-02B | Composite Lyapunov plus barrier/continuation argument | Boundedness and funnel invariance |
 | Theorem 2 | ES-22 to ES-40, ES-95, ES-98, ES-103 | Theorem 1 | Inverse transformation and deadline schedule | Practical recovery by `T_V`,`T_omega` |

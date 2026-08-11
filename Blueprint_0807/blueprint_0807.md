@@ -1,7 +1,8 @@
 # Blueprint 0807: Minimal Privacy-Preserving Prescribed-Time Secondary Control
 
-> Blueprint Version 2.1
-> Privacy-Domain Revision: 2026-08-11
+> Blueprint Version 2.2
+> Privacy-Schedule Regularity Revision: 2026-08-11
+> Predecessor: Blueprint Version 2.1, Privacy-Domain Revision
 > Historical baseline: Blueprint Freeze Version 2.0, frozen 2026-08-07
 
 ## 0. Status
@@ -160,7 +161,7 @@ Architecture B, an exact transparent reconstruction with no physical residual, i
 
 ### 5.3 Regular privacy design domain
 
-The privacy result is restricted to designer-selected initial decompositions with a channel-consistent nonzero split margin and private-weight schedules strictly inside the ES-46 bounds. For every agent/channel pair whose hidden command may change through the coupled alternative construction,
+The privacy result is restricted to designer-selected initial decompositions with a channel-consistent nonzero split margin, private-weight schedules strictly inside the ES-46 bounds, and a privacy schedule separated from zero on a fixed finite seed interval. For every agent/channel pair whose hidden command may change through the coupled alternative construction,
 
 ```text
 |z_j^nu(0)| >= eta_{z,j}^nu > 0,
@@ -168,11 +169,16 @@ The privacy result is restricted to designer-selected initial decompositions wit
 underline(w)_j^nu + eta_{w,j}^nu
  <= w_{j,12}^nu(t), w_{j,21}^nu(t)
  <= bar(w)_j^nu - eta_{w,j}^nu,
+
+gamma_priv,j^nu(t) >= eta_{gamma,j}^nu > 0,
+                         t in I_s=[0,T_s],
 ```
 
-on a declared common local seed interval, where `nu in {V,omega}` and `2 eta_{w,j}^nu < bar(w)_j^nu-underline(w)_j^nu`. The affected scope is network-wide along the frozen physical/electrical coupling; it may be reduced only if PO-04 proves that a smaller affected subset is closed.
+where `nu in {V,omega}`, `T_s>0`, and `2 eta_{w,j}^nu < bar(w)_j^nu-underline(w)_j^nu`. The affected scope is network-wide along the frozen physical/electrical coupling; it may be reduced only if PO-04 proves that a smaller affected subset is closed. The schedule margin is equivalent to bounded `1/gamma_priv,j^nu` on `I_s`; pointwise positivity alone is insufficient.
 
-These are design margins only. They do not assume that a nonzero alternative, identical public history, or a valid ES-58--ES-61 realization exists. PO-04 must construct such a realization and prove a nonzero perturbation radius; PO-05 remains downstream.
+The privacy singular set for ES-60--ES-61 is the union of the affected-pair strata `z_j^nu=0` and `gamma_priv,j^nu=0`. The Version 2.2 schedule margin separates the finite seed interval from the second stratum. The nominal split margin together with the frozen ES-49 solution supplies finite-interval nominal separation from the first; PO-04 must still establish the alternative separation needed by its construction.
+
+These are design margins only. They do not assume that a nonzero alternative, identical public history, a positive perturbation radius, or a valid ES-58--ES-61 realization exists. Every privacy conclusion stops at the earliest of `T_s` and the first exit from the regular local privacy/physical domain. No invariance of that domain is assumed or claimed. PO-04 must construct the alternative; PO-05 remains downstream.
 
 ### 5.4 Observation map
 
@@ -214,7 +220,7 @@ There is no observer update, neighbor estimator, adaptive NN update, switching-g
 - **Definition 1:** admissible physical/cyber/private microgrid closed loop.
 - **Definition 2:** public-history indistinguishability.
 - **Assumption 1:** plant, references, fixed graph, bounded uncertainty, initial funnel, and actuator regularity.
-- **Assumption 2:** regular privacy-domain margins, privacy decomposition admissibility, computable residual decay, frequency equilibrium compatibility, and passive-eavesdropper access.
+- **Assumption 2:** regular privacy-domain and finite-seed privacy-schedule margins, privacy decomposition admissibility, computable residual decay, frequency equilibrium compatibility, and passive-eavesdropper access.
 - **Lemma 1:** public/private decomposition well posedness, residual bound/decay, and, after PO-04/PO-05 closure, alternative private realizations on the regular privacy domain.
 - **Theorem 1:** closed-loop boundedness and prescribed-performance funnel invariance.
 - **Theorem 2:** practical prescribed-time voltage/frequency recovery.

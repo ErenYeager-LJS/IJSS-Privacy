@@ -1,7 +1,8 @@
 # Notation Rules 0807: Immutable Minimal Symbol Contract
 
-> Blueprint Version 2.1
-> Privacy-Domain Revision: 2026-08-11
+> Blueprint Version 2.2
+> Privacy-Schedule Regularity Revision: 2026-08-11
+> Predecessor: Blueprint Version 2.1, Privacy-Domain Revision
 > Historical baseline: Blueprint Freeze Version 2.0, frozen 2026-08-07
 
 ## Status
@@ -67,6 +68,8 @@ This file is the authoritative notation contract before equation generation. It 
 - `g_i^V` and `g_i^omega` are bounded local correction factors used only in the decomposition dynamics.
 - `eta_{z,i}^V` and `eta_{z,i}^omega` are positive, channel-unit nonzero-split margins. They are design-domain constants, not states or perturbations.
 - `eta_{w,i}^V` and `eta_{w,i}^omega` are positive interior margins with the same units as their channel private weights. They do not replace the ES-46 bounds.
+- `eta_{gamma,i}^V` and `eta_{gamma,i}^omega` are positive lower margins for `gamma_priv,i^nu` only on the fixed common finite seed interval. They have channel-command units, do not alter ES-43, and do not prevent later schedule decay.
+- `I_s=[0,T_s]`, with `T_s>0`, is the common finite privacy-construction seed interval. It is not a prescribed-performance deadline or a continuation claim.
 - A privacy-domain margin does not assert that an alternative realization exists. A prime remains reserved for the alternative later constructed by PO-04.
 - `mathbf m_i=[p_i^V,p_i^omega]^T` is the regular public message vector.
 - Public/private ownership is semantic. A locally reconstructed quantity is not public unless the observation map explicitly includes it.

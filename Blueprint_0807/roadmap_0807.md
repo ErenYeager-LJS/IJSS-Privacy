@@ -1,7 +1,8 @@
 # Mathematical Roadmap 0807: Minimal Architecture
 
-> Blueprint Version 2.1
-> Privacy-Domain Revision: 2026-08-11
+> Blueprint Version 2.2
+> Privacy-Schedule Regularity Revision: 2026-08-11
+> Predecessor: Blueprint Version 2.1, Privacy-Domain Revision
 > Historical baseline: Blueprint Freeze Version 2.0, frozen 2026-08-07
 
 ## Scope
@@ -118,9 +119,9 @@ This assumption supports A-E1-A-E4, A-E6-A-E15, B-E1, and Theorems 1-3.
 
 ### Assumption 2: Privacy decomposition and adversary compatibility
 
-Private weights and substates remain admissible and bounded; every agent/channel pair affected through the coupled alternative construction has a declared nonzero initial split margin `eta_{z,j}^nu` and designer-selected nominal private-weight schedules separated from both ES-46 endpoints by `eta_{w,j}^nu` on a common local seed interval; the public/private decomposition is locally computable; the channel-specific residual has a declared nonnegative bound that decays as required by the sharing claim; the frequency residual has zero differential steady-state component; and the eavesdropper observes all public messages and disclosed metadata but cannot access private memory or local physical sensors.
+Private weights and substates remain admissible and bounded; every agent/channel pair affected through the coupled alternative construction has a declared nonzero initial split margin `eta_{z,j}^nu`, designer-selected nominal private-weight schedules separated from both ES-46 endpoints by `eta_{w,j}^nu`, and a public schedule satisfying `gamma_priv,j^nu(t)>=eta_{gamma,j}^nu>0` on a fixed common finite seed interval `I_s=[0,T_s]`; the public/private decomposition is locally computable; the channel-specific residual has a declared nonnegative bound that decays as required by the sharing claim; the frequency residual has zero differential steady-state component; and the eavesdropper observes all public messages and disclosed metadata but cannot access private memory or local physical sensors.
 
-The margins are domain data only. They do not assume a non-nominal alternative, public-history equality, or validity of ES-58--ES-61. PO-04 must construct the alternative and prove a positive perturbation radius.
+The schedule margin is local and permits `gamma_priv` to decay after `T_s`. Together with the split conditions it separates the seed construction from the singular strata `z=0` and `gamma_priv=0`. All privacy conclusions stop at `T_s` or the first regular-domain exit, whichever occurs first; no forward invariance is assumed. The margins are domain data only and do not assume a non-nominal alternative, public-history equality, or validity of ES-58--ES-61. PO-04 must construct the alternative and prove a positive perturbation radius.
 
 This assumption supports B-E2-B-E12, Lemma 1, Theorem 3, and Theorem 4.
 

@@ -1,7 +1,8 @@
 # Theorem Dependencies Design 0807: Minimal Architecture
 
-> Blueprint Version 2.1
-> Privacy-Domain Revision: 2026-08-11
+> Blueprint Version 2.2
+> Privacy-Schedule Regularity Revision: 2026-08-11
+> Predecessor: Blueprint Version 2.1, Privacy-Domain Revision
 > Historical baseline: Blueprint Freeze Version 2.0, frozen 2026-08-07
 
 ## Scope
@@ -67,18 +68,19 @@ Assume that:
 1. private substates and coupling parameters are initialized in an admissible bounded set;
 2. for every agent/channel pair affected through the coupled alternative construction, `|z_j^nu(0)| >= eta_{z,j}^nu > 0`;
 3. on a declared common local seed interval, the relevant designer-selected nominal schedules satisfy `underline(w)_j^nu+eta_{w,j}^nu <= w_{j,12}^nu(t),w_{j,21}^nu(t) <= bar(w)_j^nu-eta_{w,j}^nu`, with `eta_{w,j}^nu>0` and `2eta_{w,j}^nu < bar(w)_j^nu-underline(w)_j^nu`;
-4. the affected scope is network-wide along the frozen physical/electrical coupling and may be reduced only after a proof that a smaller affected subset is closed;
-5. the public/private decomposition and local reconstruction are well defined;
-6. the voltage/frequency privacy residuals are locally computable, bounded by declared nonnegative schedules, and decay as required by the physical theorem;
-7. the differential steady-state frequency privacy correction vanishes;
-8. the eavesdropper observes all public messages and disclosed metadata but cannot access private local memory or physical sensors;
-9. active message manipulation and communication failures are outside the core model.
+4. on the fixed common finite seed interval `I_s=[0,T_s]`, `T_s>0`, each affected public schedule satisfies `gamma_priv,j^nu(t)>=eta_{gamma,j}^nu>0`;
+5. the affected scope is network-wide along the frozen physical/electrical coupling and may be reduced only after a proof that a smaller affected subset is closed;
+6. the public/private decomposition and local reconstruction are well defined;
+7. the voltage/frequency privacy residuals are locally computable, bounded by declared nonnegative schedules, and decay as required by the physical theorem;
+8. the differential steady-state frequency privacy correction vanishes;
+9. the eavesdropper observes all public messages and disclosed metadata but cannot access private local memory or physical sensors;
+10. active message manipulation and communication failures are outside the core model.
 
-Items 2--4 provide only designer-selectable domain margins. They do not assume an alternative realization, identical public history, a nonzero perturbation radius, or validity of ES-58--ES-61. Those remain conclusions to be established by PO-04 and PO-05.
+Items 2--5 provide only designer-selectable local domain margins. Item 4 is equivalent to a bounded reciprocal schedule on `I_s` and does not restrict decay after `T_s`. The privacy singular set is the union of `z_j^nu=0` and `gamma_priv,j^nu=0` over affected pairs. Privacy conclusions stop at the earliest of `T_s` and the first exit from the regular local domain; no invariance is assumed. These items do not assume an alternative realization, identical public history, a nonzero perturbation radius, or validity of ES-58--ES-61. Those remain conclusions to be established by PO-04 and PO-05.
 
 ### Why Assumption 2 exists
 
-It is the minimum bridge between privacy and physical control. Blueprint Version 2.1 adds the regular privacy-domain margins needed to exclude the Task-010 zero-split counterexample while leaving alternative existence unassumed. The assumption also supplies residual, sharing-compatibility, and passive-observation boundaries without adding an observer or attack-resilience subsystem.
+It is the minimum bridge between privacy and physical control. Blueprint Version 2.1 added the split/weight margins needed to exclude the Task-010 zero-split counterexample. Version 2.2 adds only the finite-seed schedule separation needed to exclude the Task-013 unbounded-reciprocal counterexample. Alternative existence remains unassumed. The assumption also supplies residual, sharing-compatibility, and passive-observation boundaries without adding an observer or attack-resilience subsystem.
 
 ## Lemma 1
 

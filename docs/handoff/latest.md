@@ -1,23 +1,25 @@
 # Latest Handoff
 
-Current task: `task-013-po04-privacy-alternative-existence-revised-domain`
+Current task: `task-014-privacy-schedule-regularity-architecture-review`
 
-Branch: `task-013-po04-privacy-alternative-existence-revised-domain`
+Branch: `task-014-privacy-schedule-regularity-architecture-review`
 
-PR: [Create or review the Task-013 PR](https://github.com/ErenYeager-LJS/IJSS-Privacy/pull/new/task-013-po04-privacy-alternative-existence-revised-domain)
+PR: [Task-014 PR #17](https://github.com/ErenYeager-LJS/IJSS-Privacy/pull/17)
 
-Full handoff: [task-013-po04-privacy-alternative-existence-revised-domain.md](task-013-po04-privacy-alternative-existence-revised-domain.md)
+Full handoff: [task-014-privacy-schedule-regularity-architecture-review.md](task-014-privacy-schedule-regularity-architecture-review.md)
 
-## Current result
+## Architecture decision
 
-**B. PO-04 BLOCKED — ARCHITECTURE REVIEW REQUIRED**
+**OUTCOME B — MINIMAL PRIVACY-DOMAIN REGULARITY REVISION**
 
-Blueprint Version 2.1 removes the Task-010 zero-split sign contradiction but does not supply a local positive lower envelope or right-regularity condition for `gamma_priv`. The frozen class permits a positive measurable schedule with `gamma_priv(t)=a_gamma t` for small `t>0`. Then the ES-60 denominator is pointwise nonzero but tends to zero, and every nonzero protected perturbation forces `w_{i,21}'` outside ES-46 arbitrarily close to the initial time.
+The active architecture is Blueprint Version 2.2, Privacy-Schedule Regularity Revision. On the fixed common finite seed interval `I_s=[0,T_s]`, every affected public privacy schedule must satisfy `gamma_priv,j^nu(t)>=eta_{gamma,j}^nu>0`. This bounds the ES-60 schedule reciprocal without changing any ES formula.
 
-No Blueprint, assumption, privacy-domain, equation, controller, Lyapunov, state, observer, or proof-obligation status was changed. PO-05 was not started.
+The singular privacy boundary is the union of `z=0` and `gamma_priv=0`. Privacy conclusions stop at `T_s` or the first regular-domain exit. No invariance or global lower bound is claimed.
+
+Controller, ES equations, Lyapunov design, states, observation model, and the `LOCAL-BEFORE-EXIT` strategy are unchanged. PO-04 remains `OPEN` and not proved; PO-05 was not started.
 
 ## Next task
 
-`task-014-privacy-schedule-regularity-architecture-review`
+`task-015-po04-privacy-alternative-existence-v2-2-domain`
 
-Resolve the privacy-schedule regularity boundary before PO-04 or PO-05 resumes.
+Re-attempt PO-04 only under Version 2.2.

@@ -1,7 +1,8 @@
 # Blueprint 0807: Minimal Privacy-Preserving Prescribed-Time Secondary Control
 
-> Blueprint Freeze Version 2.0
-> Frozen: 2026-08-07
+> Blueprint Version 2.1
+> Privacy-Domain Revision: 2026-08-11
+> Historical baseline: Blueprint Freeze Version 2.0, frozen 2026-08-07
 
 ## 0. Status
 
@@ -44,7 +45,7 @@ The central contribution is a microgrid-specific communication-control co-design
 2. Voltage and frequency errors remain inside their prescribed transient envelopes.
 3. Voltage and frequency enter their practical tolerances by designer-selected deadlines.
 4. The differential steady-state privacy correction vanishes, so the nominal droop-sharing relation is preserved.
-5. Alternative private initializations can generate the same complete public history under a passive eavesdropper model.
+5. On the regular privacy design domain, alternative private initializations may generate the same complete public history under a passive eavesdropper model after the construction obligations close.
 
 ### 2.5 Non-claims
 
@@ -157,11 +158,27 @@ The Privacy source mechanism proves convergence of public/private substates and 
 
 Architecture B, an exact transparent reconstruction with no physical residual, is not adopted as a hidden assumption. It would require a new encoding/decoding mechanism and a new indistinguishability proof. The current paper uses the source-faithful decaying-residual wrapper and does not claim an intrinsic privacy-performance frontier.
 
-### 5.3 Observation map
+### 5.3 Regular privacy design domain
+
+The privacy result is restricted to designer-selected initial decompositions with a channel-consistent nonzero split margin and private-weight schedules strictly inside the ES-46 bounds. For every agent/channel pair whose hidden command may change through the coupled alternative construction,
+
+```text
+|z_j^nu(0)| >= eta_{z,j}^nu > 0,
+
+underline(w)_j^nu + eta_{w,j}^nu
+ <= w_{j,12}^nu(t), w_{j,21}^nu(t)
+ <= bar(w)_j^nu - eta_{w,j}^nu,
+```
+
+on a declared common local seed interval, where `nu in {V,omega}` and `2 eta_{w,j}^nu < bar(w)_j^nu-underline(w)_j^nu`. The affected scope is network-wide along the frozen physical/electrical coupling; it may be reduced only if PO-04 proves that a smaller affected subset is closed.
+
+These are design margins only. They do not assume that a nonzero alternative, identical public history, or a valid ES-58--ES-61 realization exists. PO-04 must construct such a realization and prove a nonzero perturbation radius; PO-05 remains downstream.
+
+### 5.4 Observation map
 
 The public history includes every transmitted public coordination state, public controller parameter, fixed cyber topology information, and disclosed protocol metadata. The eavesdropper has no private-memory or physical-sensor access.
 
-### 5.4 Frequency compatibility
+### 5.5 Frequency compatibility
 
 The privacy dynamics must make the differential steady-state frequency correction vanish. This condition replaces an explicit common-mode projection block. The nominal equal steady-state secondary correction then preserves the IJSS droop-sharing relation.
 
@@ -197,12 +214,12 @@ There is no observer update, neighbor estimator, adaptive NN update, switching-g
 - **Definition 1:** admissible physical/cyber/private microgrid closed loop.
 - **Definition 2:** public-history indistinguishability.
 - **Assumption 1:** plant, references, fixed graph, bounded uncertainty, initial funnel, and actuator regularity.
-- **Assumption 2:** privacy decomposition admissibility, computable residual decay, frequency equilibrium compatibility, and passive-eavesdropper access.
-- **Lemma 1:** public/private decomposition well posedness, residual bound/decay, and alternative private realizations.
+- **Assumption 2:** regular privacy-domain margins, privacy decomposition admissibility, computable residual decay, frequency equilibrium compatibility, and passive-eavesdropper access.
+- **Lemma 1:** public/private decomposition well posedness, residual bound/decay, and, after PO-04/PO-05 closure, alternative private realizations on the regular privacy domain.
 - **Theorem 1:** closed-loop boundedness and prescribed-performance funnel invariance.
 - **Theorem 2:** practical prescribed-time voltage/frequency recovery.
 - **Theorem 3:** droop-consistent active-power sharing.
-- **Theorem 4:** public-history indistinguishability and simultaneous boundedness/recovery/sharing guarantee.
+- **Theorem 4:** public-history indistinguishability on the regular privacy domain and the separately qualified composite guarantee.
 
 The privacy proof is an observation-equivalence construction and remains logically separate from the physical funnel proof inside Theorem 4.
 

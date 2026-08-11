@@ -1,7 +1,8 @@
 # Equation Traceability Matrix 0807
 
-> Blueprint Freeze Version 2.0
-> Frozen: 2026-08-07
+> Blueprint Version 2.1
+> Privacy-Domain Revision: 2026-08-11
+> Historical baseline: Blueprint Freeze Version 2.0, frozen 2026-08-07
 > Equation Review Revision
 
 ## Status key
@@ -30,17 +31,17 @@
 | ES-30--ES-32 | CTL/PPC | Nominal frequency virtual control | `alpha^omega,c^omega,e^omega` | A1 smooth funnel/plant; ES-21a where baseline solve is invoked | PO-03, PO-06, PO-09, PO-13 | Def. 1; Thm. 1 | Frequency controller | Frozen candidate |
 | ES-33--ES-37 | PPC | Transformation derivative and channel dynamics | `dot sigma,dot zeta,tanh,alpha,chi,h` | A1 `rho>0`, `|sigma|<1` | PO-08, PO-09, PO-11 | Thm. 1; Thm. 2 | Performance analysis | Frozen candidate |
 | ES-38--ES-40 | PPC | Initial feasibility and deadline implication | `e_0,rho,T` | A1 initial feasible state and selected tolerances | PO-11, PO-12, PO-13 | Assump. 1; Thm. 2 | Performance guarantee | Open derivation |
-| ES-41--ES-42 | PRI | Public/private initialization and difference | `p_i,q_i,c_i,z_i` | A2 admissible private initialization | PO-01, PO-02A, PO-02B, PO-04 | Def. 1; Lemma 1; Thm. 4 | Privacy wrapper | Frozen candidate |
+| ES-41--ES-42 | PRI | Public/private initialization and difference | `p_i,q_i,c_i,z_i` | A2 admissible private initialization; Version 2.1 nonzero initial-split margin on every affected agent/channel pair for the alternative-construction domain | PO-01, PO-02A, PO-02B, PO-04 | Def. 1; Lemma 1; Thm. 4 | Privacy wrapper | Frozen candidate |
 | ES-43 | PRI | Bounded correction factor | `g_i,z_i,gamma_priv,i` | A2 positive decay schedule | PO-01, PO-05, PO-10 | Lemma 1 | Privacy wrapper | Frozen candidate |
-| ES-44--ES-45 | PRI | Command-tracking decomposition dynamics | `p,q,c,z,lambda_tr,w_12,w_21,g` | A2 positive bounded weights and tracking rates | PO-01--PO-05, PO-10, PO-16A | Def. 1; Lemma 1; Thm. 4 | Privacy wrapper dynamics | Frozen candidate |
-| ES-46 | PRI | Private-weight admissibility interval | `underline w,bar w,w_12,w_21` | A2 strict positive margins | PO-01, PO-04, PO-05, PO-10 | Assump. 2; Lemma 1 | Privacy admissibility | Frozen candidate |
+| ES-44--ES-45 | PRI | Command-tracking decomposition dynamics | `p,q,c,z,lambda_tr,w_12,w_21,g` | A2 positive bounded weights and tracking rates; relevant nominal schedules remain inside ES-46 by the Version 2.1 channel-specific interior margin on the common local seed interval | PO-01--PO-05, PO-10, PO-16A | Def. 1; Lemma 1; Thm. 4 | Privacy wrapper dynamics | Frozen candidate |
+| ES-46 | PRI | Private-weight admissibility interval | `underline w,bar w,w_12,w_21` | A2 ES-46 bounds unchanged; Version 2.1 adds a strict nominal interior margin for every affected agent/channel pair | PO-01, PO-04, PO-05, PO-10 | Assump. 2; Lemma 1 | Privacy admissibility | Frozen candidate |
 | ES-47--ES-48 | PRI/CTL | Reconstruction, residual orientation, state identities | `hat c,r,p,q,c,z` | A2 initialization/ownership | PO-02A, PO-02B, PO-06, PO-13 | Def. 1; Lemma 1; Thm. 1 | Privacy-to-control interface | Frozen candidate |
 | ES-49--ES-50 | PRI | Difference and residual dynamics | `z,r,c,lambda_tr,w_12,w_21,g` | A2 positive weights/rates | PO-01, PO-02A, PO-02B, PO-03, PO-10 | Lemma 1; Thm. 1 | Privacy stability analysis | Frozen candidate |
 | ES-51 | PRI | Decaying residual envelope | `bar r,gamma_priv,r` | A2 admissible schedule; PO-02B post-continuation command-rate decay | PO-02B | Lemma 1; Thm. 1--Thm. 4 | Privacy performance bound | Open derivation |
 | ES-52 | PRI | Exact transparent-wrapper condition | `r,z,w_12,w_21,g,dot c` | A2 | PO-03 (for feasibility interpretation) | Claim restriction; Thm. 4 boundary | Transparency exclusion | Frozen candidate |
 | ES-53 | PRI/CTL | Nontransparent Case-B reconstruction | `hat c,c,r` | A2; ES-52 not imposed | PO-02A, PO-13 | Def. 1; Thm. 1--Thm. 4 | Integrated architecture | Frozen candidate |
-| ES-54--ES-57 | PRI | Protected datum and observation-equivalence target | `S_i,S_i',O_adv,q_i,w_i,A_i` | A2 passive adversary and local admissibility | PO-04, PO-15 | Def. 2; Thm. 4 | Privacy definition | Frozen candidate |
-| ES-58--ES-61 | PRI | Alternative private-realization construction | `p_i',q_i',c_i',z_i',g_i',w_i'` | A2 private-weight margins and compatible alternative path | PO-04, PO-05, PO-15 | Lemma 1; Thm. 4 | Privacy proof construction | Open derivation |
+| ES-54--ES-57 | PRI | Protected datum and observation-equivalence target | `S_i,S_i',O_adv,q_i,w_i,A_i` | A2 passive adversary; local claim restricted to the Version 2.1 regular privacy design domain and common local-before-exit interval | PO-04, PO-15 | Def. 2; Thm. 4 | Privacy definition | Frozen candidate |
+| ES-58--ES-61 | PRI | Alternative private-realization construction | `p_i',q_i',c_i',z_i',g_i',w_i'` | A2 supplies only nominal split/interior margins; alternative existence, identical public history, denominator validity, and a positive perturbation radius are not assumed | PO-04, PO-05, PO-15 | Lemma 1; Thm. 4 | Privacy proof construction | Open derivation |
 | ES-62--ES-67 | CL/PPC | Voltage closed loop with explicit residual injection | `u^V,c^V,r^V,chi^V,zeta^V,e^V,R^V` | A1; A2 residual envelope | PO-02A, PO-06, PO-08, PO-13, PO-16A | Thm. 1; Thm. 2 | Closed-loop voltage dynamics | Frozen candidate |
 | ES-68--ES-70 | CL/PPC | Frequency closed loop with explicit residual injection | `u^omega,c^omega,r^omega,zeta^omega,e^omega,R^omega` | A1; A2 residual envelope | PO-02A, PO-06, PO-09, PO-13, PO-16A | Thm. 1; Thm. 2 | Closed-loop frequency dynamics | Frozen candidate |
 | ES-71--ES-73 | SHR | Regulated synchronized equilibrium compatibility | `omega^*,z^*,r^*,p^*,q^*,c_common^omega,L_c` | A1 graph connectedness; equilibrium existence; A2 residual decay | PO-02B, PO-14 | Thm. 3; Thm. 4 | Steady-state characterization | Open derivation |

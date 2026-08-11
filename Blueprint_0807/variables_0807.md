@@ -1,7 +1,8 @@
 # Variables 0807: Minimal Variable Dictionary
 
-> Blueprint Freeze Version 2.0
-> Frozen: 2026-08-07
+> Blueprint Version 2.1
+> Privacy-Domain Revision: 2026-08-11
+> Historical baseline: Blueprint Freeze Version 2.0, frozen 2026-08-07
 
 ## Scope and ownership
 
@@ -141,6 +142,8 @@ The exact order and dimensions of `x`, `c`, `hat c`, `u`, and `alpha` are equati
 | `g_i^V`, `g_i^omega` | Bounded decomposition correction factors | Nonnegative scalars | Local/private | Residual dynamics |
 | `underline w_i^V`, `bar w_i^V` | Voltage private-weight lower/upper bounds | Positive scalars | Public bounds | Admissibility |
 | `underline w_i^omega`, `bar w_i^omega` | Frequency private-weight lower/upper bounds | Positive scalars | Public bounds | Admissibility |
+| `eta_{z,i}^V`, `eta_{z,i}^omega` | Declared nonzero initial private-split margins | Positive scalars with the corresponding channel-command unit | Public design data | Assumption 2 regular privacy domain |
+| `eta_{w,i}^V`, `eta_{w,i}^omega` | Declared private-weight interior margins | Positive scalars with the corresponding private-weight unit | Public design data | Assumption 2 regular privacy domain |
 | `mathbf m_i` | Regular public message vector | Vector `[p_i^V,p_i^omega]^T` | Public | Cyber payload |
 
 Only `p_i^V` and `p_i^omega` are regular coordination payloads.
@@ -215,7 +218,7 @@ The following are derived constants or channel-suppressed proof notation, not ad
 
 ## 10.3 Notation-level freeze update
 
-The symbols added in Sections 3-6 are equation-stage auxiliaries required to make the frozen modules explicit. They do not add observers, estimators, approximators, graph switching, sampling theory, or controller subsystems. They must be accepted together with `equation_spec_0807.md` before full derivation.
+The symbols added in Sections 3-6 are equation-stage auxiliaries required to make the frozen modules explicit. Blueprint Version 2.1 adds only `eta_{z,i}^nu` and `eta_{w,i}^nu` as privacy-domain design margins; they are not states, controller gains, masking signals, or existence certificates. No observer, estimator, approximator, graph-switching, sampling, or controller subsystem is added.
 
 ## 11. Ownership and forbidden reuse rules
 

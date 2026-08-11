@@ -1,7 +1,8 @@
 # Equation Specification 0807
 
-> Blueprint Freeze Version 2.0
-> Frozen: 2026-08-07
+> Blueprint Version 2.1
+> Privacy-Domain Revision: 2026-08-11
+> Historical baseline: Blueprint Freeze Version 2.0, frozen 2026-08-07
 
 ## Status and authority
 
@@ -20,6 +21,7 @@ The following symbols are unavoidable equation-level auxiliaries and have been a
 - input-affine drifts `F_i^V`, `F_i^omega` and voltage backstepping error `chi_i^V`;
 - decomposition differences `z_i^V`, `z_i^omega` and correction factors `g_i^V`, `g_i^omega`;
 - public message vector `mathbf m_i`, command-tracking rates, uncertainty bounds, controller gains, and private-weight bounds.
+- channel-consistent privacy-domain margins `eta_{z,i}^V`, `eta_{z,i}^omega`, `eta_{w,i}^V`, and `eta_{w,i}^omega`.
 
 Channel-suppressed notation in Parts 4-8 and 13-14 is specification shorthand only. Every such equation represents two equations obtained by restoring superscript `V` or `omega`; the shorthand is not a third channel or a manuscript symbol family.
 
@@ -416,6 +418,24 @@ Thus the claim is practical prescribed-time recovery, with final tolerances sele
 
 ## 5. Privacy-preserving virtual-state mechanism
 
+### 5.0 Blueprint Version 2.1 regular privacy domain
+
+The ES formulas in this section are unchanged from Blueprint Version 2.0. Version 2.1 restricts only the domain on which the alternative-realization proof may be attempted.
+
+For every agent/channel pair affected through the frozen physical/electrical coupling by a candidate alternative construction, Assumption 2 requires
+
+```text
+|z_j^nu(0)| >= eta_{z,j}^nu > 0,
+
+underline(w)_j^nu + eta_{w,j}^nu
+ <= w_{j,12}^nu(t), w_{j,21}^nu(t)
+ <= bar(w)_j^nu - eta_{w,j}^nu
+```
+
+on a declared common local seed interval, with `nu in {V,omega}` and `2eta_{w,j}^nu < bar(w)_j^nu-underline(w)_j^nu`. The margins carry the units of their corresponding channel quantities. Unless PO-04 proves that a smaller affected subset is closed, the condition is applied network-wide along the coupled model.
+
+These inequalities are nominal design-domain data. They do not posit `S_i'`, `q_i'`, `w_i'`, `p_i'=p_i`, a compatible alternative trajectory, or a positive perturbation radius. PO-04 must construct those objects and prove that some nonzero perturbation remains inside these margins. PO-05 remains downstream and must validate the divisions used by ES-60--ES-61.
+
 ### 5.1 Initialization and ownership
 
 For both channels, initialize
@@ -543,7 +563,7 @@ with residual dynamics (ES-50) and envelope (ES-51).
 
 ### Equation-level decision
 
-Blueprint Freeze Version 2.0 implements Case B. Case A is algebraically possible only under the extra constraint (ES-52), which is not part of the frozen private-parameter contract and cannot be assumed globally under bounded weights. This conclusion is based on (ES-50), not on intuition.
+Blueprint Versions 2.0 and 2.1 both implement Case B. Version 2.1 changes only the privacy-admissible design domain. Case A is algebraically possible only under the extra constraint (ES-52), which is not part of the private-parameter contract and cannot be assumed globally under bounded weights. This conclusion is based on (ES-50), not on intuition.
 
 ## 7. Privacy observation map and target
 
@@ -613,7 +633,7 @@ w_{i,12}'(t)
 
 whenever `z_i'(t) != 0`.
 
-The admissible alternative set `A_i(S_i)` consists only of alternatives for which:
+The admissible alternative set `A_i(S_i)` consists only of alternatives constructed from a nominal realization in the Version 2.1 regular privacy domain and for which:
 
 1. the denominators in (ES-60)-(ES-61) do not vanish before their numerators;
 2. the resulting weights satisfy (ES-46);
@@ -624,7 +644,7 @@ The admissible alternative set `A_i(S_i)` consists only of alternatives for whic
 
 This construction adapts the Privacy paper's “same public state, adjusted private weights” idea. Equations (ES-59)-(ES-61), command-tracking terms, plant compatibility, and the admissible-set restrictions are new.
 
-The construction establishes local/existence-based ambiguity, not ambiguity for every arbitrary `S_i'`. **PO-04** establishes nonemptiness of `A_i(S_i)` beyond the nominal realization; **PO-05** establishes the denominator conditions used by (ES-60)--(ES-61).
+The construction targets local/existence-based ambiguity on the regular privacy domain, not ambiguity for every arbitrary `S_i'` or every initialization in the historical Version 2.0 bounded class. **PO-04** must establish nonemptiness of `A_i(S_i)` beyond the nominal realization and quantify a nonzero perturbation radius from the declared margins; **PO-05** remains downstream and establishes the denominator conditions used by (ES-60)--(ES-61).
 
 ## 9. Voltage closed-loop equations
 

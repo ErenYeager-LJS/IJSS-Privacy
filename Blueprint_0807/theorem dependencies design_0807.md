@@ -1,7 +1,8 @@
 # Theorem Dependencies Design 0807: Minimal Architecture
 
-> Blueprint Freeze Version 2.0
-> Frozen: 2026-08-07
+> Blueprint Version 2.1
+> Privacy-Domain Revision: 2026-08-11
+> Historical baseline: Blueprint Freeze Version 2.0, frozen 2026-08-07
 
 ## Scope
 
@@ -64,21 +65,26 @@ It supplies existence, bounded nonlinear terms, graph information flow, funnel i
 Assume that:
 
 1. private substates and coupling parameters are initialized in an admissible bounded set;
-2. the public/private decomposition and local reconstruction are well defined;
-3. the voltage/frequency privacy residuals are locally computable, bounded by declared nonnegative schedules, and decay as required by the physical theorem;
-4. the differential steady-state frequency privacy correction vanishes;
-5. the eavesdropper observes all public messages and disclosed metadata but cannot access private local memory or physical sensors;
-6. active message manipulation and communication failures are outside the core model.
+2. for every agent/channel pair affected through the coupled alternative construction, `|z_j^nu(0)| >= eta_{z,j}^nu > 0`;
+3. on a declared common local seed interval, the relevant designer-selected nominal schedules satisfy `underline(w)_j^nu+eta_{w,j}^nu <= w_{j,12}^nu(t),w_{j,21}^nu(t) <= bar(w)_j^nu-eta_{w,j}^nu`, with `eta_{w,j}^nu>0` and `2eta_{w,j}^nu < bar(w)_j^nu-underline(w)_j^nu`;
+4. the affected scope is network-wide along the frozen physical/electrical coupling and may be reduced only after a proof that a smaller affected subset is closed;
+5. the public/private decomposition and local reconstruction are well defined;
+6. the voltage/frequency privacy residuals are locally computable, bounded by declared nonnegative schedules, and decay as required by the physical theorem;
+7. the differential steady-state frequency privacy correction vanishes;
+8. the eavesdropper observes all public messages and disclosed metadata but cannot access private local memory or physical sensors;
+9. active message manipulation and communication failures are outside the core model.
+
+Items 2--4 provide only designer-selectable domain margins. They do not assume an alternative realization, identical public history, a nonzero perturbation radius, or validity of ES-58--ES-61. Those remain conclusions to be established by PO-04 and PO-05.
 
 ### Why Assumption 2 exists
 
-It is the minimum bridge between privacy and physical control. It supplies admissibility, residual decay, the sharing compatibility condition, and the exact passive observation boundary without adding an observer or attack-resilience subsystem.
+It is the minimum bridge between privacy and physical control. Blueprint Version 2.1 adds the regular privacy-domain margins needed to exclude the Task-010 zero-split counterexample while leaving alternative existence unassumed. The assumption also supplies residual, sharing-compatibility, and passive-observation boundaries without adding an observer or attack-resilience subsystem.
 
 ## Lemma 1
 
 ### Public/private decomposition regularity and residual property
 
-Under Definitions 1-2 and Assumption 2, the public/private substates and private parameters remain well posed and bounded. The local reconstructed coordination states are computable, and the channel-specific residuals `r_i^V` and `r_i^omega` satisfy their declared bounds and decay conditions. For every admissible alternative protected initial local coordination state, an admissible alternative private realization exists that generates the same public history.
+Under Definitions 1-2 and Assumption 2, the public/private substates and private parameters remain well posed and bounded. The local reconstructed coordination states are computable, and the channel-specific residuals `r_i^V` and `r_i^omega` satisfy their declared bounds and decay conditions. On the regular privacy design domain, existence of a non-nominal private realization with the same public history is retained as a conclusion only after PO-04 and PO-05 close.
 
 ### Why Lemma 1 exists
 
@@ -90,7 +96,7 @@ This is the only supporting lemma needed after pruning. It supplies both the phy
 - admissibility of private parameters;
 - local computability and boundedness of the reconstruction residual;
 - the residual decay condition required by the sharing theorem;
-- existence of alternative private explanations with identical public histories.
+- after PO-04/PO-05 closure, existence of an alternative private explanation with identical public history on the common local-before-exit interval.
 
 ### Source status
 
@@ -153,9 +159,9 @@ Voltage/frequency recovery alone does not imply active-power sharing. Privacy ca
 
 ### Privacy-preserving composite guarantee
 
-Under Definitions 1-2, Assumptions 1-2, Lemma 1, and Theorems 1-3, the same closed loop simultaneously satisfies:
+Under Definitions 1-2, Assumptions 1-2, Lemma 1, and Theorems 1-3, with the privacy initialization in the regular design domain and the required proof obligations closed, the intended same closed loop satisfies:
 
-1. public-history indistinguishability of the protected initial local virtual coordination state;
+1. local existence-based public-history indistinguishability of the protected initial local virtual coordination state on the common admissible interval;
 2. closed-loop boundedness;
 3. prescribed voltage/frequency funnel invariance;
 4. practical prescribed-time voltage/frequency recovery;

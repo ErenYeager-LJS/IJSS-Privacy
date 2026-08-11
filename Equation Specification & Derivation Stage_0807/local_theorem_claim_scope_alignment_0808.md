@@ -6,7 +6,7 @@
 
 ## 1. Authority boundary
 
-Blueprint Freeze Version 2.0 remains the historical baseline and records the original stronger design target. The controlled Task-012 revision activates Blueprint Version 2.1 only for the privacy-admissible design-domain contract; the controller, ES formulas, Lyapunov design, theorem strategy, and local-before-exit physical boundary remain unchanged.
+Blueprint Freeze Version 2.0 remains the historical baseline and records the original stronger design target. Task-012 activated Version 2.1 for the split/weight privacy-domain contract. The controlled Task-014 revision activates Blueprint Version 2.2 only for finite-seed privacy-schedule regularity and its local stopping boundary; the controller, ES formulas, Lyapunov design, theorem strategy, and local-before-exit physical boundary remain unchanged.
 
 The final manuscript theorem scope is a separate, non-frozen claim layer:
 
@@ -30,7 +30,7 @@ No conclusion is made at or after the first admissibility exit. The theorem does
 
 ### Privacy clause pending required proof closure
 
-The final local manuscript must retain a local public-history indistinguishability result because privacy is a core paper claim. That clause may be appended to the local theorem or stated under the already-frozen theorem number assigned to the privacy result only after PO-04 and PO-05 are proved. Its legal scope is existence-based public-history non-uniqueness for nominal realizations in the Blueprint Version 2.1 regular privacy design domain, on the common admissible local-before-exit interval, under the passive-eavesdropper observation model. It must not claim the historical unrestricted Version 2.0 class, global ambiguity, universal alternative realizations, transparent reconstruction, cryptographic secrecy, or protection against physical-sensor/private-memory access.
+The final local manuscript must retain a local public-history indistinguishability result because privacy is a core paper claim. That clause may be appended to the local theorem or stated under the already-frozen theorem number assigned to the privacy result only after PO-04 and PO-05 are proved. Its legal scope is existence-based public-history non-uniqueness for nominal realizations in the Blueprint Version 2.2 schedule-regular privacy design domain, before the earliest of the finite seed horizon and first regular-domain exit, under the passive-eavesdropper observation model. It must not claim the historical unrestricted Version 2.0 class, the Version 2.1 schedule class without a local lower margin, global ambiguity, universal alternative realizations, transparent reconstruction, cryptographic secrecy, or protection against physical-sensor/private-memory access.
 
 Until PO-04 and PO-05 close, the privacy observation-equivalence clause is a required but unavailable final claim, not a proved conclusion.
 
@@ -38,7 +38,7 @@ Until PO-04 and PO-05 close, the privacy observation-equivalence clause is a req
 
 | PO | Current ledger status | Classification | Claim supported | Does the claim survive Route L? | Must finish before Proof Freeze? | Exact reason |
 |---|---|---|---|---|---|---|
-| PO-04 | OPEN | **A. REQUIRED FOR FINAL LOCAL MAIN THEOREM** | Nonempty admissible alternative private realization and public-history non-uniqueness | **YES, locally on the Version 2.1 regular privacy design domain.** PO-04 is eligible to resume and must construct the coupled family and positive perturbation radius; neither is assumed by the new margins. | **YES** | A privacy-preserving paper cannot treat observation ambiguity as proved without at least one non-nominal admissible realization. |
+| PO-04 | OPEN | **A. REQUIRED FOR FINAL LOCAL MAIN THEOREM** | Nonempty admissible alternative private realization and public-history non-uniqueness | **YES, locally on the Version 2.2 schedule-regular privacy design domain.** PO-04 may be re-attempted and must construct the coupled family and positive perturbation radius; neither is assumed by the schedule margin. | **YES** | A privacy-preserving paper cannot treat observation ambiguity as proved without at least one non-nominal admissible realization. |
 | PO-05 | OPEN | **A. REQUIRED FOR FINAL LOCAL MAIN THEOREM** | Validity of the alternative-realization denominators or compatible extension | **YES, locally, after revised-domain PO-04 closes.** | **YES** | The PO-04 construction cannot support a legal privacy theorem while its frozen alternative-weight formulas may be singular. |
 | PO-12 | OPEN | **C. OUTSIDE FINAL MANUSCRIPT THEOREM SCOPE** | Practical recovery by the prescribed deadlines | **NO.** Its frozen dependency chain uses PO-11, PO-16B, and PO-02B, which Route L does not pursue. | **NO** | A local-before-exit theorem cannot guarantee existence/admissibility through the deadlines or use ES-51 decay. |
 | PO-14 | OPEN | **C. OUTSIDE FINAL MANUSCRIPT THEOREM SCOPE** | Exact or practical active-power sharing | **NO.** The theorem-ready sharing claim requires PO-12, PO-02B, equilibrium closure, and residual limits. | **NO** | The required upstream performance/residual chain is outside Route L. Frozen sharing algebra remains design intent, not a final theorem. |
@@ -55,13 +55,13 @@ No listed PO is discharged or moved to another ledger status by this classificat
 | Prescribed-performance machinery | **FINAL LOCAL THEOREM CLAIM** | PPC coordinates and local inequalities are regular before exit | Forward invariance of the complete funnel; no funnel crossing for all time |
 | Actuator feasibility | **FINAL LOCAL THEOREM CLAIM** | Symbolic feasibility on the PO-13 design region while the trajectory remains there | All-time actuator feasibility or saturation avoidance |
 | Finite privacy residual | **FINAL LOCAL THEOREM CLAIM** | Finite PO-02A local residual/convolution bound | Residual converges to zero; ES-51 decay |
-| Public-history indistinguishability | **CONDITIONAL CLAIM pending PO-04/PO-05** | Local existence-based non-unique reconstruction for the Version 2.1 regular privacy design domain under the frozen passive observation model after both POs close | Historical unrestricted Version 2.0 class, global/universal ambiguity, perfect secrecy, transparent reconstruction |
+| Public-history indistinguishability | **CONDITIONAL CLAIM pending PO-04/PO-05** | Local existence-based non-unique reconstruction for the Version 2.2 schedule-regular privacy domain before its stopping boundary, under the frozen passive observation model after both POs close | Historical Version 2.0 class, Version 2.1 schedules without a local lower margin, global/universal ambiguity, perfect secrecy, transparent reconstruction |
 | Deadline recovery | **NOT AVAILABLE UNDER CURRENT FINAL THEORY** | May be described only as an original frozen target or unproved limitation | Recovery by `T_V` or `T_omega`; continued post-deadline boundedness |
 | Active-power sharing | **NOT AVAILABLE UNDER CURRENT FINAL THEORY** | Frozen equilibrium algebra may be identified as original design intent or future work | Exact sharing or a proved residual-dependent sharing bound |
 | Simultaneous composite guarantee | **NOT AVAILABLE UNDER CURRENT FINAL THEORY** | Separate local physical and privacy results may be reported after their own closures | One theorem simultaneously guaranteeing privacy, persistent PPC, deadlines, and sharing |
 | Global continuation and domain invariance | **NOT AVAILABLE UNDER CURRENT FINAL THEORY** | Explicit local-before-exit limitation | `K_0` invariant, `Delta` invariant, denominator/actuator margins persist for all time |
 
-The public-history claim remains conditional because PO-04 and PO-05 are open. Blueprint Version 2.1 supplies only designer-selectable domain margins; it does not assume the alternative construction, identical public history, or a positive perturbation radius. Task-013 must address the first immediate proof step.
+The public-history claim remains conditional because PO-04 and PO-05 are open. Blueprint Version 2.2 supplies only designer-selectable local domain margins and a stopping boundary; it does not assume alternative construction, identical public history, a positive perturbation radius, or invariance. Task-015 must re-attempt the first proof step.
 
 ## 5. Blocked stronger-theorem chain
 
@@ -77,7 +77,7 @@ These statuses are intentionally retained. They can re-enter the proof pipeline 
 
 | PO | Current status | Route-L relevance | Must finish before Proof Freeze? | Reason |
 |---|---|---|---|---|
-| PO-04 | OPEN | Required local privacy construction on the Version 2.1 regular domain; eligible to resume | **YES** | Immediate prerequisite for the retained privacy claim |
+| PO-04 | OPEN | Required local privacy construction on the Version 2.2 schedule-regular domain; eligible to re-attempt | **YES** | Immediate prerequisite for the retained privacy claim |
 | PO-05 | OPEN | Required local privacy-construction validity; inactive until PO-04 closes | **YES, after PO-04** | Removes singularity gap in the frozen construction |
 | PO-11 | OPEN | Stronger-theorem funnel continuation only | **NO** | Route L stops before exit |
 | PO-12 | OPEN | Deadline theorem only | **NO** | Deadline claim is outside final scope |
@@ -102,7 +102,7 @@ The frozen Blueprint dependency graph remains untouched and must be labeled, whe
 ## 8. Architecture classification
 
 - The stopped continuation chain remains a **Proof Boundary** and **Claim Issue**, already resolved by Route L scope restriction.
-- The Task-010 full-domain blocker is resolved at architecture level by the approved Version 2.1 domain restriction; PO-04 and PO-05 remain **open proof obligations**, not conclusions embedded in Assumption 2.
+- The Task-010 zero-split blocker is resolved by Version 2.1, and the Task-013 schedule-reciprocal blocker is resolved at architecture level by the Version 2.2 finite-seed schedule margin. PO-04 and PO-05 remain **open proof obligations**, not conclusions embedded in Assumption 2.
 - Architecture Review Required: **NO** for the present classification and the immediate PO-04 proof task.
 
 If PO-04 later shows that no non-nominal admissible alternative exists, or PO-05 shows that the frozen construction is generically singular and cannot be extended without equation or assumption changes, that later task must stop and report `ARCHITECTURE REVIEW REQUIRED`.
@@ -111,18 +111,18 @@ If PO-04 later shows that no non-nominal admissible alternative exists, or PO-05
 
 Recommend exactly:
 
-`task-013-po04-privacy-alternative-existence-revised-domain`
+`task-015-po04-privacy-alternative-existence-v2-2-domain`
 
-Scope: prove only PO-04's coupled nonempty alternative-set claim and positive perturbation radius on the Version 2.1 regular privacy design domain and legal common local-before-exit interval. Do not begin PO-05 in the same task. If the construction requires another assumption, an equation change, a new state, or a privacy-mechanism change, stop and report `ARCHITECTURE REVIEW REQUIRED`.
+Scope: re-attempt only PO-04's coupled nonempty alternative-set claim and positive perturbation radius on the Version 2.2 schedule-regular privacy design domain before the finite-seed/first-exit boundary. Do not begin PO-05. If the construction requires another assumption, an equation change, a new state, or a privacy-mechanism change, stop and report `ARCHITECTURE REVIEW REQUIRED`.
 
 ## 10. Modification declaration
 
-- Blueprint changed by Task-012: **YES, only the approved Version 2.1 privacy-admissible domain contract; Version 2.0 remains the historical baseline**.
+- Blueprint changed by Tasks 012 and 014: **YES, only the approved Version 2.1 split/weight domain and Version 2.2 finite-seed schedule regularity; Version 2.0 remains the historical baseline**.
 - Controller changed: **NO**.
 - ES equations changed: **NO**.
 - Lyapunov design changed: **NO**.
 - State definitions changed: **NO**.
-- Assumptions changed by Task-012: **YES, only Assumption 2's approved regular privacy-domain margins and affected-pair scope**.
+- Assumptions changed by Tasks 012 and 014: **YES, only Assumption 2's approved regular privacy-domain margins, affected-pair scope, and finite-seed schedule lower margin**.
 - Theorem numbering changed: **NO**.
 - Proof-obligation statuses changed: **NO**.
 - Simulation/HIL files changed: **NO**.

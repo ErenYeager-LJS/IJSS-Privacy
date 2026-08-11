@@ -1,7 +1,8 @@
 # Variables 0807: Minimal Variable Dictionary
 
-> Blueprint Version 2.1
-> Privacy-Domain Revision: 2026-08-11
+> Blueprint Version 2.2
+> Privacy-Schedule Regularity Revision: 2026-08-11
+> Predecessor: Blueprint Version 2.1, Privacy-Domain Revision
 > Historical baseline: Blueprint Freeze Version 2.0, frozen 2026-08-07
 
 ## Scope and ownership
@@ -144,6 +145,8 @@ The exact order and dimensions of `x`, `c`, `hat c`, `u`, and `alpha` are equati
 | `underline w_i^omega`, `bar w_i^omega` | Frequency private-weight lower/upper bounds | Positive scalars | Public bounds | Admissibility |
 | `eta_{z,i}^V`, `eta_{z,i}^omega` | Declared nonzero initial private-split margins | Positive scalars with the corresponding channel-command unit | Public design data | Assumption 2 regular privacy domain |
 | `eta_{w,i}^V`, `eta_{w,i}^omega` | Declared private-weight interior margins | Positive scalars with the corresponding private-weight unit | Public design data | Assumption 2 regular privacy domain |
+| `eta_{gamma,i}^V`, `eta_{gamma,i}^omega` | Finite-seed lower margins for the public privacy schedules | Positive scalars with the corresponding channel-command unit | Public design data | Assumption 2 schedule-regular privacy domain |
+| `T_s`, `I_s=[0,T_s]` | Common finite privacy-construction seed horizon and interval | Positive time / compact interval | Public design data | Local privacy-domain stopping boundary |
 | `mathbf m_i` | Regular public message vector | Vector `[p_i^V,p_i^omega]^T` | Public | Cyber payload |
 
 Only `p_i^V` and `p_i^omega` are regular coordination payloads.
@@ -218,7 +221,7 @@ The following are derived constants or channel-suppressed proof notation, not ad
 
 ## 10.3 Notation-level freeze update
 
-The symbols added in Sections 3-6 are equation-stage auxiliaries required to make the frozen modules explicit. Blueprint Version 2.1 adds only `eta_{z,i}^nu` and `eta_{w,i}^nu` as privacy-domain design margins; they are not states, controller gains, masking signals, or existence certificates. No observer, estimator, approximator, graph-switching, sampling, or controller subsystem is added.
+The symbols added in Sections 3-6 are equation-stage auxiliaries required to make the frozen modules explicit. Blueprint Version 2.1 added `eta_{z,i}^nu` and `eta_{w,i}^nu`; Version 2.2 adds only `eta_{gamma,i}^nu` as a finite-seed privacy-schedule margin. These are not states, controller gains, masking signals, invariance assumptions, or existence certificates. No observer, estimator, approximator, graph-switching, sampling, or controller subsystem is added.
 
 ## 11. Ownership and forbidden reuse rules
 

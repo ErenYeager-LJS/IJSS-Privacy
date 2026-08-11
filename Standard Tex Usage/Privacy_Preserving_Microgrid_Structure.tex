@@ -65,7 +65,7 @@
 
 \begin{document}
 
-\title{A Privacy-Preserving Prescribed-Time Distributed Secondary Control Framework for Microgrids}   %标题
+\title{A Privacy-Preserving Distributed Secondary Control Framework for Islanded AC Microgrids: Local Physical Analysis and Public-History Indistinguishability}
 
 \author{Jiashun Lu
 \thanks
@@ -79,21 +79,28 @@
 \maketitle
 
 \begin{abstract}
-
+Distributed secondary control in islanded AC microgrids must coordinate physical regulation with communication constraints and incomplete adversary access. This paper studies a frozen secondary-control architecture equipped with a public/private virtual coordination decomposition and a passive public-history observation model. The analysis is deliberately restricted to a local-before-exit theorem boundary. First, we establish local well-posedness and compact-region comparison properties for the physical closed loop, including the prescribed-performance coordinates, the finite privacy-residual bound, and actuator feasibility on a verified bootstrap design region. Second, we construct a non-nominal private realization that produces the same complete public history as a nominal realization under the Version 2.2 privacy-domain margins. The initial alternative construction and its post-seed denominator continuation are treated separately, so the privacy statement remains existence-based and local. The results apply only before the earliest admissibility exit or finite privacy-seed boundary. They do not assert global continuation, all-time invariance, post-seed validity, asymptotic residual decay, deadline recovery, active-power sharing, or a simultaneous composite guarantee.
 \end{abstract}
 
 \begin{IEEEkeywords}
-
+Islanded AC microgrid, distributed secondary control, public/private coordination, prescribed-performance control, public-history indistinguishability, passive eavesdropper, local-before-exit analysis.
 \end{IEEEkeywords}
 
 %======================================================
 \section{Introduction}
 
+Islanded AC microgrids rely on distributed secondary control to coordinate inverter-based units while preserving acceptable voltage and frequency behavior. The communication layer is part of this control loop: public coordination states are exchanged among neighboring units, whereas local controller variables and physical measurements may remain private. A useful analysis therefore has to describe both the physical closed loop and the information that is available to an observer of the communication network.
+
+The two requirements are not interchangeable. A controller can be physically regular on an admissible operating region without preventing multiple private explanations of the same communication record. Conversely, a state decomposition that hides local variables does not by itself establish that the coupled microgrid equations remain well posed, that the prescribed-performance coordinates are regular, or that the implemented inputs remain feasible on the design region. The resulting proof problem is a coupled one, but the physical and observation-equivalence arguments must remain logically separate.
+
+This paper analyzes a distributed secondary-control architecture with a public/private virtual coordination layer, a fixed connected cyber graph, and a passive eavesdropper that observes the complete public history. The controller, plant equations, prescribed-performance construction, and privacy equations are treated as frozen design objects. The proof is intentionally local-before-exit: estimates are stated on a selected compact bootstrap/design region and the privacy construction is stopped at the earliest finite-seed or regular-domain boundary. This boundary avoids interpreting a local margin as a global invariance claim.
+
+The paper makes two bounded contributions. First, it establishes a local physical result for the closed loop: local well-posedness, finite compact-dependent component and composite comparison bounds, a finite privacy-residual bound, and actuator feasibility on the verified bootstrap design region. Second, it establishes a local public-history indistinguishability result: after the initial alternative construction, the admissible private realization can be continued while the strict privacy-domain conditions remain valid, and the nominal and alternative realizations generate the same complete passive public history. The two results are reported separately. Deadline recovery, asymptotic residual decay, active-power sharing, forward invariance, global continuation, and a simultaneous composite theorem are outside the final theorem scope.
+
 The contributions of this paper are as follows.
 \begin{enumerate}
-    \item 
-    \item 
-    \item
+    \item A local-before-exit analysis of the frozen distributed secondary-control closed loop. On the selected compact bootstrap/design region, the plant, prescribed-performance coordinates, reconstruction interface, and privacy residual are regular, and the composite comparison inequality is available with the stated local feasibility conditions.
+    \item A local public-history indistinguishability construction under the passive observation model. The initial non-nominal realization and the subsequent denominator-valid continuation are treated as separate proof obligations, and the claim stops at the finite-seed or regular-domain boundary.
 \end{enumerate}
 
 
@@ -132,5 +139,4 @@ Author. Title. Journal, Year.
 
 \end{thebibliography}
 \end{document}
-
 

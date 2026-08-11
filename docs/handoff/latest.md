@@ -1,30 +1,29 @@
 # Latest Handoff
 
-Current task: `task-016-po05-alternative-denominator-validity`
+Current task: `task-017-final-proof-chain-and-manuscript-readiness-audit`
 
-Branch: `task-016-po05-alternative-denominator-validity`
+Branch: `task-017-final-proof-chain-and-manuscript-readiness-audit`
 
-PR: pending creation after local verification
+PR: pending creation after verification
 
-Full handoff: [task-016-po05-alternative-denominator-validity.md](task-016-po05-alternative-denominator-validity.md)
+Full handoff: [task-017-final-proof-chain-and-manuscript-readiness-audit.md](task-017-final-proof-chain-and-manuscript-readiness-audit.md)
 
 ## Current result
 
-**OUTCOME A - PO-05 PROVED LOCALLY UP TO THE RETAINED STOPPING BOUNDARY**
+**READY FOR LOCAL MANUSCRIPT LATEX PREPARATION**
 
-PO-04 remains `PROVED` and supplies the initial/common local construction interval, including legal ES-60/ES-61 denominators, ES-46-interior weights, identical complete public history, and a positive physical perturbation radius. PO-05 does not re-prove that interval. It proves local restart/extension of the alternative realization after the PO-04 seed while the strict regular-domain conditions remain valid, up to the first retained privacy/physical admissibility exit or the finite-seed horizon `T_s`.
+PO-04 and PO-05 are closed on their declared local domains. No remaining `OPEN` proof obligation is required for the selected `LOCAL-BEFORE-EXIT` theorem.
 
-No global continuation, post-`T_s` validity, all-time `z'` separation, or all-time ES-46 invariance is claimed.
+The final manuscript may state the local physical result and the logically separate local public-history indistinguishability result. It must not copy the stronger historical Blueprint theorem descriptions or the all-time ES-57 target into the manuscript.
 
-Controller, ES equations, Lyapunov design, states, observation model, theorem scope, and Blueprint Version 2.2 are unchanged. PO-04 and PO-05 are `PROVED` on their stated local domains; PO-11, PO-12, PO-14, PO-15, PO-16B, and PO-02B remain unchanged and open where recorded in the ledger.
+Remaining open obligations are classified as follows:
 
-## Verification
+- Outside final theorem scope: PO-12, PO-14, PO-15.
+- Future work only: PO-02B, PO-11, PO-16B.
+- Required for final theorem: none.
 
-- `git diff --check`: run before commit.
-- Scope audit: only PO-05 derivation/ledger/traceability/theorem-scope/handoff documents changed.
+Blueprint Version 2.2, controller, ES equations, Lyapunov design, state definitions, observation model, theorem numbering, and all PO statuses remain unchanged.
 
 ## Next task
 
-`task-017-final-proof-chain-and-manuscript-readiness-audit`
-
-Audit the remaining open obligations and exact local theorem claim before manuscript LaTeX work. Do not strengthen PO-05 beyond the retained local-before-exit boundary.
+Prepare the manuscript LaTeX architecture using only the final claim layer and the limitations recorded in `final_proof_chain_manuscript_readiness_audit_0808.md`. Do not translate the frozen stronger theorem hierarchy verbatim.

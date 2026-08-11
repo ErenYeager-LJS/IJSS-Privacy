@@ -33,6 +33,7 @@
 \usepackage{amsmath}
 \usepackage{amsfonts}
 \usepackage{amssymb}
+\usepackage{mathrsfs}
 \usepackage{booktabs}
 \usepackage{bm}
 \usepackage{graphicx}
@@ -333,18 +334,266 @@ continuation, or compatible extension up to the retained privacy stopping
 boundary remains the conclusion of PO-05. Neither assumption asserts global
 invariance or continuation.
 
-\section{Prescribed Time-based Secondary Controller Design}
+\section{Local Physical Analysis}
+\label{sec:local_physical_analysis}
 
+\subsection{Prescribed-Performance Coordinates and Frozen Controller}
 
-% % 正文中插入图片的位置
-% \begin{figure}[htbp]  % [htbp]控制图片浮动位置（here, top, bottom, page）
-%     \centering  % 图片居中
-%     % 插入图片，调整尺寸（width/height可选）
-%     \includegraphics[width=1.0\linewidth]{MG_SC.eps}  % 宽度为文本宽度的80%
-%     % 图片标题
-%     \caption{Distributed secondary control diagram of the isolated island type MG}  % 替换为你的图片标题
-%     \label{fig:MG_SC}  % 标签，用于交叉引用（如\ref{fig:rbfnn}）
-% \end{figure}
+For $\nu\in\{V,\omega\}$, the frozen performance envelope is
+\begin{equation}
+\rho_i^\nu(t)
+=\rho_{i,\infty}^\nu+
+  (\rho_{i,0}^\nu-\rho_{i,\infty}^\nu)h(t/T_\nu),
+\label{eq:ppc_envelope}
+\end{equation}
+\begin{equation}
+h(s)=
+\begin{cases}
+1-10s^3+15s^4-6s^5,&0\leq s\leq1,\\
+0,&s>1.
+\end{cases}
+\label{eq:ppc_shape}
+\end{equation}
+The normalized and transformed coordinates are
+\begin{equation}
+\sigma_i^\nu=\frac{e_{i,0}^\nu}{\rho_i^\nu},
+\qquad
+\zeta_i^\nu=\operatorname{atanh}(\sigma_i^\nu),
+\qquad
+h_i^\nu=\frac{1}{\rho_i^\nu[1-(\sigma_i^\nu)^2]}.
+\label{eq:ppc_coordinates}
+\end{equation}
+They are well defined only in the strict interior $|\sigma_i^\nu|<1$.
+For the voltage channel, the retained virtual control and backstepping error are
+\begin{align}
+\alpha_i^V
+&=\sigma_i^V\dot\rho_i^V
+-k_1^V\rho_i^V[1-(\sigma_i^V)^2]\zeta_i^V,
+\nonumber\\
+\chi_i^V&=x_{i,2}^V-\alpha_i^V,
+\label{eq:voltage_virtual_control}
+\end{align}
+whereas the frequency channel uses
+\begin{equation}
+\alpha_i^\omega
+=\sigma_i^\omega\dot\rho_i^\omega
+-k_1^\omega\rho_i^\omega[1-(\sigma_i^\omega)^2]\zeta_i^\omega.
+\label{eq:frequency_virtual_control}
+\end{equation}
+The frozen nominal commands and the privacy-aware plant inputs are
+\begin{align}
+c_i^V
+&=\tau_{Q_i}k_{V_i}\!\left(F_i^V-\dot\alpha_i^V+k_2^V\chi_i^V
++h_i^V\zeta_i^V\right)+k_c^V e_i^V,
+\label{eq:local_voltage_command}\\
+c_i^\omega
+&=\tau_{P_i}(F_i^\omega-\alpha_i^\omega)+k_c^\omega e_i^\omega,
+\label{eq:local_frequency_command}\\
+u_i^V&=c_i^V+r_i^V,
+\qquad
+u_i^\omega=c_i^\omega+r_i^\omega.
+\label{eq:local_reconstructed_inputs}
+\end{align}
+Substitution through the unique plant interface gives the frozen transformed
+subsystems
+\begin{align}
+\dot\zeta_i^V
+&=-k_1^V\zeta_i^V+h_i^V\chi_i^V,
+\nonumber\\
+\dot\chi_i^V
+&=-k_2^V\chi_i^V-h_i^V\zeta_i^V
+-\frac{k_c^V e_i^V+r_i^V}{\tau_{Q_i}k_{V_i}}+R_i^V,
+\label{eq:local_voltage_subsystem}\\
+\dot\zeta_i^\omega
+&=-k_1^\omega\zeta_i^\omega
++h_i^\omega\!\left(
+-\frac{k_c^\omega e_i^\omega+r_i^\omega}{\tau_{P_i}}
++R_i^\omega\right).
+\label{eq:local_frequency_subsystem}
+\end{align}
+These identities retain the privacy residual explicitly and do not absorb it
+into the physical uncertainty.
+
+\subsection{Local Well-Posedness and First-Exit Interval}
+
+On $\mathcal D_{\min}$, the load and power-flow maps, graph maps, PPC
+transformations, and algebraic controller maps are locally regular. The product
+$g_i^\nu z_i^\nu$ in the privacy dynamics is locally Lipschitz in the private
+difference, including at $|z_i^\nu|=\gamma_{\mathrm{priv},i}^\nu$.
+Together with the measurable, locally essentially bounded uncertainty and
+privacy coefficients in Assumptions 1--2, the reduced independent vector field
+satisfies the Caratheodory conditions. Hence PO-16A supplies a unique absolutely
+continuous maximal local solution from every admissible initial condition.
+
+All analysis below is restricted to compact time intervals before
+$\tau_{\mathrm{ex}}$, while the independent trajectory remains in
+$\mathcal D_{\min}$ and in the selected $\mathcal K_0$. On such intervals, all
+reconstructed coordinates and compact-dependent constants are finite. This
+local result neither excludes a later admissibility exit nor extends the
+trajectory beyond it.
+
+\subsection{Command-Rate and Finite Residual Bounds}
+
+For each channel, subtraction and averaging of the frozen public/private
+dynamics give
+\begin{align}
+\dot z_i^\nu
+&=-[\lambda_{\mathrm{tr},i}^\nu+w_{i,12}^\nu
++w_{i,21}^\nu g_i^\nu]z_i^\nu,
+\label{eq:local_z_dynamics}\\
+\dot r_i^\nu
+&=-\lambda_{\mathrm{tr},i}^\nu r_i^\nu
++\frac{1}{2}(w_{i,12}^\nu-w_{i,21}^\nu g_i^\nu)z_i^\nu
+-\dot c_i^\nu.
+\label{eq:local_r_dynamics}
+\end{align}
+PO-01 gives the channel-wise exponential bound on $z_i^\nu$. PO-03 then gives
+finite compact-dependent command-rate constants
+\begin{equation}
+\|\dot{\bm c}^V\|\leq C_c^V(\mathcal K_0),
+\qquad
+\|\dot{\bm c}^\omega\|\leq C_c^\omega(\mathcal K_0),
+\label{eq:local_command_rate_bounds}
+\end{equation}
+before the first exit while the trajectory remains in $\mathcal K_0$.
+Since $r_i^\nu(0)=0$, variation of constants in
+\eqref{eq:local_r_dynamics} yields
+\begin{align}
+r_i^\nu(t)=\int_0^t &e^{-\lambda_{\mathrm{tr},i}^\nu(t-s)}
+\bigg[\frac{1}{2}(w_{i,12}^\nu-w_{i,21}^\nu g_i^\nu)z_i^\nu
+\nonumber\\[-1mm]
+&\hspace{29mm}-\dot c_i^\nu\bigg](s)\,ds.
+\label{eq:local_residual_convolution}
+\end{align}
+PO-02A therefore supplies a finite residual bound on the same compact local
+interval. A bounded command rate supports only this finite convolution estimate;
+no residual convergence conclusion follows from it.
+
+\subsection{Voltage and Frequency Component Inequalities}
+
+Use only the frozen Lyapunov components
+\begin{align}
+\mathscr V_V
+&=\frac{1}{2}\sum_i\!\left[p_\zeta^V(\zeta_i^V)^2
++p_\chi^V(\chi_i^V)^2\right],
+\nonumber\\
+\mathscr V_\omega
+&=\frac{1}{2}\sum_i(\zeta_i^\omega)^2,
+\nonumber\\
+\mathscr V_{\mathrm{priv}}
+&=\frac{1}{2}\sum_{i,\nu}p_c^\nu
+\left[(z_i^\nu)^2+(r_i^\nu)^2\right],
+\nonumber\\
+\mathscr V_{\mathrm{cl}}
+&=\mathscr V_V+\mathscr V_\omega+\mathscr V_{\mathrm{priv}}.
+\label{eq:frozen_lyapunov_components}
+\end{align}
+On $\mathcal K_0$, define the frozen disturbance aggregates
+\begin{align}
+D_i^V
+&=\frac{k_c^V|e_i^V|+|r_i^V|}{\tau_{Q_i}k_{V_i}}
++\bar R_i^V,
+\nonumber\\
+D_i^\omega
+&=\frac{k_c^\omega|e_i^\omega|+|r_i^\omega|}{\tau_{P_i}}
++\bar R_i^\omega.
+\label{eq:component_disturbances}
+\end{align}
+PO-08 and PO-09 establish, pointwise on the selected compact region and before
+the first admissibility exit,
+\begin{align}
+\dot{\mathscr V}_V
+&\leq-a_{Vz}\|\bm\zeta^V\|^2-a_{V\chi}\|\bm\chi^V\|^2
++\sum_i\frac{(p_\chi^V)^2(D_i^V)^2}{2\epsilon_{V2}},
+\label{eq:local_voltage_inequality}\\
+\dot{\mathscr V}_\omega
+&\leq-a_{\omega z}\|\bm\zeta^\omega\|^2
++\sum_i\frac{(\bar h_i^\omega)^2(D_i^\omega)^2}
+{2\epsilon_\omega},
+\label{eq:local_frequency_inequality}
+\end{align}
+where $a_{Vz}$, $a_{V\chi}$, and $a_{\omega z}$ are the positive coefficients
+fixed by ES-94, ES-95, and ES-98. Under the Privacy Gain Feasibility Condition,
+PO-10 gives on the same local region
+\begin{equation}
+\dot{\mathscr V}_{\mathrm{priv}}
+\leq-a_z\|\bm z\|^2-a_r\|\bm r\|^2
++d_c\|\dot{\bm c}\|^2,
+\label{eq:local_privacy_inequality}
+\end{equation}
+with $a_z>0$, $a_r>0$, and finite $d_c$. This component estimate uses
+\eqref{eq:local_command_rate_bounds}, not a residual-decay premise.
+
+\subsection{Bootstrap Actuator/Funnel Feasibility}
+
+PO-13 checks feasibility on $\mathcal K_0$ before the composite gain closure.
+For the frozen reconstructed commands, let
+\begin{equation}
+\bar U_i^\nu(\mathcal K_0)
+=\sup_{X\in\mathcal K_0}|\widehat c_i^\nu(X)|.
+\label{eq:local_actuator_demand}
+\end{equation}
+The voltage and frequency command maps give the finite bounds
+\begin{align}
+\bar U_i^V
+&\leq\tau_{Q_i}k_{V_i}
+(\bar F_i^V+\overline{\dot\alpha}_i^V
++k_2^V\bar\chi_i^V+\bar h_i^V\bar\zeta_i^V)
+\nonumber\\
+&\quad+|k_c^V|\bar e_i^V+\bar r_i^V,
+\label{eq:voltage_actuator_bound}\\
+\bar U_i^\omega
+&\leq\tau_{P_i}(\bar F_i^\omega+\bar\alpha_i^\omega)
++|k_c^\omega|\bar e_i^\omega+\bar r_i^\omega.
+\label{eq:frequency_actuator_bound}
+\end{align}
+The symbolic design test requires the resulting compact command intervals to be
+strictly contained in the declared actuator sets $U_i^\nu$, together with the
+frozen funnel, gain, and privacy-feasibility inequalities. It certifies actuator
+and funnel feasibility only on the selected design region while the trajectory
+remains there. It does not establish persistence of those margins after an exit.
+
+\subsection{Composite Local Comparison}
+
+The graph identity used by PO-06 is
+\begin{equation}
+\bm e=\operatorname{diag}(b_i)\bm e_0+L_c\bm c
++L_c\bm r+\frac{1}{2}L_c\bm z.
+\label{eq:local_graph_identity}
+\end{equation}
+Together with the frozen algebraic command maps, it bounds $\bm e$ and $\bm c$
+by the physical, residual, and decomposition coordinates without treating the
+graph term as an external input. The component inequalities are assembled with
+the closed PO-07 certificate
+\begin{equation}
+Q_{\mathrm{cl}}=Q_0-H^T W_DH\succ0,
+\qquad
+\lambda_{\mathrm{cl}}=\lambda_{\min}(Q_{\mathrm{cl}})>0,
+\label{eq:local_composite_certificate}
+\end{equation}
+where the frequency factor $(\bar h_i^\omega)^2$ occurs exactly once in
+$W_D^\omega$. Consequently, on the selected $\mathcal K_0$, before the first
+admissibility exit and while the solution remains in $\mathcal D_{\min}$,
+\begin{equation}
+\dot{\mathscr V}_{\mathrm{cl}}
+\leq-a_{\mathrm{cl}}\mathscr V_{\mathrm{cl}}+d_R+d_{\mathrm{priv}}(t),
+\qquad a_{\mathrm{cl}}>0,
+\label{eq:local_composite_inequality}
+\end{equation}
+and comparison gives
+\begin{align}
+\mathscr V_{\mathrm{cl}}(t)
+\leq{}&e^{-a_{\mathrm{cl}}t}\mathscr V_{\mathrm{cl}}(0)
+\nonumber\\
+&+\int_0^t e^{-a_{\mathrm{cl}}(t-s)}
+[d_R+d_{\mathrm{priv}}(s)]\,ds.
+\label{eq:local_comparison_bound}
+\end{align}
+Here $d_R$ contains the declared physical-uncertainty and compact-region terms,
+whereas $d_{\mathrm{priv}}$ is finite by PO-03 and PO-02A. Equations
+\eqref{eq:local_composite_inequality}--\eqref{eq:local_comparison_bound} are
+local comparison statements. They do not exclude a funnel, actuator, physical,
+or loss-of-compactness exit and do not provide a conclusion after such an exit.
 
 
 %======================================================

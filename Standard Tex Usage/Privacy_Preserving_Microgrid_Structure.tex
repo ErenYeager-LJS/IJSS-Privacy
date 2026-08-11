@@ -105,9 +105,125 @@ The contributions of this paper are as follows.
 
 
 %======================================================
-\section{Preliminaries}
+\section{System Model and Problem Formulation}
+\label{sec:system_model}
 
+\subsection{Islanded Microgrid and Droop Model}
 
+Consider an islanded AC microgrid containing $N$ inverter-based distributed generators (DGs), indexed by $\mathcal V=\{1,\ldots,N\}$. For DG $i$, let $V_i$, $\omega_i$, and $\delta_i$ denote the voltage amplitude, angular frequency, and phase angle, respectively. The voltage and frequency channel states are
+\begin{equation}
+\bm{x}_i^V=
+\begin{bmatrix}x_{i,1}^V & x_{i,2}^V\end{bmatrix}^{\!T}
+=\begin{bmatrix}V_i & \dot V_i\end{bmatrix}^{\!T},
+\qquad x_i^\omega=\omega_i,
+\qquad \dot\delta_i=\omega_i.
+\label{eq:physical_states}
+\end{equation}
+The reduced droop dynamics are
+\begin{align}
+\tau_{P_i}\dot\omega_i
+&=-(\omega_i-\omega_{\mathrm{ref}})
+-k_{P_i}(P_i-P_i^d)-u_i^\omega
++\tau_{P_i}R_i^\omega,
+\label{eq:frequency_droop}\\
+\tau_{Q_i}k_{V_i}\ddot V_i
+&=-(\tau_{Q_i}+k_{V_i})\dot V_i
+-(V_i-V_{\mathrm{ref}})
+-k_{Q_i}(Q_i-Q_i^d)-u_i^V
++\tau_{Q_i}k_{V_i}R_i^V.
+\label{eq:voltage_droop}
+\end{align}
+Here, $\tau_{P_i}$ and $\tau_{Q_i}$ are filter time constants, $k_{P_i}$ and $k_{Q_i}$ are droop coefficients, $k_{V_i}$ is the voltage-loop coefficient, and $P_i^d$ and $Q_i^d$ are droop setpoints. The terms $R_i^\omega$ and $R_i^V$ collect bounded physical or model uncertainty in their respective channels. Privacy residuals are not included in these terms.
+
+The electrical network is represented by $\mathcal G_e=(\mathcal V,\mathcal E_e)$ with electrical neighbor set $\mathcal N_i^e$. Under the frozen lossless inductive specialization, let $B_{ik}$ denote the line susceptance magnitude and define $\delta_{ik}=\delta_i-\delta_k$. The active and reactive powers are
+\begin{align}
+P_i
+&=P_i^L(V_i)+\sum_{k\in\mathcal N_i^e}
+V_iV_k|B_{ik}|\sin(\delta_{ik}),
+\label{eq:active_power_flow}\\
+Q_i
+&=Q_i^L(V_i)+V_i^2\sum_{k\in\mathcal N_i^e}|B_{ik}|
+-\sum_{k\in\mathcal N_i^e}V_iV_k|B_{ik}|\cos(\delta_{ik}),
+\label{eq:reactive_power_flow}
+\end{align}
+where $P_i^L(V_i)$ and $Q_i^L(V_i)$ are the local voltage-dependent load functions. Conductance terms are not absorbed into $R_i^\omega$ or $R_i^V$.
+
+For later analysis, define the known channel drifts
+\begin{align}
+F_i^\omega
+&=-\frac{(\omega_i-\omega_{\mathrm{ref}})
++k_{P_i}(P_i-P_i^d)}{\tau_{P_i}},
+\label{eq:frequency_drift}\\
+F_i^V
+&=-\frac{(\tau_{Q_i}+k_{V_i})x_{i,2}^V
++(x_{i,1}^V-V_{\mathrm{ref}})
++k_{Q_i}(Q_i-Q_i^d)}{\tau_{Q_i}k_{V_i}}.
+\label{eq:voltage_drift}
+\end{align}
+Equations~\eqref{eq:frequency_droop} and \eqref{eq:voltage_droop} can then be written as
+\begin{align}
+\dot x_{i,1}^V&=x_{i,2}^V,\nonumber\\
+\dot x_{i,2}^V&=F_i^V-\frac{u_i^V}{\tau_{Q_i}k_{V_i}}+R_i^V,
+\label{eq:voltage_input_affine}\\
+\dot\omega_i&=F_i^\omega-\frac{u_i^\omega}{\tau_{P_i}}+R_i^\omega.
+\label{eq:frequency_input_affine}
+\end{align}
+The privacy-aware coordination layer reaches the plant through the unique interface
+\begin{equation}
+u_i^V=\widehat c_i^V,
+\qquad
+u_i^\omega=\widehat c_i^\omega.
+\label{eq:plant_interface}
+\end{equation}
+No public or private coordination state enters \eqref{eq:voltage_input_affine}--\eqref{eq:frequency_input_affine} through another path.
+
+\subsection{Electrical and Cyber Graphs}
+
+The electrical graph $\mathcal G_e$ determines the power-flow coupling in \eqref{eq:active_power_flow}--\eqref{eq:reactive_power_flow}. Communication is described separately by a fixed, connected, undirected cyber graph $\mathcal G_c=(\mathcal V,\mathcal E_c)$. Its symmetric adjacency weights and Laplacian are
+\begin{equation}
+a_{ij}=a_{ji}>0\quad\text{if }(i,j)\in\mathcal E_c,
+\qquad
+L_c=\operatorname{diag}\!\left(\sum_j a_{ij}\right)-[a_{ij}],
+\label{eq:cyber_graph}
+\end{equation}
+with $a_{ij}=0$ otherwise. Reference access is encoded by $b_i\geq0$, with at least one pinned DG in each regulated channel. The corresponding pinned matrix is $L_c+\operatorname{diag}(b_i)$. The electrical and cyber neighbor sets, $\mathcal N_i^e$ and $\mathcal N_i^c$, are distinct model objects and need not coincide.
+
+\subsection{Public/Private Coordination Interface}
+
+For each channel $\nu\in\{V,\omega\}$, $p_i^\nu$ denotes the public coordination substate and $q_i^\nu$ denotes the private substate retained by DG $i$. The private weights, residual variables, and locally reconstructed commands are also retained locally. The regular message transmitted by DG $i$ is exactly
+\begin{equation}
+\bm{m}_i(t)=
+\begin{bmatrix}p_i^V(t)&p_i^\omega(t)\end{bmatrix}^{T}.
+\label{eq:public_message}
+\end{equation}
+Thus, raw $V_i$, $\omega_i$, $P_i$, $Q_i$, the nominal coordination state $c_i$, the reconstructed command $\widehat c_i$, $q_i$, privacy residuals, private weights, physical uncertainty, and private controller memory are not regular message components. This ownership convention does not mask the physical state from an adversary that obtains an independent physical-sensor channel; such a channel is outside the frozen observation model.
+
+\subsection{Passive Observation Map}
+
+At time $t$, DG $i$ has access to the neighboring message history
+\begin{equation}
+\{\bm{m}_j(s):j\in\mathcal N_i^c,\ 0\leq s\leq t\}.
+\label{eq:neighbor_history}
+\end{equation}
+The passive eavesdropper observes the complete public history
+\begin{align}
+\mathcal O_{\mathrm{adv}}[0,t]
+={}&\{\bm{m}_j(s):j\in\mathcal V,\ 0\leq s\leq t\}
+\cup H_c[0,t]\nonumber\\
+&\cup\{\mathcal G_c,a_{ij},b_i,V_{\mathrm{ref}},
+\omega_{\mathrm{ref}},\rho_i^V(\cdot),\rho_i^\omega(\cdot),
+T_V,T_\omega,\text{ declared public controller parameters}\}.
+\label{eq:adversary_history}
+\end{align}
+Here, $\mathcal H_c[0,t]$ contains the disclosed topology, timing, and protocol metadata. Public schedules and their parameters are included because they are part of the disclosed protocol, not because a deadline property is asserted. Private substates, private weights, residual and internal privacy variables, private controller memory, raw physical-sensor histories, and locally reconstructed commands are not observed unless separately declared public. The adversary records but does not alter public messages; active manipulation and communication failures are outside this model.
+
+Two admissible private initializations are publicly indistinguishable on a declared interval when they generate the same $\mathcal O_{\mathrm{adv}}[0,t]$ under the same public references, cyber graph, schedules, and protocol metadata while their protected initial local virtual coordination states differ. This definition concerns non-unique reconstruction from the complete public history. It does not describe differential privacy or cryptographic secrecy.
+
+\subsection{Local-Before-Exit Problem Statement}
+
+The physical problem is to characterize the frozen closed loop from an admissible independent initial state while the solution remains in the open regular domain $\mathcal D_{\min}$ and, for compact-dependent estimates, in a selected compact bootstrap/design region $\mathcal K_0\Subset\mathcal D_{\min}$. The requested result is local well-posedness together with the finite component and composite comparison bounds available before the first admissibility exit. The problem does not require exclusion of that exit.
+
+The privacy problem is to determine whether a non-nominal admissible private realization can produce the same complete passive public history as a nominal realization. The construction is restricted to the Version~2.2 schedule-regular privacy domain and stops at the earliest finite-seed or regular-domain boundary. No conclusion is sought after that stopping boundary. Section~III formalizes the active assumptions and domains used by these two local problems.
 
 \section{Prescribed Time-based Secondary Controller Design}
 
@@ -139,4 +255,3 @@ Author. Title. Journal, Year.
 
 \end{thebibliography}
 \end{document}
-

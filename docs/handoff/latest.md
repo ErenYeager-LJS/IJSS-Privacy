@@ -1,25 +1,25 @@
 # Latest Handoff
 
-Current task: `task-014-privacy-schedule-regularity-architecture-review`
+Current task: `task-015-po04-privacy-alternative-existence-v2-2-domain`
 
-Branch: `task-014-privacy-schedule-regularity-architecture-review`
+Branch: `task-015-po04-privacy-alternative-existence-v2-2-domain`
 
-PR: [Task-014 PR #17](https://github.com/ErenYeager-LJS/IJSS-Privacy/pull/17)
+PR: [Create or review the Task-015 PR](https://github.com/ErenYeager-LJS/IJSS-Privacy/pull/new/task-015-po04-privacy-alternative-existence-v2-2-domain)
 
-Full handoff: [task-014-privacy-schedule-regularity-architecture-review.md](task-014-privacy-schedule-regularity-architecture-review.md)
+Full handoff: [task-015-po04-privacy-alternative-existence-v2-2-domain.md](task-015-po04-privacy-alternative-existence-v2-2-domain.md)
 
-## Architecture decision
+## Current result
 
-**OUTCOME B — MINIMAL PRIVACY-DOMAIN REGULARITY REVISION**
+**OUTCOME B — PO-04 STILL BLOCKED; ARCHITECTURE REVIEW REQUIRED**
 
-The active architecture is Blueprint Version 2.2, Privacy-Schedule Regularity Revision. On the fixed common finite seed interval `I_s=[0,T_s]`, every affected public privacy schedule must satisfy `gamma_priv,j^nu(t)>=eta_{gamma,j}^nu>0`. This bounds the ES-60 schedule reciprocal without changing any ES formula.
+Blueprint Version 2.2 removes the Task-013 schedule-reciprocal obstruction, but the frozen assumptions do not establish local command-initialization reachability or the coupled network command-map construction required for a non-nominal alternative.
 
-The singular privacy boundary is the union of `z=0` and `gamma_priv=0`. Privacy conclusions stop at `T_s` or the first regular-domain exit. No invariance or global lower bound is claimed.
+No non-nominal admissible alternative or positive perturbation radius is proved. PO-05 remains downstream and was not started.
 
-Controller, ES equations, Lyapunov design, states, observation model, and the `LOCAL-BEFORE-EXIT` strategy are unchanged. PO-04 remains `OPEN` and not proved; PO-05 was not started.
+Controller, ES equations, Lyapunov design, states, observation model, theorem scope, and the proof-obligation ledger are unchanged. PO-04 remains `OPEN / NOT PROVED`; PO-05 remains `OPEN / NOT STARTED`.
 
 ## Next task
 
-`task-015-po04-privacy-alternative-existence-v2-2-domain`
+`task-016-privacy-command-reachability-architecture-review`
 
-Re-attempt PO-04 only under Version 2.2.
+Decide whether a defensible local command-initialization reachability/domain condition can be added without changing ES-58--ES-61, or whether the privacy target must be narrowed. Do not begin PO-05.

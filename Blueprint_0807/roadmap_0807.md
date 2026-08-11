@@ -1,7 +1,8 @@
 # Mathematical Roadmap 0807: Minimal Architecture
 
-> Blueprint Freeze Version 2.0
-> Frozen: 2026-08-07
+> Blueprint Version 2.1
+> Privacy-Domain Revision: 2026-08-11
+> Historical baseline: Blueprint Freeze Version 2.0, frozen 2026-08-07
 
 ## Scope
 
@@ -117,7 +118,9 @@ This assumption supports A-E1-A-E4, A-E6-A-E15, B-E1, and Theorems 1-3.
 
 ### Assumption 2: Privacy decomposition and adversary compatibility
 
-Private weights and substates remain admissible and bounded; the public/private decomposition is locally computable; the channel-specific residual has a declared nonnegative bound that decays as required by the sharing claim; the frequency residual has zero differential steady-state component; and the eavesdropper observes all public messages and disclosed metadata but cannot access private memory or local physical sensors.
+Private weights and substates remain admissible and bounded; every agent/channel pair affected through the coupled alternative construction has a declared nonzero initial split margin `eta_{z,j}^nu` and designer-selected nominal private-weight schedules separated from both ES-46 endpoints by `eta_{w,j}^nu` on a common local seed interval; the public/private decomposition is locally computable; the channel-specific residual has a declared nonnegative bound that decays as required by the sharing claim; the frequency residual has zero differential steady-state component; and the eavesdropper observes all public messages and disclosed metadata but cannot access private memory or local physical sensors.
+
+The margins are domain data only. They do not assume a non-nominal alternative, public-history equality, or validity of ES-58--ES-61. PO-04 must construct the alternative and prove a positive perturbation radius.
 
 This assumption supports B-E2-B-E12, Lemma 1, Theorem 3, and Theorem 4.
 
@@ -127,7 +130,7 @@ No observer derivative bound, graph switching condition, packet-loss condition, 
 
 ### Lemma 1: Public/private decomposition regularity and residual property
 
-Under Definitions 1 and 2 and Assumption 2, the public/private substates and private parameters are well posed and bounded; the local reconstruction residual is computable and bounded; the residual follows the declared decay schedule; and for every admissible alternative protected initial state there exists an admissible private realization with the same public observation history.
+Under Definitions 1 and 2 and Assumption 2, the public/private substates and private parameters are well posed and bounded, and the local reconstruction residual is computable and bounded. On the regular privacy design domain, the retained local public-history non-uniqueness clause becomes available only after PO-04 constructs at least one non-nominal realization and PO-05 validates its denominators.
 
 ### Theorem 1: Closed-loop boundedness and funnel invariance
 
@@ -143,7 +146,7 @@ Under Assumptions 1-2 and Theorem 2, the differential steady-state frequency pri
 
 ### Theorem 4: Privacy-preserving composite guarantee
 
-Under Definitions 1-2, Assumptions 1-2, Lemma 1, and Theorems 1-3, the same closed loop simultaneously satisfies public-history indistinguishability, boundedness, funnel invariance, practical prescribed-time recovery, and droop-consistent sharing under the declared passive-eavesdropper model.
+Under Definitions 1-2, Assumptions 1-2, Lemma 1, and Theorems 1-3, the intended composite theorem places public-history indistinguishability on the regular privacy design domain and keeps it logically separate from the physical guarantees. The final manuscript may use only the local-before-exit components whose proof obligations are closed.
 
 ## 6. Proof Method Consistency Check
 

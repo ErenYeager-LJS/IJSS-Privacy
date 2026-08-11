@@ -1,7 +1,8 @@
 # Notation Rules 0807: Immutable Minimal Symbol Contract
 
-> Blueprint Freeze Version 2.0
-> Frozen: 2026-08-07
+> Blueprint Version 2.1
+> Privacy-Domain Revision: 2026-08-11
+> Historical baseline: Blueprint Freeze Version 2.0, frozen 2026-08-07
 
 ## Status
 
@@ -64,6 +65,9 @@ This file is the authoritative notation contract before equation generation. It 
 - `theta_i^{priv,V}`, `theta_i^{priv,omega}`, `w_{i,12}^V`, `w_{i,21}^V`, `w_{i,12}^omega`, and `w_{i,21}^omega` are private decomposition parameters. They carry no hats because the controller does not estimate them.
 - `z_i^V=p_i^V-q_i^V` and `z_i^omega=p_i^omega-q_i^omega` are private decomposition differences. They are not transformed physical errors.
 - `g_i^V` and `g_i^omega` are bounded local correction factors used only in the decomposition dynamics.
+- `eta_{z,i}^V` and `eta_{z,i}^omega` are positive, channel-unit nonzero-split margins. They are design-domain constants, not states or perturbations.
+- `eta_{w,i}^V` and `eta_{w,i}^omega` are positive interior margins with the same units as their channel private weights. They do not replace the ES-46 bounds.
+- A privacy-domain margin does not assert that an alternative realization exists. A prime remains reserved for the alternative later constructed by PO-04.
 - `mathbf m_i=[p_i^V,p_i^omega]^T` is the regular public message vector.
 - Public/private ownership is semantic. A locally reconstructed quantity is not public unless the observation map explicitly includes it.
 - `c_cm^omega` is a common steady-state frequency correction used only in the sharing derivation.

@@ -1,26 +1,39 @@
 # Latest Handoff
 
-Current task: `task-018-manuscript-latex-architecture-preparation`
+Current task: `task-019-latex-manuscript-architecture-population`
 
-Branch: `task-018-manuscript-latex-architecture-preparation`
+Branch: `task-019-latex-manuscript-architecture-population`
 
-PR: pending creation after audit verification
+PR: pending creation after mapping review
 
-Full handoff: [task-018-manuscript-latex-architecture-preparation.md](task-018-manuscript-latex-architecture-preparation.md)
+Full handoff: [task-019-latex-manuscript-architecture-population.md](task-019-latex-manuscript-architecture-population.md)
 
 ## Current result
 
-**PASS WITH MINOR REVISION - CLAIM-SCOPE AUDIT COMPLETE; LATEX WRITING NOT STARTED**
+**LATEX ARCHITECTURE MAPPING COMPLETE; INSERTION NOT STARTED**
 
-The designated IEEE template is a blank format skeleton. The historical `IJSS_tex.tex` contains global, deadline, active-power sharing, and old composite claims that exceed Task-017. Those statements must be rewritten or omitted before use.
+The designated IEEE template remains the sole manuscript destination. Historical `IJSS_tex.tex` is restricted to notation, literature, and system-description source material. Its theorem/result claims are not copied.
 
-The approved manuscript result layer contains only:
+Approved structure:
 
-- the local physical theorem;
-- the local public-history indistinguishability theorem.
+I. Introduction
 
-PO-04 and PO-05 are closed and support the local privacy result. The remaining OPEN obligations remain unchanged and are excluded or reserved according to the Task-018 audit.
+II. System Model and Problem Formulation
+
+III. Definitions and Active Assumptions
+
+IV. Local Physical Analysis
+
+V. Local Privacy Construction and Observation Equivalence
+
+VI. Theoretical Results and Proof Chain
+
+VII. Limitations and Discussion
+
+VIII. Conclusion
+
+Only the local physical theorem and the local public-history indistinguishability theorem may appear as final result families.
 
 ## Next action
 
-Populate `Standard Tex Usage/Privacy_Preserving_Microgrid_Structure.tex` only after applying the claim-scope controls in `manuscript_claim_scope_audit_0811.md`. Do not copy historical theorem prose verbatim.
+Await approval of `manuscript_latex_architecture_mapping_0811.md` before inserting any LaTeX text.

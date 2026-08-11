@@ -6,7 +6,7 @@
 
 ## PR
 
-[Create or review the Task-014 PR](https://github.com/ErenYeager-LJS/IJSS-Privacy/pull/new/task-014-privacy-schedule-regularity-architecture-review)
+[Task-014 PR #17](https://github.com/ErenYeager-LJS/IJSS-Privacy/pull/17)
 
 ## Changed files
 

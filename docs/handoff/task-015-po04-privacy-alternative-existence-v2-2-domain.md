@@ -19,7 +19,7 @@
 
 ## Result
 
-**Outcome A — PO-04 is PROVED locally.** The corrected complete ES-31 frequency command map is nonconstant in the physical frequency initial state. An admissible physical perturbation induces `S' != S`; ES-58--ES-61 and the strict Version 2.2 margins then provide a coupled local family and positive physical perturbation radius before first exit.
+**Outcome A — PO-04 is PROVED locally.** The corrected complete ES-31 frequency command map is nonconstant in the physical frequency initial state. An admissible physical perturbation induces `S' != S`; ES-58--ES-61 and the strict Version 2.2 margins then provide a coupled local family, legal initial/common local denominators, ES-46-interior weights, and a positive physical perturbation radius before first exit.
 
 ## Proof status
 
@@ -48,4 +48,4 @@ No PO-05 proof, architecture repair, equation modification, simulation, or HIL r
 
 `task-016-po05-alternative-denominator-validity`
 
-Prove the downstream validity and continuation of the alternative denominators in ES-60--ES-61. Do not change ES-58--ES-61.
+Handle only additional denominator validity, continuation, or compatible extension after the PO-04 initial/common construction interval and before the retained stopping boundary. Do not re-prove that PO-04 interval or change ES-58--ES-61.

@@ -11,7 +11,7 @@
 
 The previous reachability objection is withdrawn. It incorrectly treated an arbitrary preassigned `S_i+delta` as necessary and used an incomplete frequency derivative that omitted the `-tau_Pi alpha_i^omega` term. The correct construction starts with an admissible physical initial perturbation, evaluates the same frozen controller, and defines the induced protected value `S_i'`.
 
-PO-04 is proved for a nonempty local family before the earliest finite-seed/regular-domain first exit. PO-05 remains `OPEN / NOT STARTED`; no denominator continuation beyond this local interval is claimed.
+PO-04 is proved for a nonempty local family before the earliest finite-seed/regular-domain first exit. Its proof includes denominator legality and ES-46 admissibility on the initial common construction interval used to instantiate that family. PO-05 remains `OPEN / NOT STARTED` and does not re-prove that interval; it addresses any additional denominator validity, continuation, or compatible extension required after that interval and up to the retained privacy theorem stopping boundary.
 
 ## 2. Weakest required quantifier
 
@@ -107,7 +107,7 @@ The remaining elements of ES-16 (`H_c`, graph, references, schedules, and public
 
 ## 9. PO-04 / PO-05 separation
 
-PO-04 is closed only on the constructed local interval: a genuine non-nominal induced `S'`, admissible ES-58 initialization, bounded ES-60/61 weights, identical public history, and a positive physical perturbation radius exist before first exit. PO-05 is not used to obtain this local result. Any continuation through later zeros of `z'`, isolated denominator extensions, or persistence beyond the local interval remains PO-05.
+PO-04 is closed only on the constructed initial/common local interval: a genuine non-nominal induced `S'`, admissible ES-58 initialization, nonzero `z'`, legal ES-60/ES-61 denominators, ES-46-interior weights, identical public history, and a positive physical perturbation radius exist there. PO-05 is not used to obtain or re-prove this initial interval. Any additional denominator validity, continuation through later portions of the retained stopping domain, isolated compatible extensions, or persistence beyond the PO-04 construction interval remains PO-05.
 
 ## 10. Final status and next task
 

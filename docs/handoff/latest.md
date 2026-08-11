@@ -1,35 +1,33 @@
 # Latest Handoff
 
-Current task: `task-021-ieee-latex-section-ii`
+Current task: `task-022-ieee-latex-section-iii`
 
-Branch: `task-021-ieee-latex-section-ii`
+Branch: `task-022-ieee-latex-section-iii`
 
-PR: pending creation after Section II review
+PR: pending creation after Section III review
 
-Full handoff: [task-021-ieee-latex-section-ii.md](task-021-ieee-latex-section-ii.md)
+Full handoff: [task-022-ieee-latex-section-iii.md](task-022-ieee-latex-section-iii.md)
 
 ## Current result
 
-**SECTION II COMPLETE; APPROVAL GATE BEFORE SECTION III**
+**SECTION III COMPLETE; APPROVAL GATE BEFORE SECTION IV**
 
-The designated IEEE template now contains the approved Section II,
-`System Model and Problem Formulation`, with subsections for the islanded
-microgrid and droop model, electrical and cyber graphs, public/private
-coordination, the passive observation map, and the local-before-exit problem.
-Section I remains unchanged, and Section III and all later sections remain
-untouched.
+The designated IEEE template now contains Section III, `Definitions and Active
+Assumptions`, covering independent/reconstructed coordinates, the admissible
+open domain and compact bootstrap region, Definitions 1--2, and Assumptions
+1--2. Task-021's observation metadata notation is unified as
+`\mathcal H_c[0,t]`.
 
-The section preserves ES-1--ES-16 and the frozen complete passive public-history
-definition. It uses only the local physical and local public-history
-indistinguishability claim layer and explicitly excludes stronger continuation,
-invariance, deadline, sharing, decay, and composite claims.
+The section preserves the `LOCAL-BEFORE-EXIT` boundary. PO-04 alternative
+existence and PO-05 downstream denominator validity/extension remain proof
+conclusions rather than assumptions. No stronger theorem claim is introduced.
 
 ## Verification
 
 IEEEtran compilation succeeded with only layout box warnings. `git diff --check`
-passed. No Blueprint, controller, ES equation, Lyapunov, state,
-observation-model, theorem-scope, or proof-obligation status file changed.
+passed. No Blueprint, controller, ES equation, Lyapunov, state, observation
+model, theorem scope, or proof-obligation status file changed.
 
 ## Next action
 
-Review and approve Section II. Only then populate Section III.
+Review and approve Section III. Only then populate Section IV.

@@ -209,7 +209,7 @@ The passive eavesdropper observes the complete public history
 \begin{align}
 \mathcal O_{\mathrm{adv}}[0,t]
 ={}&\{\bm{m}_j(s):j\in\mathcal V,\ 0\leq s\leq t\}
-\cup H_c[0,t]\nonumber\\
+\cup \mathcal H_c[0,t]\nonumber\\
 &\cup\{\mathcal G_c,a_{ij},b_i,V_{\mathrm{ref}},
 \omega_{\mathrm{ref}},\rho_i^V(\cdot),\rho_i^\omega(\cdot),
 T_V,T_\omega,\text{ declared public controller parameters}\}.
@@ -224,6 +224,114 @@ Two admissible private initializations are publicly indistinguishable on a decla
 The physical problem is to characterize the frozen closed loop from an admissible independent initial state while the solution remains in the open regular domain $\mathcal D_{\min}$ and, for compact-dependent estimates, in a selected compact bootstrap/design region $\mathcal K_0\Subset\mathcal D_{\min}$. The requested result is local well-posedness together with the finite component and composite comparison bounds available before the first admissibility exit. The problem does not require exclusion of that exit.
 
 The privacy problem is to determine whether a non-nominal admissible private realization can produce the same complete passive public history as a nominal realization. The construction is restricted to the Version~2.2 schedule-regular privacy domain and stops at the earliest finite-seed or regular-domain boundary. No conclusion is sought after that stopping boundary. Section~III formalizes the active assumptions and domains used by these two local problems.
+
+\section{Definitions and Active Assumptions}
+\label{sec:definitions_assumptions}
+
+\subsection{Independent and Reconstructed Coordinates}
+
+The local solution is formulated on the independent coordinates
+\begin{equation}
+X=\operatorname{col}_{i\in\mathcal V}\!\left(V_i,\dot V_i,\omega_i,\delta_i,
+p_i^V,q_i^V,p_i^\omega,q_i^\omega\right).
+\label{eq:independent_coordinates}
+\end{equation}
+The physical errors, normalized errors, transformed errors, virtual controls,
+reconstructed commands, and privacy residuals are algebraic or smooth images of
+$(X,t)$ through the frozen maps. In particular, $e_{i,0}^V$, $e_{i,0}^\omega$,
+$\sigma_i^V$, $\sigma_i^\omega$, $\zeta_i^V$, $\zeta_i^\omega$, $r_i^V$,
+and $r_i^\omega$ are reconstructed analysis quantities; they are not additional
+independent states. The augmented bookkeeping vector used in the proof is
+therefore interpreted as the image of \eqref{eq:independent_coordinates}, with
+its consistency derivatives supplied by the frozen equations.
+
+\subsection{Admissible Open Domain and Bootstrap Region}
+
+Let $\mathcal D_{\min}$ denote the genuine open regular domain of the independent
+coordinates on which the plant, controller, prescribed-performance maps, and
+privacy divisions are defined. It includes strict funnel inequalities
+$|\sigma_i^V|<1$ and $|\sigma_i^\omega|<1$, positive performance envelopes,
+the regular privacy denominators, and the physical operating domain inherited
+from the frozen model. A compact set
+\begin{equation}
+\mathcal K_0\Subset\mathcal D_{\min}
+\label{eq:bootstrap_region}
+\end{equation}
+is selected with the admissible initial condition in its interior. The set
+$\mathcal K_0$ is a design and estimation region for local bounds; it is not
+declared forward invariant. The first-exit time is the earliest time at which
+the independent trajectory leaves $\mathcal D_{\min}$ or a separately declared
+local design margin ceases to hold.
+
+\subsection{Definition 1: Closed-Loop Local Solution}
+
+\textbf{Definition 1 (closed-loop local solution).}
+Given an admissible initial condition in $\mathcal D_{\min}$, a closed-loop local
+solution is an absolutely continuous independent trajectory $X(t)$ satisfying
+the frozen plant, graph, controller, and public/private coordination equations
+almost everywhere on a maximal interval $[0,\tau_{\mathrm{ex}})$, where
+$\tau_{\mathrm{ex}}$ is the first admissibility-exit time. All reconstructed
+coordinates are evaluated from $X(t)$ and remain consistent with their defining
+maps on this interval. This definition asserts local well-posedness and a
+stopping boundary only; it does not assert continuation beyond
+$\tau_{\mathrm{ex}}$.
+
+\subsection{Definition 2: Public-History Indistinguishability}
+
+\textbf{Definition 2 (public-history indistinguishability).}
+Two admissible realizations are publicly history-indistinguishable on an interval
+$[0,\tau)$ if their complete passive observations satisfy
+\begin{equation}
+\mathcal O_{\mathrm{adv}}[0,t]=\mathcal O'_{\mathrm{adv}}[0,t],
+\qquad 0\leq t<\tau,
+\label{eq:definition_public_history}
+\end{equation}
+including every transmitted public message and every disclosed element of
+$\mathcal H_c[0,t]$, while at least one protected private initial quantity
+$S_i$ differs from its alternative $S_i'$. The observation is passive and
+complete with respect to the declared public payload and metadata. Private
+memory, private weights, residuals, locally reconstructed commands, and raw
+physical-sensor histories are excluded unless explicitly declared public. The
+definition is existence-based and does not assert cryptographic secrecy or
+uniqueness failure outside the declared local stopping interval.
+
+\subsection{Assumption 1: Local Physical and Graph Regularity}
+
+\textbf{Assumption 1.} The frozen physical model is defined on the declared
+operating region $\Delta$, its channel parameters and positive time constants
+are regular, and the load and power-flow maps are locally regular there. The
+cyber graph $\mathcal G_c$ is fixed, connected, undirected, and has the declared
+pinning needed by the distributed errors; the electrical graph remains a
+separate plant object. References and performance envelopes are public and
+regular with strictly positive radii. The uncertainty signals $R_i^V$ and
+$R_i^\omega$ are measurable and locally essentially bounded on compact subsets
+of $\Delta$ with the declared bounds. The initial condition satisfies the
+strict funnel feasibility conditions and belongs to the interior of
+$\mathcal D_{\min}$. The feasible actuator sets $U_i$ and frozen input maps are
+locally regular; actuator feasibility on a selected $\mathcal K_0$ is a design
+check performed by PO-13, not a global premise of this assumption.
+
+\subsection{Assumption 2: Version 2.2 Privacy-Domain Regularity}
+
+\textbf{Assumption 2.} For every affected agent/channel pair, the nominal
+initial private split has the declared nonzero margin $\eta_{z,i}^\nu>0$,
+the nominal private weights lie strictly inside their ES-46 bounds with margin
+$\eta_{w,i}^\nu>0$, and the prescribed privacy schedule satisfies
+$\gamma_{\mathrm{priv},i}^\nu(t)\geq\eta_{\gamma,i}^\nu>0$ on the common finite
+seed interval $I_s=[0,T_s]$. The margins satisfy the Version 2.2 feasibility
+relations, and the privacy gains and finite local residual budget obey the
+declared Privacy Gain Feasibility Condition on the selected compact design
+region. The schedule is regular enough for the finite local residual estimate;
+no asymptotic residual conclusion is included here. The adversary is passive
+and observes exactly the complete public history in Definition 2.
+
+Assumption 2 does not assert the existence of a non-nominal admissible
+alternative, a positive perturbation radius, or a compatible private trajectory:
+those are conclusions of PO-04. It also does not assert denominator validity
+beyond the initial construction interval: any additional ES-60--ES-61 validity,
+continuation, or compatible extension up to the retained privacy stopping
+boundary remains the conclusion of PO-05. Neither assumption asserts global
+invariance or continuation.
 
 \section{Prescribed Time-based Secondary Controller Design}
 

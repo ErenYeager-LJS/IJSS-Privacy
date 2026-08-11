@@ -37,6 +37,8 @@
 \usepackage{booktabs}
 \usepackage{bm}
 \usepackage{graphicx}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta,positioning,fit,shapes.geometric}
 \usepackage{subfigure}
 \usepackage{color}
 \usepackage{multirow}
@@ -51,6 +53,16 @@
 \newtheorem{lemma}{Lemma}
 \newtheorem{remark}{Remark}
 \newtheorem{corollary}{Corollary}
+
+\tikzset{
+  mgblock/.style={draw, rounded corners=1.5pt, align=center,
+    minimum height=7mm, minimum width=25mm, font=\footnotesize},
+  mgpublic/.style={mgblock, fill=blue!7},
+  mgprivate/.style={mgblock, fill=black!6},
+  mgflow/.style={-{Latex[length=2mm]}, thick},
+  mgobserve/.style={-{Latex[length=2mm]}, dashed, thick},
+  mgregion/.style={draw, dashed, rounded corners=2pt, inner sep=4pt}
+}
 
 
 \usepackage[justification=centering]{caption}
@@ -80,7 +92,7 @@
 \maketitle
 
 \begin{abstract}
-Distributed secondary control in islanded AC microgrids must coordinate physical regulation with communication constraints and incomplete adversary access. This paper studies a frozen secondary-control architecture equipped with a public/private virtual coordination decomposition and a passive public-history observation model. The analysis is deliberately restricted to a local-before-exit theorem boundary. First, we establish local well-posedness and compact-region comparison properties for the physical closed loop, including the prescribed-performance coordinates, the finite privacy-residual bound, and actuator feasibility on a verified bootstrap design region. Second, we construct a non-nominal private realization that produces the same complete public history as a nominal realization under the Version 2.2 privacy-domain margins. The initial alternative construction and its post-seed denominator continuation are treated separately, so the privacy statement remains existence-based and local. The results apply only before the earliest admissibility exit or finite privacy-seed boundary. They do not assert global continuation, all-time invariance, post-seed validity, asymptotic residual decay, deadline recovery, active-power sharing, or a simultaneous composite guarantee.
+Distributed secondary control in islanded AC microgrids must coordinate physical regulation with communication constraints and incomplete adversary access. This paper studies a secondary-control architecture equipped with a public/private virtual coordination decomposition and a passive public-history observation model. The analysis is deliberately restricted to a local-before-exit theorem boundary. First, we establish local well-posedness and compact-region comparison properties for the physical closed loop, including regular prescribed-performance coordinates, a finite privacy-residual bound, and actuator feasibility on the selected compact bootstrap region $\mathcal K_0$. Second, we construct a non-nominal private realization that produces the same complete public history as a nominal realization under the stated privacy-domain margins. The initial alternative construction and its denominator-valid continuation are treated separately, so the privacy statement remains existence-based and local. The results apply only before the earliest admissibility exit or finite privacy-seed boundary. They do not assert global continuation, all-time invariance, post-seed validity, asymptotic residual decay, deadline recovery, active-power sharing, or a simultaneous composite guarantee.
 \end{abstract}
 
 \begin{IEEEkeywords}
@@ -94,15 +106,48 @@ Islanded AC microgrids rely on distributed secondary control to coordinate inver
 
 The two requirements are not interchangeable. A controller can be physically regular on an admissible operating region without preventing multiple private explanations of the same communication record. Conversely, a state decomposition that hides local variables does not by itself establish that the coupled microgrid equations remain well posed, that the prescribed-performance coordinates are regular, or that the implemented inputs remain feasible on the design region. The resulting proof problem is a coupled one, but the physical and observation-equivalence arguments must remain logically separate.
 
-This paper analyzes a distributed secondary-control architecture with a public/private virtual coordination layer, a fixed connected cyber graph, and a passive eavesdropper that observes the complete public history. The controller, plant equations, prescribed-performance construction, and privacy equations are treated as frozen design objects. The proof is intentionally local-before-exit: estimates are stated on a selected compact bootstrap/design region and the privacy construction is stopped at the earliest finite-seed or regular-domain boundary. This boundary avoids interpreting a local margin as a global invariance claim.
+This paper asks whether a distributed secondary controller can retain a rigorous local physical analysis while preventing unique reconstruction of protected virtual coordination data from the complete passive public history. We address this question using a public/private virtual coordination layer, a fixed connected cyber graph, and an explicitly bounded observation model. The controller, plant equations, prescribed-performance construction, and privacy mechanism are held fixed throughout the analysis. Physical estimates are stated on the selected compact bootstrap region $\mathcal K_0$ before the first admissibility exit, and the privacy construction stops at the earliest finite-seed or regular-domain boundary.
 
-The paper makes two bounded contributions. First, it establishes a local physical result for the closed loop: local well-posedness, finite compact-dependent component and composite comparison bounds, a finite privacy-residual bound, and actuator feasibility on the verified bootstrap design region. Second, it establishes a local public-history indistinguishability result: after the initial alternative construction, the admissible private realization can be continued while the strict privacy-domain conditions remain valid, and the nominal and alternative realizations generate the same complete passive public history. The two results are reported separately. Deadline recovery, asymptotic residual decay, active-power sharing, forward invariance, global continuation, and a simultaneous composite theorem are outside the final theorem scope.
+The paper makes two bounded contributions. First, it establishes a local physical result for the closed loop: local well-posedness, finite component and composite comparison bounds, a finite privacy-residual bound, and actuator feasibility on the selected compact bootstrap region $\mathcal K_0$. Second, it establishes a local public-history indistinguishability result: an admissible non-nominal private realization is constructed and continued while the strict privacy-domain conditions remain valid, producing the same complete passive public history as the nominal realization. The two results are reported separately. Deadline recovery, asymptotic residual decay, active-power sharing, forward invariance, global continuation, and a simultaneous composite theorem are outside the final theorem scope.
 
 The contributions of this paper are as follows.
 \begin{enumerate}
-    \item A local-before-exit analysis of the frozen distributed secondary-control closed loop. On the selected compact bootstrap/design region, the plant, prescribed-performance coordinates, reconstruction interface, and privacy residual are regular, and the composite comparison inequality is available with the stated local feasibility conditions.
-    \item A local public-history indistinguishability construction under the passive observation model. The initial non-nominal realization and the subsequent denominator-valid continuation are treated as separate proof obligations, and the claim stops at the finite-seed or regular-domain boundary.
+    \item A local-before-exit analysis of the distributed secondary-control closed loop. On the selected compact bootstrap region $\mathcal K_0$, the plant, prescribed-performance coordinates, reconstruction interface, and privacy residual admit finite local bounds, and the composite comparison inequality holds under the stated feasibility conditions.
+    \item A local public-history indistinguishability construction under the passive observation model. The initial non-nominal realization and its denominator-valid continuation are established in separate construction stages, and the claim stops at the finite-seed or regular-domain boundary.
 \end{enumerate}
+
+Figure~\ref{fig:overall_framework} summarizes the physical, coordination, and
+observation paths. The public-history channel is separated explicitly from the
+private and locally reconstructed quantities.
+
+\begin{figure}[t]
+\centering
+\resizebox{0.98\columnwidth}{!}{%
+\begin{tikzpicture}[node distance=10mm and 13mm]
+  \node[mgprivate] (wrapper) {Privacy wrapper\\$p_i^\nu,q_i^\nu,r_i^\nu$};
+  \node[mgprivate, right=of wrapper] (controller) {Secondary controller\\$c_i^\nu,\widehat c_i^\nu$};
+  \node[mgprivate, below=of controller] (plant) {Physical microgrid\\$V_i,\omega_i,P_i,Q_i$};
+  \node[mgpublic, above=of wrapper] (history) {Public history\\$\mathcal O_{\mathrm{adv}}[0,t]$};
+  \node[mgpublic, right=of history] (adv) {Passive\\eavesdropper};
+
+  \draw[mgflow] (controller.west) -- node[above,font=\scriptsize] {$c_i^\nu$} (wrapper.east);
+  \draw[mgflow] ([yshift=-2mm]wrapper.east) -- node[below,font=\scriptsize] {$\widehat c_i^\nu$} ([yshift=-2mm]controller.west);
+  \draw[mgflow] (controller) -- node[right,font=\scriptsize] {$u_i^\nu$} (plant);
+  \draw[mgflow] ([xshift=-3mm]plant.north) -- node[left,font=\scriptsize] {local measurements} ([xshift=-3mm]controller.south);
+  \draw[mgflow] (wrapper) -- node[left,font=\scriptsize] {public $p_i^\nu$} (history);
+  \draw[mgobserve] (history) -- node[above,font=\scriptsize] {observation} (adv);
+
+  \node[mgregion, fit=(history)(adv), label={[font=\scriptsize]above:Public side}] {};
+  \node[mgregion, fit=(wrapper)(controller)(plant),
+    label={[font=\scriptsize]below:Private/local side}] {};
+\end{tikzpicture}%
+}
+\caption{Overall architecture and information ownership. The passive
+eavesdropper receives the declared public history only; private substates,
+local controller memory, reconstructed commands, and physical measurements are
+not observation channels.}
+\label{fig:overall_framework}
+\end{figure}
 
 
 %======================================================
@@ -136,7 +181,7 @@ The reduced droop dynamics are
 \end{align}
 Here, $\tau_{P_i}$ and $\tau_{Q_i}$ are filter time constants, $k_{P_i}$ and $k_{Q_i}$ are droop coefficients, $k_{V_i}$ is the voltage-loop coefficient, and $P_i^d$ and $Q_i^d$ are droop setpoints. The terms $R_i^\omega$ and $R_i^V$ collect bounded physical or model uncertainty in their respective channels. Privacy residuals are not included in these terms.
 
-The electrical network is represented by $\mathcal G_e=(\mathcal V,\mathcal E_e)$ with electrical neighbor set $\mathcal N_i^e$. Under the frozen lossless inductive specialization, let $B_{ik}$ denote the line susceptance magnitude and define $\delta_{ik}=\delta_i-\delta_k$. The active and reactive powers are
+The electrical network is represented by $\mathcal G_e=(\mathcal V,\mathcal E_e)$ with electrical neighbor set $\mathcal N_i^e$. Under the adopted lossless inductive specialization, let $B_{ik}$ denote the line susceptance magnitude and define $\delta_{ik}=\delta_i-\delta_k$. The active and reactive powers are
 \begin{align}
 P_i
 &=P_i^L(V_i)+\sum_{k\in\mathcal N_i^e}
@@ -197,7 +242,7 @@ For each channel $\nu\in\{V,\omega\}$, $p_i^\nu$ denotes the public coordination
 \begin{bmatrix}p_i^V(t)&p_i^\omega(t)\end{bmatrix}^{T}.
 \label{eq:public_message}
 \end{equation}
-Thus, raw $V_i$, $\omega_i$, $P_i$, $Q_i$, the nominal coordination state $c_i$, the reconstructed command $\widehat c_i$, $q_i$, privacy residuals, private weights, physical uncertainty, and private controller memory are not regular message components. This ownership convention does not mask the physical state from an adversary that obtains an independent physical-sensor channel; such a channel is outside the frozen observation model.
+Thus, raw $V_i$, $\omega_i$, $P_i$, $Q_i$, the nominal coordination state $c_i$, the reconstructed command $\widehat c_i$, $q_i$, privacy residuals, private weights, physical uncertainty, and private controller memory are not regular message components. This ownership convention does not mask the physical state from an adversary that obtains an independent physical-sensor channel; such a channel is outside the declared observation model.
 
 \subsection{Passive Observation Map}
 
@@ -218,13 +263,46 @@ T_V,T_\omega,\text{ declared public controller parameters}\}.
 \end{align}
 Here, $\mathcal H_c[0,t]$ contains the disclosed topology, timing, and protocol metadata. Public schedules and their parameters are included because they are part of the disclosed protocol, not because a deadline property is asserted. Private substates, private weights, residual and internal privacy variables, private controller memory, raw physical-sensor histories, and locally reconstructed commands are not observed unless separately declared public. The adversary records but does not alter public messages; active manipulation and communication failures are outside this model.
 
+Figure~\ref{fig:information_decomposition} illustrates the resulting
+many-to-one observation architecture. It records information ownership and the
+declared observation map; it does not by itself establish the existence of an
+admissible alternative realization.
+
+\begin{figure}[t]
+\centering
+\resizebox{0.98\columnwidth}{!}{%
+\begin{tikzpicture}[node distance=7mm and 10mm]
+  \node[mgprivate] (nominal) {Nominal private realization\\$q,w,r,\widehat c$};
+  \node[mgprivate, below=of nominal] (alternative) {Non-nominal private realization\\$q',w',r',\widehat c'$};
+  \node[mgblock, right=of nominal, yshift=-7mm] (map) {Observation map};
+  \node[mgpublic, right=of map] (public) {Same public variables\\and history};
+  \node[mgpublic, right=of public] (observer) {Passive\\eavesdropper};
+
+  \draw[mgflow] (nominal.east) -- (map.west);
+  \draw[mgflow] (alternative.east) -- (map.west);
+  \draw[mgflow] (map) -- (public);
+  \draw[mgobserve] (public) -- node[above,font=\scriptsize] {visible} (observer);
+
+  \node[mgregion, fit=(nominal)(alternative),
+    label={[font=\scriptsize]below:Private/internal side}] {};
+  \node[mgregion, fit=(public)(observer),
+    label={[font=\scriptsize]below:Public side}] {};
+\end{tikzpicture}%
+}
+\caption{Public/private information decomposition under the passive observation
+map. Distinct private realizations may be candidates for the same public
+history; admissibility and observation equivalence are established by the local
+privacy analysis rather than assumed by this diagram.}
+\label{fig:information_decomposition}
+\end{figure}
+
 Two admissible private initializations are publicly indistinguishable on a declared interval when they generate the same $\mathcal O_{\mathrm{adv}}[0,t]$ under the same public references, cyber graph, schedules, and protocol metadata while their protected initial local virtual coordination states differ. This definition concerns non-unique reconstruction from the complete public history. It does not describe differential privacy or cryptographic secrecy.
 
 \subsection{Local-Before-Exit Problem Statement}
 
-The physical problem is to characterize the frozen closed loop from an admissible independent initial state while the solution remains in the open regular domain $\mathcal D_{\min}$ and, for compact-dependent estimates, in a selected compact bootstrap/design region $\mathcal K_0\Subset\mathcal D_{\min}$. The requested result is local well-posedness together with the finite component and composite comparison bounds available before the first admissibility exit. The problem does not require exclusion of that exit.
+The physical problem is to characterize the specified closed loop from an admissible independent initial state while the solution remains in the open regular domain $\mathcal D_{\min}$ and, for compact-dependent estimates, in the selected compact bootstrap region $\mathcal K_0\Subset\mathcal D_{\min}$. The requested result is local well-posedness together with the finite component and composite comparison bounds available before the first admissibility exit. The problem does not require exclusion of that exit.
 
-The privacy problem is to determine whether a non-nominal admissible private realization can produce the same complete passive public history as a nominal realization. The construction is restricted to the Version~2.2 schedule-regular privacy domain and stops at the earliest finite-seed or regular-domain boundary. No conclusion is sought after that stopping boundary. Section~III formalizes the active assumptions and domains used by these two local problems.
+The privacy problem is to determine whether a non-nominal admissible private realization can produce the same complete passive public history as a nominal realization. The construction is restricted to the stated schedule-regular privacy domain and stops at the earliest finite-seed or regular-domain boundary. No conclusion is sought after that stopping boundary. Section~III now formalizes the coordinates, domains, definitions, and active assumptions shared by these two local problems.
 
 \section{Definitions and Active Assumptions}
 \label{sec:definitions_assumptions}
@@ -239,12 +317,12 @@ p_i^V,q_i^V,p_i^\omega,q_i^\omega\right).
 \end{equation}
 The physical errors, normalized errors, transformed errors, virtual controls,
 reconstructed commands, and privacy residuals are algebraic or smooth images of
-$(X,t)$ through the frozen maps. In particular, $e_{i,0}^V$, $e_{i,0}^\omega$,
+$(X,t)$ through the specified maps. In particular, $e_{i,0}^V$, $e_{i,0}^\omega$,
 $\sigma_i^V$, $\sigma_i^\omega$, $\zeta_i^V$, $\zeta_i^\omega$, $r_i^V$,
 and $r_i^\omega$ are reconstructed analysis quantities; they are not additional
-independent states. The augmented bookkeeping vector used in the proof is
+independent states. The augmented analysis vector is
 therefore interpreted as the image of \eqref{eq:independent_coordinates}, with
-its consistency derivatives supplied by the frozen equations.
+its consistency derivatives supplied by the closed-loop equations.
 
 \subsection{Admissible Open Domain and Bootstrap Region}
 
@@ -253,7 +331,7 @@ coordinates on which the plant, controller, prescribed-performance maps, and
 privacy divisions are defined. It includes strict funnel inequalities
 $|\sigma_i^V|<1$ and $|\sigma_i^\omega|<1$, positive performance envelopes,
 the regular privacy denominators, and the physical operating domain inherited
-from the frozen model. A compact set
+from the adopted model. A compact set
 \begin{equation}
 \mathcal K_0\Subset\mathcal D_{\min}
 \label{eq:bootstrap_region}
@@ -264,12 +342,49 @@ declared forward invariant. The first-exit time is the earliest time at which
 the independent trajectory leaves $\mathcal D_{\min}$ or a separately declared
 local design margin ceases to hold.
 
+\begin{figure}[!b]
+\centering
+\resizebox{0.90\columnwidth}{!}{%
+\begin{tikzpicture}[x=1cm,y=1cm]
+  \draw[thick, rounded corners=12pt]
+    (0,0) .. controls (0.2,2.5) and (1.0,3.4) .. (3.7,3.5)
+    .. controls (6.1,3.5) and (7.1,2.5) .. (7.0,0.4)
+    .. controls (6.9,-1.7) and (5.3,-2.2) .. (3.2,-2.0)
+    .. controls (1.0,-1.9) and (-0.2,-1.1) .. (0,0) -- cycle;
+  \node[font=\footnotesize] at (1.0,2.8) {$\mathcal D_{\min}$};
+
+  \draw[dashed, thick, rounded corners=8pt]
+    (1.2,0.0) .. controls (1.3,1.4) and (2.0,2.0) .. (3.4,2.0)
+    .. controls (4.7,2.0) and (5.2,1.2) .. (5.0,0.0)
+    .. controls (4.8,-0.9) and (3.9,-1.2) .. (2.7,-1.1)
+    .. controls (1.7,-1.0) and (1.1,-0.7) .. (1.2,0.0) -- cycle;
+  \node[font=\footnotesize] at (2.0,1.45) {$\mathcal K_0$};
+
+  \fill (2.2,0.2) circle (2pt) node[below left,font=\scriptsize] {$X(0)$};
+  \draw[mgflow]
+    (2.2,0.2) .. controls (3.0,0.9) and (4.0,0.8) .. (4.7,0.3)
+    .. controls (5.5,-0.2) and (5.9,-0.6) .. (6.45,-0.95);
+  \fill (6.45,-0.95) circle (2pt);
+  \node[right,font=\scriptsize,align=left] at (6.48,-0.95)
+    {$t=\tau_{\mathrm{ex}}$\\first admissibility exit};
+  \draw[dashed, -{Latex[length=1.8mm]}]
+    (6.47,-0.97) .. controls (6.8,-1.2) and (7.2,-1.25) .. (7.55,-1.15);
+  \node[below,font=\scriptsize] at (7.1,-1.25) {no conclusion after exit};
+\end{tikzpicture}%
+}
+\caption{Schematic local-before-exit geometry. The initial state belongs to
+$\mathcal K_0\Subset\mathcal D_{\min}$, and the analysis applies along the
+trajectory only before $\tau_{\mathrm{ex}}$. The diagram does not assert that
+exit from $\mathcal D_{\min}$ is avoided.}
+\label{fig:local_exit_geometry}
+\end{figure}
+
 \subsection{Definition 1: Closed-Loop Local Solution}
 
 \textbf{Definition 1 (closed-loop local solution).}
 Given an admissible initial condition in $\mathcal D_{\min}$, a closed-loop local
 solution is an absolutely continuous independent trajectory $X(t)$ satisfying
-the frozen plant, graph, controller, and public/private coordination equations
+the specified plant, graph, controller, and public/private coordination equations
 almost everywhere on a maximal interval $[0,\tau_{\mathrm{ex}})$, where
 $\tau_{\mathrm{ex}}$ is the first admissibility-exit time. All reconstructed
 coordinates are evaluated from $X(t)$ and remain consistent with their defining
@@ -298,7 +413,7 @@ uniqueness failure outside the declared local stopping interval.
 
 \subsection{Assumption 1: Local Physical and Graph Regularity}
 
-\textbf{Assumption 1.} The frozen physical model is defined on the declared
+\textbf{Assumption 1.} The physical model is defined on the declared
 operating region $\Delta$, its channel parameters and positive time constants
 are regular, and the load and power-flow maps are locally regular there. The
 cyber graph $\mathcal G_c$ is fixed, connected, undirected, and has the declared
@@ -308,38 +423,53 @@ regular with strictly positive radii. The uncertainty signals $R_i^V$ and
 $R_i^\omega$ are measurable and locally essentially bounded on compact subsets
 of $\Delta$ with the declared bounds. The initial condition satisfies the
 strict funnel feasibility conditions and belongs to the interior of
-$\mathcal D_{\min}$. The feasible actuator sets $U_i$ and frozen input maps are
-locally regular; actuator feasibility on a selected $\mathcal K_0$ is a design
-check performed by PO-13, not a global premise of this assumption.
+$\mathcal D_{\min}$. The feasible actuator sets $U_i$ and specified input maps are
+locally regular; actuator feasibility on the selected compact bootstrap region
+$\mathcal K_0$ is a design
+check verified by the local actuator-demand test in Section~IV, not a global
+premise of this assumption.
 
-\subsection{Assumption 2: Version 2.2 Privacy-Domain Regularity}
+\subsection{Assumption 2: Privacy-Domain Regularity}
 
 \textbf{Assumption 2.} For every affected agent/channel pair, the nominal
 initial private split has the declared nonzero margin $\eta_{z,i}^\nu>0$,
-the nominal private weights lie strictly inside their ES-46 bounds with margin
+the nominal private weights lie strictly inside their declared lower and upper
+bounds with margin
 $\eta_{w,i}^\nu>0$, and the prescribed privacy schedule satisfies
 $\gamma_{\mathrm{priv},i}^\nu(t)\geq\eta_{\gamma,i}^\nu>0$ on the common finite
-seed interval $I_s=[0,T_s]$. The margins satisfy the Version 2.2 feasibility
+seed interval $I_s=[0,T_s]$. The margins satisfy the stated feasibility
 relations, and the privacy gains and finite local residual budget obey the
-declared Privacy Gain Feasibility Condition on the selected compact design
+declared Privacy Gain Feasibility Condition on the selected compact bootstrap
 region. The schedule is regular enough for the finite local residual estimate;
 no asymptotic residual conclusion is included here. The adversary is passive
 and observes exactly the complete public history in Definition 2.
 
 Assumption 2 does not assert the existence of a non-nominal admissible
-alternative, a positive perturbation radius, or a compatible private trajectory:
-those are conclusions of PO-04. It also does not assert denominator validity
-beyond the initial construction interval: any additional ES-60--ES-61 validity,
-continuation, or compatible extension up to the retained privacy stopping
-boundary remains the conclusion of PO-05. Neither assumption asserts global
-invariance or continuation.
+alternative, a positive perturbation radius, or a compatible private trajectory;
+these are conclusions of the constructive privacy analysis. It also does not
+assert denominator validity beyond the initial construction interval. Any
+additional denominator validity, continuation, or compatible extension up to
+the retained privacy stopping boundary must be established by the later local
+continuation argument. Neither assumption asserts global invariance or
+continuation.
+
+\begin{remark}[Scope of the local physical analysis]
+The selected compact bootstrap region $\mathcal K_0$ supplies the finite
+constants used in Section~IV; it is not assumed to be forward invariant.
+Accordingly, the definitions and assumptions above permit a first
+admissibility exit and do not supply a conclusion beyond it.
+\end{remark}
+
+With the independent coordinates, stopping boundary, and compact region now
+fixed, Section~IV derives the physical estimates available on this local
+interval. The privacy construction is treated separately afterward.
 
 \section{Local Physical Analysis}
 \label{sec:local_physical_analysis}
 
-\subsection{Prescribed-Performance Coordinates and Frozen Controller}
+\subsection{Prescribed-Performance Coordinates and Specified Controller}
 
-For $\nu\in\{V,\omega\}$, the frozen performance envelope is
+For $\nu\in\{V,\omega\}$, the prescribed-performance envelope is
 \begin{equation}
 \rho_i^\nu(t)
 =\rho_{i,\infty}^\nu+
@@ -380,7 +510,7 @@ whereas the frequency channel uses
 -k_1^\omega\rho_i^\omega[1-(\sigma_i^\omega)^2]\zeta_i^\omega.
 \label{eq:frequency_virtual_control}
 \end{equation}
-The frozen nominal commands and the privacy-aware plant inputs are
+The nominal commands and the privacy-aware plant inputs are
 \begin{align}
 c_i^V
 &=\tau_{Q_i}k_{V_i}\!\left(F_i^V-\dot\alpha_i^V+k_2^V\chi_i^V
@@ -394,7 +524,7 @@ u_i^V&=c_i^V+r_i^V,
 u_i^\omega=c_i^\omega+r_i^\omega.
 \label{eq:local_reconstructed_inputs}
 \end{align}
-Substitution through the unique plant interface gives the frozen transformed
+Substitution through the unique plant interface gives the transformed
 subsystems
 \begin{align}
 \dot\zeta_i^V
@@ -422,19 +552,21 @@ $g_i^\nu z_i^\nu$ in the privacy dynamics is locally Lipschitz in the private
 difference, including at $|z_i^\nu|=\gamma_{\mathrm{priv},i}^\nu$.
 Together with the measurable, locally essentially bounded uncertainty and
 privacy coefficients in Assumptions 1--2, the reduced independent vector field
-satisfies the Caratheodory conditions. Hence PO-16A supplies a unique absolutely
-continuous maximal local solution from every admissible initial condition.
+satisfies the Caratheodory conditions. The local existence and uniqueness
+argument therefore supplies a unique absolutely continuous maximal local
+solution from every admissible initial condition.
 
 All analysis below is restricted to compact time intervals before
 $\tau_{\mathrm{ex}}$, while the independent trajectory remains in
-$\mathcal D_{\min}$ and in the selected $\mathcal K_0$. On such intervals, all
+$\mathcal D_{\min}$ and in the selected compact bootstrap region $\mathcal K_0$.
+On such intervals, all
 reconstructed coordinates and compact-dependent constants are finite. This
 local result neither excludes a later admissibility exit nor extends the
 trajectory beyond it.
 
 \subsection{Command-Rate and Finite Residual Bounds}
 
-For each channel, subtraction and averaging of the frozen public/private
+For each channel, subtraction and averaging of the specified public/private
 dynamics give
 \begin{align}
 \dot z_i^\nu
@@ -447,8 +579,9 @@ dynamics give
 -\dot c_i^\nu.
 \label{eq:local_r_dynamics}
 \end{align}
-PO-01 gives the channel-wise exponential bound on $z_i^\nu$. PO-03 then gives
-finite compact-dependent command-rate constants
+The first identity gives a channel-wise exponential bound on $z_i^\nu$.
+Differentiating the specified command maps on $\mathcal K_0$ then gives finite
+compact-dependent command-rate constants
 \begin{equation}
 \|\dot{\bm c}^V\|\leq C_c^V(\mathcal K_0),
 \qquad
@@ -465,13 +598,13 @@ r_i^\nu(t)=\int_0^t &e^{-\lambda_{\mathrm{tr},i}^\nu(t-s)}
 &\hspace{29mm}-\dot c_i^\nu\bigg](s)\,ds.
 \label{eq:local_residual_convolution}
 \end{align}
-PO-02A therefore supplies a finite residual bound on the same compact local
+The resulting convolution estimate is finite on the same compact local
 interval. A bounded command rate supports only this finite convolution estimate;
 no residual convergence conclusion follows from it.
 
 \subsection{Voltage and Frequency Component Inequalities}
 
-Use only the frozen Lyapunov components
+Consider the specified Lyapunov components
 \begin{align}
 \mathscr V_V
 &=\frac{1}{2}\sum_i\!\left[p_\zeta^V(\zeta_i^V)^2
@@ -488,7 +621,7 @@ Use only the frozen Lyapunov components
 &=\mathscr V_V+\mathscr V_\omega+\mathscr V_{\mathrm{priv}}.
 \label{eq:frozen_lyapunov_components}
 \end{align}
-On $\mathcal K_0$, define the frozen disturbance aggregates
+On $\mathcal K_0$, define the disturbance aggregates
 \begin{align}
 D_i^V
 &=\frac{k_c^V|e_i^V|+|r_i^V|}{\tau_{Q_i}k_{V_i}}
@@ -499,8 +632,9 @@ D_i^\omega
 +\bar R_i^\omega.
 \label{eq:component_disturbances}
 \end{align}
-PO-08 and PO-09 establish, pointwise on the selected compact region and before
-the first admissibility exit,
+Applying the stated metric and Young-inequality bounds gives, pointwise on the
+selected compact bootstrap region $\mathcal K_0$ and before the first
+admissibility exit,
 \begin{align}
 \dot{\mathscr V}_V
 &\leq-a_{Vz}\|\bm\zeta^V\|^2-a_{V\chi}\|\bm\chi^V\|^2
@@ -513,8 +647,8 @@ the first admissibility exit,
 \label{eq:local_frequency_inequality}
 \end{align}
 where $a_{Vz}$, $a_{V\chi}$, and $a_{\omega z}$ are the positive coefficients
-fixed by ES-94, ES-95, and ES-98. Under the Privacy Gain Feasibility Condition,
-PO-10 gives on the same local region
+fixed by the stated gain and Young-parameter conditions. Under the Privacy Gain
+Feasibility Condition, the privacy component satisfies on the same local region
 \begin{equation}
 \dot{\mathscr V}_{\mathrm{priv}}
 \leq-a_z\|\bm z\|^2-a_r\|\bm r\|^2
@@ -526,8 +660,8 @@ with $a_z>0$, $a_r>0$, and finite $d_c$. This component estimate uses
 
 \subsection{Bootstrap Actuator/Funnel Feasibility}
 
-PO-13 checks feasibility on $\mathcal K_0$ before the composite gain closure.
-For the frozen reconstructed commands, let
+Bootstrap feasibility is checked on $\mathcal K_0$ before the composite gain
+closure. For the reconstructed commands, let
 \begin{equation}
 \bar U_i^\nu(\mathcal K_0)
 =\sup_{X\in\mathcal K_0}|\widehat c_i^\nu(X)|.
@@ -549,22 +683,23 @@ The voltage and frequency command maps give the finite bounds
 \end{align}
 The symbolic design test requires the resulting compact command intervals to be
 strictly contained in the declared actuator sets $U_i^\nu$, together with the
-frozen funnel, gain, and privacy-feasibility inequalities. It certifies actuator
-and funnel feasibility only on the selected design region while the trajectory
-remains there. It does not establish persistence of those margins after an exit.
+specified funnel, gain, and privacy-feasibility inequalities. It certifies
+actuator and funnel feasibility only on the selected compact bootstrap region
+$\mathcal K_0$ while the trajectory remains there. It does not establish
+persistence of those margins after an exit.
 
 \subsection{Composite Local Comparison}
 
-The graph identity used by PO-06 is
+The graph closure uses the identity
 \begin{equation}
 \bm e=\operatorname{diag}(b_i)\bm e_0+L_c\bm c
 +L_c\bm r+\frac{1}{2}L_c\bm z.
 \label{eq:local_graph_identity}
 \end{equation}
-Together with the frozen algebraic command maps, it bounds $\bm e$ and $\bm c$
+Together with the specified algebraic command maps, it bounds $\bm e$ and $\bm c$
 by the physical, residual, and decomposition coordinates without treating the
 graph term as an external input. The component inequalities are assembled with
-the closed PO-07 certificate
+the sufficient composite certificate
 \begin{equation}
 Q_{\mathrm{cl}}=Q_0-H^T W_DH\succ0,
 \qquad
@@ -572,7 +707,8 @@ Q_{\mathrm{cl}}=Q_0-H^T W_DH\succ0,
 \label{eq:local_composite_certificate}
 \end{equation}
 where the frequency factor $(\bar h_i^\omega)^2$ occurs exactly once in
-$W_D^\omega$. Consequently, on the selected $\mathcal K_0$, before the first
+$W_D^\omega$. Consequently, on the selected compact bootstrap region
+$\mathcal K_0$, before the first
 admissibility exit and while the solution remains in $\mathcal D_{\min}$,
 \begin{equation}
 \dot{\mathscr V}_{\mathrm{cl}}
@@ -590,18 +726,27 @@ and comparison gives
 \label{eq:local_comparison_bound}
 \end{align}
 Here $d_R$ contains the declared physical-uncertainty and compact-region terms,
-whereas $d_{\mathrm{priv}}$ is finite by PO-03 and PO-02A. Equations
+whereas $d_{\mathrm{priv}}$ is finite by the command-rate and residual estimates
+above. Equations
 \eqref{eq:local_composite_inequality}--\eqref{eq:local_comparison_bound} are
 local comparison statements. They do not exclude a funnel, actuator, physical,
 or loss-of-compactness exit and do not provide a conclusion after such an exit.
 
+\begin{remark}[Scope of the local comparison]
+The comparison bound describes the physical closed loop only while the stated
+open-domain and compact-region conditions hold. It is neither an invariance
+certificate nor a prescribed-time recovery result.
+\end{remark}
 
-%======================================================
-\section{Illustrative Simulation}
+Section~IV has therefore answered only the physical, local-before-exit part of
+the problem. The next stage turns to the private-realization construction and
+its passive observation equivalence without upgrading the physical result to a
+global theorem; the physical and privacy conclusions remain separate
+theoretical results.
 
-\section{Hardware-in-the-Loop Closed-Loop Test}
 
-\section{Conclusion}
+% Later manuscript sections are intentionally deferred until their review gates.
+% Simulation and experiment design have not started.
 
 
 

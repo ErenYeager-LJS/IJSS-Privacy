@@ -1,28 +1,23 @@
 # Latest Handoff
 
-Current task: `task-012-privacy-admissible-domain-revision`
+Current task: `task-013-po04-privacy-alternative-existence-revised-domain`
 
-Branch: `task-012-privacy-admissible-domain-revision`
+Branch: `task-013-po04-privacy-alternative-existence-revised-domain`
 
-PR: [Create or review the Task-012 PR](https://github.com/ErenYeager-LJS/IJSS-Privacy/pull/new/task-012-privacy-admissible-domain-revision)
+PR: [Create or review the Task-013 PR](https://github.com/ErenYeager-LJS/IJSS-Privacy/pull/new/task-013-po04-privacy-alternative-existence-revised-domain)
 
-Full handoff: [task-012-privacy-admissible-domain-revision.md](task-012-privacy-admissible-domain-revision.md)
+Full handoff: [task-013-po04-privacy-alternative-existence-revised-domain.md](task-013-po04-privacy-alternative-existence-revised-domain.md)
 
-## Current decision
+## Current result
 
-Task-011 Recommendation **B. MINIMAL ASSUMPTION / DOMAIN REVISION REQUIRED** is implemented. The active architecture is **Blueprint Version 2.1, Privacy-Domain Revision**; Version 2.0 remains the historical frozen baseline. The controller, all ES formulas, Lyapunov design, states, observers, theorem numbering, simulation, HIL, and `LOCAL-BEFORE-EXIT` theorem strategy are unchanged.
+**B. PO-04 BLOCKED — ARCHITECTURE REVIEW REQUIRED**
 
-Assumption 2 now restricts the privacy-admissible design domain using channel-specific nonzero initial-split margins and nominal private-weight interior margins on a common local seed interval for every affected agent/channel pair. These margins do not assume an alternative realization, identical public history, denominator validity, or a positive perturbation radius.
+Blueprint Version 2.1 removes the Task-010 zero-split sign contradiction but does not supply a local positive lower envelope or right-regularity condition for `gamma_priv`. The frozen class permits a positive measurable schedule with `gamma_priv(t)=a_gamma t` for small `t>0`. Then the ES-60 denominator is pointwise nonzero but tends to zero, and every nonzero protected perturbation forces `w_{i,21}'` outside ES-46 arbitrarily close to the initial time.
 
-## Proof pipeline
-
-- `PO-04`: remains `OPEN`, but is eligible to resume on the Version 2.1 regular privacy design domain.
-- `PO-05`: remains `OPEN`, downstream and inactive until PO-04 closes.
-- No proof-obligation status changed.
-- Route-L exclusions remain unchanged.
+No Blueprint, assumption, privacy-domain, equation, controller, Lyapunov, state, observer, or proof-obligation status was changed. PO-05 was not started.
 
 ## Next task
 
-`task-013-po04-privacy-alternative-existence-revised-domain`
+`task-014-privacy-schedule-regularity-architecture-review`
 
-Prove only PO-04's coupled alternative existence and positive perturbation radius on the revised domain. Do not begin PO-05.
+Resolve the privacy-schedule regularity boundary before PO-04 or PO-05 resumes.

@@ -38,13 +38,13 @@ Until PO-04 and PO-05 close, the privacy observation-equivalence clause is a req
 
 | PO | Current ledger status | Classification | Claim supported | Does the claim survive Route L? | Must finish before Proof Freeze? | Exact reason |
 |---|---|---|---|---|---|---|
-| PO-04 | OPEN | **A. REQUIRED FOR FINAL LOCAL MAIN THEOREM** | Nonempty admissible alternative private realization and public-history non-uniqueness | **YES, locally on the Version 2.2 schedule-regular privacy design domain.** PO-04 may be re-attempted and must construct the coupled family and positive perturbation radius; neither is assumed by the schedule margin. | **YES** | A privacy-preserving paper cannot treat observation ambiguity as proved without at least one non-nominal admissible realization. |
-| PO-05 | OPEN | **A. REQUIRED FOR FINAL LOCAL MAIN THEOREM** | Validity of the alternative-realization denominators or compatible extension | **YES, locally, after revised-domain PO-04 closes.** | **YES** | The PO-04 construction cannot support a legal privacy theorem while its frozen alternative-weight formulas may be singular. |
+| PO-04 | PROVED | **A. REQUIRED FOR FINAL LOCAL MAIN THEOREM** | Nonempty admissible alternative private realization and public-history non-uniqueness | **YES, locally on the Version 2.2 schedule-regular privacy design domain.** The completed PO-04 construction uses an admissible physical frequency perturbation and proves a coupled family with positive local radius. | **YES** | The proof is local-before-exit; downstream denominator continuation remains PO-05. |
+| PO-05 | OPEN | **A. REQUIRED FOR FINAL LOCAL MAIN THEOREM** | Additional validity of the alternative-realization denominators or compatible extension beyond the PO-04 construction interval | **YES, after PO-04, for any portion of the retained stopping domain beyond the initial/common local interval.** PO-05 does not re-prove the denominator legality already established by PO-04 on that initial interval. | **YES** | The PO-04 construction is locally legal; the remaining issue is downstream continuation or compatible extension, if required before the declared privacy stopping boundary. |
 | PO-12 | OPEN | **C. OUTSIDE FINAL MANUSCRIPT THEOREM SCOPE** | Practical recovery by the prescribed deadlines | **NO.** Its frozen dependency chain uses PO-11, PO-16B, and PO-02B, which Route L does not pursue. | **NO** | A local-before-exit theorem cannot guarantee existence/admissibility through the deadlines or use ES-51 decay. |
 | PO-14 | OPEN | **C. OUTSIDE FINAL MANUSCRIPT THEOREM SCOPE** | Exact or practical active-power sharing | **NO.** The theorem-ready sharing claim requires PO-12, PO-02B, equilibrium closure, and residual limits. | **NO** | The required upstream performance/residual chain is outside Route L. Frozen sharing algebra remains design intent, not a final theorem. |
 | PO-15 | OPEN | **C. OUTSIDE FINAL MANUSCRIPT THEOREM SCOPE** | Simultaneous privacy, persistent PPC, deadline recovery, and sharing composition | **NO.** Its frozen claim composes unavailable physical and sharing results. | **NO** | Narrowing PO-15 silently would change its frozen ledger claim. Route L retains separate local physical and, after PO-04/05, local privacy results without the stronger simultaneous guarantee. |
 
-No listed PO is discharged or moved to another ledger status by this classification.
+PO-04 is discharged by the completed Task-015 local construction. The remaining classifications do not discharge PO-05 or any other OPEN obligation.
 
 ## 4. Manuscript claim alignment
 
@@ -61,7 +61,7 @@ No listed PO is discharged or moved to another ledger status by this classificat
 | Simultaneous composite guarantee | **NOT AVAILABLE UNDER CURRENT FINAL THEORY** | Separate local physical and privacy results may be reported after their own closures | One theorem simultaneously guaranteeing privacy, persistent PPC, deadlines, and sharing |
 | Global continuation and domain invariance | **NOT AVAILABLE UNDER CURRENT FINAL THEORY** | Explicit local-before-exit limitation | `K_0` invariant, `Delta` invariant, denominator/actuator margins persist for all time |
 
-The public-history claim remains conditional because PO-04 and PO-05 are open. Blueprint Version 2.2 supplies only designer-selectable local domain margins and a stopping boundary; it does not assume alternative construction, identical public history, a positive perturbation radius, or invariance. Task-015 must re-attempt the first proof step.
+The public-history claim remains conditional because PO-05 is open. PO-04 now supplies the local alternative construction and positive radius; Blueprint Version 2.2 still supplies only designer-selectable local domain margins and a stopping boundary, not invariance or global ambiguity.
 
 ## 5. Blocked stronger-theorem chain
 
@@ -77,8 +77,8 @@ These statuses are intentionally retained. They can re-enter the proof pipeline 
 
 | PO | Current status | Route-L relevance | Must finish before Proof Freeze? | Reason |
 |---|---|---|---|---|
-| PO-04 | OPEN | Required local privacy construction on the Version 2.2 schedule-regular domain; eligible to re-attempt | **YES** | Immediate prerequisite for the retained privacy claim |
-| PO-05 | OPEN | Required local privacy-construction validity; inactive until PO-04 closes | **YES, after PO-04** | Removes singularity gap in the frozen construction |
+| PO-04 | PROVED | Local privacy construction on the Version 2.2 schedule-regular domain | **YES** | Completed by Task-015; local denominator continuation remains PO-05 |
+| PO-05 | OPEN | Additional denominator validity/continuation after the PO-04 construction interval | **YES, after PO-04** | Does not re-prove PO-04's initial/common local denominator legality; handles only the remaining retained stopping-domain interval or compatible extension |
 | PO-11 | OPEN | Stronger-theorem funnel continuation only | **NO** | Route L stops before exit |
 | PO-12 | OPEN | Deadline theorem only | **NO** | Deadline claim is outside final scope |
 | PO-14 | OPEN | Sharing theorem only | **NO** | Sharing claim is outside final scope |
@@ -86,7 +86,7 @@ These statuses are intentionally retained. They can re-enter the proof pipeline 
 | PO-16B | OPEN | Global/forward continuation only | **NO** | Route L uses PO-16A local existence |
 | PO-02B | OPEN | Asymptotic residual-decay chain only | **NO** | Route L uses the finite PO-02A bound |
 
-The remaining mathematical work before Proof Freeze is therefore PO-04 followed by PO-05. This ordering does not authorize both in one task: PO-05 depends on the construction established by PO-04.
+The remaining mathematical work before Proof Freeze is the downstream PO-05 continuation/extension audit. PO-04's initial/common local denominator legality is already proved and is not repeated by PO-05.
 
 ## 7. Manuscript-facing dependency presentation
 
@@ -102,7 +102,7 @@ The frozen Blueprint dependency graph remains untouched and must be labeled, whe
 ## 8. Architecture classification
 
 - The stopped continuation chain remains a **Proof Boundary** and **Claim Issue**, already resolved by Route L scope restriction.
-- The Task-010 zero-split blocker is resolved by Version 2.1, and the Task-013 schedule-reciprocal blocker is resolved at architecture level by the Version 2.2 finite-seed schedule margin. PO-04 and PO-05 remain **open proof obligations**, not conclusions embedded in Assumption 2.
+- The Task-010 zero-split blocker is resolved by Version 2.1, and the Task-013 schedule-reciprocal blocker is resolved at architecture level by the Version 2.2 finite-seed schedule margin. PO-04 is proved locally; PO-05 remains an **OPEN downstream proof obligation** for additional continuation/extension only, not a premise embedded in Assumption 2.
 - Architecture Review Required: **NO** for the present classification and the immediate PO-04 proof task.
 
 If PO-04 later shows that no non-nominal admissible alternative exists, or PO-05 shows that the frozen construction is generically singular and cannot be extended without equation or assumption changes, that later task must stop and report `ARCHITECTURE REVIEW REQUIRED`.

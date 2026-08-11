@@ -1,29 +1,26 @@
 # Latest Handoff
 
-Current task: `task-017-final-proof-chain-and-manuscript-readiness-audit`
+Current task: `task-018-manuscript-latex-architecture-preparation`
 
-Branch: `task-017-final-proof-chain-and-manuscript-readiness-audit`
+Branch: `task-018-manuscript-latex-architecture-preparation`
 
-PR: pending creation after verification
+PR: pending creation after audit verification
 
-Full handoff: [task-017-final-proof-chain-and-manuscript-readiness-audit.md](task-017-final-proof-chain-and-manuscript-readiness-audit.md)
+Full handoff: [task-018-manuscript-latex-architecture-preparation.md](task-018-manuscript-latex-architecture-preparation.md)
 
 ## Current result
 
-**READY FOR LOCAL MANUSCRIPT LATEX PREPARATION**
+**PASS WITH MINOR REVISION - CLAIM-SCOPE AUDIT COMPLETE; LATEX WRITING NOT STARTED**
 
-PO-04 and PO-05 are closed on their declared local domains. No remaining `OPEN` proof obligation is required for the selected `LOCAL-BEFORE-EXIT` theorem.
+The designated IEEE template is a blank format skeleton. The historical `IJSS_tex.tex` contains global, deadline, active-power sharing, and old composite claims that exceed Task-017. Those statements must be rewritten or omitted before use.
 
-The final manuscript may state the local physical result and the logically separate local public-history indistinguishability result. It must not copy the stronger historical Blueprint theorem descriptions or the all-time ES-57 target into the manuscript.
+The approved manuscript result layer contains only:
 
-Remaining open obligations are classified as follows:
+- the local physical theorem;
+- the local public-history indistinguishability theorem.
 
-- Outside final theorem scope: PO-12, PO-14, PO-15.
-- Future work only: PO-02B, PO-11, PO-16B.
-- Required for final theorem: none.
+PO-04 and PO-05 are closed and support the local privacy result. The remaining OPEN obligations remain unchanged and are excluded or reserved according to the Task-018 audit.
 
-Blueprint Version 2.2, controller, ES equations, Lyapunov design, state definitions, observation model, theorem numbering, and all PO statuses remain unchanged.
+## Next action
 
-## Next task
-
-Prepare the manuscript LaTeX architecture using only the final claim layer and the limitations recorded in `final_proof_chain_manuscript_readiness_audit_0808.md`. Do not translate the frozen stronger theorem hierarchy verbatim.
+Populate `Standard Tex Usage/Privacy_Preserving_Microgrid_Structure.tex` only after applying the claim-scope controls in `manuscript_claim_scope_audit_0811.md`. Do not copy historical theorem prose verbatim.

@@ -1,39 +1,44 @@
 # Latest Handoff
 
-Current task: `task-025-ieee-privacy-construction`
+Current task: `task-026-ieee-theoretical-results`
 
-Branch: `task-025-ieee-privacy-construction`
+Branch: `task-026-ieee-theoretical-results`
 
 PR: pending creation
 
-Full handoff: [task-025-ieee-privacy-construction.md](task-025-ieee-privacy-construction.md)
+Full handoff: [task-026-ieee-theoretical-results.md](task-026-ieee-theoretical-results.md)
 
 ## Current result
 
-**SECTION V PRIVACY CONSTRUCTION ARCHITECTURE COMPLETE**
+**SECTION VI THEORETICAL RESULTS COMPLETE**
 
-The designated IEEE manuscript now contains Section V, `Local Privacy
-Construction and Observation Equivalence`. The section builds the manuscript
-architecture for the local privacy construction: problem transition, alternative
-initialization, public-history equivalence framework, finite stopping boundary,
-and publication-facing proof structure.
+Task-026 typo fix completed: the missing `\mathrm` command in the Theorem 2
+public-history equality was corrected. Manuscript compilation and
+`git diff --check` both pass. There is no theorem-scope change and no
+simulation/experiment work has started.
 
-The privacy result remains existence-based and local. It is stated only as a
-construction architecture up to the finite-seed/regular-domain stopping
-boundary. No Theorem 2, Section VI theorem statement, global continuation,
-all-time privacy, cryptographic-secrecy claim, differential-privacy claim, or
-simulation content was added.
+The designated IEEE manuscript now contains Section VI, `Theoretical Results`.
+It records the Section IV local physical analysis as Theorem 1 and the Section V
+local public-history construction as the independent Theorem 2. Each theorem has
+a compact publication-facing proof sketch and an explicit boundary remark.
+
+Theorem 1 remains a local-before-exit physical result. Theorem 2 remains an
+existence-based local observation-equivalence result up to the retained privacy
+stopping boundary. Neither theorem implies the other, and no combined theorem,
+global continuation, prescribed-time recovery, power-sharing, residual-decay, or
+all-time privacy claim was added.
 
 ## Verification
 
-IEEEtran compilation succeeded and produced a seven-page PDF. Section V was
-visually rendered and checked. `git diff --check` passed. No controller, state,
-observation model, Lyapunov function, theorem scope, proof-obligation status, or
-frozen equation meaning changed.
+IEEEtran compilation succeeded and produced an eight-page PDF. Section VI was
+visually rendered and checked, with no new Section VI overfull warning.
+`git diff --check` passed. No controller, state, observation model, assumption,
+Lyapunov function, theorem scope, proof-obligation status, or frozen equation
+meaning changed.
 
 ## Next action
 
-Review and approve Task-025. Do not begin Theorem 2, Section VI, or simulation
-work automatically.
+Review and approve Task-026. Do not begin Section VII, Discussion, Conclusion,
+or simulation work automatically.
 
 Simulation/Experiment work has NOT started and requires user intervention before commencement.

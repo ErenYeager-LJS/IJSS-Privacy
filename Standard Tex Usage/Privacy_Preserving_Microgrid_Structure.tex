@@ -962,13 +962,66 @@ observation channels outside Definition~2.
 The two results above complete the theoretical summary supported by the present
 local proof chain. Theorem~1 records what can be concluded about the physical
 closed loop before admissibility exit. Theorem~2 records the separate local
-public-history ambiguity under the passive observation model. Section~VII is
-reserved for numerical experiments that test the physical and privacy behaviors
-associated with these two results; no simulation design is specified here.
+public-history ambiguity under the passive observation model. Section~VII
+specifies the numerical-evaluation architecture associated with these two
+results without reporting simulation outcomes.
 
+%======================================================
+\section{Simulation Architecture}
+\label{sec:simulation_architecture}
 
-% Later manuscript sections are intentionally deferred until their review gates.
-% Simulation and experiment design have not started.
+\subsection{Simulation Objectives and Theorem Mapping}
+
+The numerical study is organized around two independent experiment groups.
+The physical group is intended to illustrate trajectories and local comparison
+quantities associated with Theorem~1 only before the applicable admissibility
+or compact-region exit. The privacy group is intended to exhibit one explicit
+nominal/non-nominal witness pair for Theorem~2 under the passive observation
+map in Definition~2. A numerically successful trajectory does not enlarge
+either theorem, and the two groups are not combined into a composite claim.
+
+\subsection{Local Physical Evaluation Setup}
+
+One closed-loop run will record the physical states $V_i$, $\omega_i$, and
+$\delta_i$, the normalized and transformed coordinates $\sigma_i^\nu$ and
+$\zeta_i^\nu$, the voltage backstepping error $\chi_i^V$, the reconstructed
+inputs $u_i^\nu$, the residuals $r_i^\nu$, and the composite quantity
+$\mathscr V_{\mathrm{cl}}$. The implementation will evaluate the strict
+conditions defining $\mathcal D_{\min}$ and the selected compact bootstrap
+region $\mathcal K_0$ at every recorded time. Let $\tau_{\mathrm{num}}$ be the
+first numerically detected loss of one of the conditions required for the
+reported local estimate. Plots and interpretation will be restricted to
+$0\leq t<\tau_{\mathrm{num}}$; samples at or after that marker will not be used
+to claim continuation, invariance, convergence, recovery, or power sharing.
+
+\subsection{Public-History Indistinguishability Setup}
+
+The privacy evaluation will use one nominal admissible initialization and one
+explicitly constructed admissible non-nominal initialization with
+$S_i'\neq S_i$. Both realizations will use the same disclosed graph,
+references, schedules, timing data, and public controller parameters. The
+observer-side comparison will contain exactly the complete public history in
+Definition~2, whereas private substates, private weights, residuals, locally
+reconstructed commands, and physical trajectories will be recorded separately
+as internal diagnostic quantities. The witness will be interpreted only for
+$0\leq t<\tau_{\mathrm{priv}}$. It illustrates existence for the selected
+pair; it is not a random-initialization or universal privacy test.
+
+\subsection{Evaluation Quantities and Figure Organization}
+
+The physical run is planned to supply one multi-panel figure for voltage,
+frequency, and input trajectories and one multi-panel figure for normalized
+errors, transformed coordinates, local margins, and the composite comparison
+quantity. The privacy witness run is planned to supply one figure comparing
+nominal and non-nominal public histories and one figure showing selected
+private/internal differences. Every time-domain panel will display its
+applicable local stopping marker. Numerical values, solver settings, initial
+conditions, topology, gains, and the witness perturbation remain to be fixed
+before simulation execution; no historical simulation parameter is adopted by
+this architecture section.
+
+% Simulation execution and numerical results are intentionally deferred until
+% user confirmation of the Task-028 architecture and all implementation data.
 
 
 

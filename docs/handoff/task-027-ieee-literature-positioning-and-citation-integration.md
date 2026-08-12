@@ -12,8 +12,9 @@ No tracked `.bib` file exists in the repository. The reference assets are:
   This is a pre-existing untracked source file and was inspected read-only; it
   is not part of this commit.
 - `Standard Tex Usage/Privacy_Preserving_Microgrid_Structure.tex`: before this
-  task, no citation commands and one dummy `ref1` entry; after this task, seven
-  citation commands, eight unique cited keys, and eight matching entries.
+  task, no citation commands and one dummy `ref1` entry; after the Task-027
+  revision, eight citation commands, 12 unique cited keys, and 12 matching
+  entries.
 
 The active manuscript has no cited key without an entry and no uncited entry.
 No duplicate key or DOI was introduced. The `ref1` dummy was not a valid
@@ -31,6 +32,13 @@ was available:
   the DOI suffix remains 2025.
 - `SD`, `SD-MSR`, and `YeCaoChowCai2024`: state-decomposition and consensus
   privacy references recovered from `private.tex` and verified by DOI.
+- `Xiaokang2023`, `Rosini2024`, and `Huang2026`: recent microgrid secondary
+  control, stability, validation, and cyber-resilience references recovered
+  from `IJSS_tex.tex`. The `Xiaokang2023` article number was corrected from the
+  historical `111143` to the verified `111164`, and the omitted sixth author of
+  `Huang2026` was restored.
+- `WangLiuLiHuang2021`: weighted-consensus privacy reference recovered from
+  `private.tex` and verified by DOI.
 
 Three additional foundational references were added from verified DOI metadata:
 `Guerrero2011`, `Bidram2012`, and `Bechlioulis2008`. They support hierarchical
@@ -40,9 +48,9 @@ microgrid control and prescribed-performance control, respectively.
 
 | Direction | Citation role | Integrated references | Boundary |
 |---|---|---|---|
-| Distributed secondary control of microgrids | Establish hierarchical primary/secondary organization and neighbor-based secondary coordination | `Guerrero2011`, `Bidram2012`, `Lantao2019`, `Bu2025` | Background only; no restoration, deadline, or sharing result is inherited |
-| Cyber-physical security and privacy in microgrids | Motivate exposure of public coordination data and distinguish passive observation from active attacks | `SD-MSR`, together with the explicit threat-model text | The manuscript does not claim attack resilience or cryptographic security |
-| Privacy-preserving distributed control | Position state decomposition and many-to-one public histories | `SD`, `SD-MSR`, `YeCaoChowCai2024` | The retained claim is existence-based local public-history indistinguishability only |
+| Distributed secondary control of microgrids | Establish hierarchical primary/secondary organization and neighbor-based secondary coordination | `Guerrero2011`, `Bidram2012`, `Lantao2019`, `Xiaokang2023`, `Rosini2024`, `Bu2025` | Background only; no restoration, deadline, or sharing result is inherited |
+| Cyber-physical security and privacy in microgrids | Motivate exposure of public coordination data and distinguish passive observation from active attacks | `Huang2026`, `SD-MSR`, together with the explicit threat-model text | The manuscript does not claim attack resilience or cryptographic security |
+| Privacy-preserving distributed control | Position weighted-consensus privacy, state decomposition, and many-to-one public histories | `WangLiuLiHuang2021`, `SD`, `SD-MSR`, `YeCaoChowCai2024` | The retained claim is existence-based local public-history indistinguishability only |
 | Prescribed-performance / constrained nonlinear control | Support transformed-error envelopes and separate them from prescribed-time convergence | `Bechlioulis2008`; `Bu2025` is used only for the contrast | No prescribed-time recovery claim is made |
 
 ## Citation placement audit
@@ -88,7 +96,7 @@ were not changed.
 ## Verification
 
 - IEEEtran/pdfLaTeX compilation: PASS
-- Citation closure: PASS (8 cited keys, 8 entries, none missing or uncited)
+- Citation closure: PASS (12 cited keys, 12 entries, none missing or uncited)
 - `git diff --check`: PASS
 - Theorem-scope audit: PASS; `LOCAL-BEFORE-EXIT` is unchanged, and stronger
   notions occur only as literature distinctions or explicit exclusions

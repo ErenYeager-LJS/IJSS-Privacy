@@ -13,10 +13,12 @@ Full handoff: [task-027-ieee-literature-positioning-and-citation-integration.md]
 **LITERATURE POSITIONING AND CITATION INTEGRATION COMPLETE**
 
 The repository reference assets were inventoried. The active manuscript now
-uses eight DOI-verified references across four bounded literature directions:
+uses 12 DOI-verified references across four bounded literature directions:
 distributed microgrid secondary control, cyber/privacy context,
 privacy-preserving distributed control, and prescribed-performance control.
-All eight cited keys have entries, and all eight entries are cited.
+All 12 cited keys have entries, and all 12 entries are cited. The four added
+references were recovered from the two designated historical TeX sources;
+external discovery was not required.
 
 The Introduction received a compact literature-positioning backbone. Section II
 received only source attribution for the hierarchical model and distributed

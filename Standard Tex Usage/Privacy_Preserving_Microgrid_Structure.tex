@@ -864,6 +864,106 @@ theorem here, does not assert uniqueness failure for every possible protected
 value, and does not extend the observation-equivalence claim beyond the finite
 stopping boundary.
 
+%======================================================
+\section{Theoretical Results}
+\label{sec:theoretical_results}
+
+Section~IV established the local physical estimates for the closed-loop
+microgrid, and Section~V established the local privacy construction under the
+passive public-history observation model. This section records those two
+analyses as separate theoretical results. The first theorem concerns physical
+well-posedness and local comparison bounds. The second theorem concerns
+existence-based public-history indistinguishability. Neither theorem is used to
+derive the other, and the two are not combined into a single composite theorem.
+
+\subsection{Local Physical Result}
+
+\begin{theorem}[Local physical result]
+Consider the closed-loop system defined in Sections~II--IV under
+Definitions~1--2 and Assumptions~1--2. Let the initial independent state be
+admissible in $\mathcal D_{\min}$, and let $\mathcal K_0\Subset
+\mathcal D_{\min}$ be the selected compact bootstrap region used for the local
+component estimates. Then, before the first admissibility exit, while the
+trajectory remains in $\mathcal D_{\min}$ and, where compact-dependent constants
+are used, while it remains in $\mathcal K_0$, the closed loop admits a unique
+local solution. Along this interval, the prescribed-performance coordinates,
+reconstructed commands, and residual coordinates are well defined; the voltage,
+frequency, and privacy component inequalities in Section~IV hold; the residual
+has the finite local convolution bound described there; the bootstrap actuator
+test is valid on $\mathcal K_0$; and the composite comparison bound
+\eqref{eq:local_composite_inequality}--\eqref{eq:local_comparison_bound}
+holds with constants defined on the selected local region.
+\end{theorem}
+
+\noindent\textit{Proof sketch:}
+Local existence and uniqueness follow from the local regularity argument on the
+open admissible domain in Section~IV-B. The command-rate and residual estimates
+come from the public/private difference dynamics in Section~IV-C. The voltage,
+frequency, and privacy component inequalities are the local estimates collected
+in Section~IV-D, and the actuator feasibility condition is the compact-region
+test in Section~IV-E. Combining these component estimates through the graph
+closure and sufficient composite certificate in Section~IV-F gives
+\eqref{eq:local_composite_inequality} and the comparison bound
+\eqref{eq:local_comparison_bound}. The argument is stopped at the first
+admissibility or compact-region exit.\hfill$\square$
+
+\begin{remark}[Boundary of Theorem 1]
+Theorem~1 is a local-before-exit physical result. It is not a global stability
+theorem, an invariance theorem, a prescribed-time recovery theorem, a residual
+convergence theorem, or an active-power sharing theorem. In particular, the
+compact region $\mathcal K_0$ supplies finite constants for the comparison
+argument and is not asserted to be forward invariant.
+\end{remark}
+
+\subsection{Local Public-History Indistinguishability}
+
+\begin{theorem}[Local public-history indistinguishability]
+Consider the passive observation model in Definition~2 and the privacy-domain
+regularity conditions in Assumption~2. For a nominal admissible realization in
+the stated local privacy domain, there exists at least one admissible
+non-nominal private initialization $S_i'\neq S_i$, together with compatible
+private paths and private weights, such that the nominal and alternative
+realizations generate the same complete passive public history:
+\begin{equation}
+\mathcal O_{mathrm{adv}}[0,t]
+=\mathcal O'_{mathrm{adv}}[0,t],
+\label{eq:theorem_public_history_equality}
+\end{equation}
+for $0\leq t<\tau_{\mathrm{priv}}$, where $\tau_{\mathrm{priv}}$ is the
+finite-seed or regular-domain stopping
+boundary described in Section~V. The equality is with respect to the declared
+public messages, public metadata, public references, schedules, graph data, and
+public controller parameters only.
+\end{theorem}
+
+\noindent\textit{Proof sketch:}
+Section~V-B initializes the alternative by keeping the public initial message
+fixed while perturbing the protected private initialization. For sufficiently
+small nonzero perturbations inside the declared privacy-domain margins, the
+alternative split, weights, and local plant/wrapper variables remain admissible
+on a common initial interval. Section~V-C then enforces equality of every public
+trajectory by fixing the private weights through the public and private wrapper
+dynamics. Section~V-D continues the construction only while all strict
+denominator, weight, plant, funnel, and input conditions remain inside their
+local regular domains. These steps give the complete passive public-history
+equality in Definition~2 on $[0,\tau_{\mathrm{priv}})$.\hfill$\square$
+
+\begin{remark}[Boundary of Theorem 2]
+Theorem~2 is an existence result for local public-history indistinguishability.
+It does not say that every protected initialization has an indistinguishable
+alternative, that every perturbation is admissible, or that indistinguishability
+continues for all time. It also does not assert cryptographic secrecy,
+differential privacy, information-theoretic privacy, or privacy against
+observation channels outside Definition~2.
+\end{remark}
+
+The two results above complete the theoretical summary supported by the present
+local proof chain. Theorem~1 records what can be concluded about the physical
+closed loop before admissibility exit. Theorem~2 records the separate local
+public-history ambiguity under the passive observation model. Section~VII is
+reserved for numerical experiments that test the physical and privacy behaviors
+associated with these two results; no simulation design is specified here.
+
 
 % Later manuscript sections are intentionally deferred until their review gates.
 % Simulation and experiment design have not started.

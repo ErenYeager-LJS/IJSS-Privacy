@@ -1,39 +1,44 @@
 # Latest Handoff
 
-Current task: `task-028-simulation-architecture`
+Current task: `task-029-a-numerical-implementation-specification`
 
-Branch: `task-028-simulation-architecture`
+Branch: `task-029-a-numerical-implementation-specification`
 
 PR: pending creation
 
-Full handoff: [task-028-simulation-architecture.md](task-028-simulation-architecture.md)
+Full handoff:
+[task-029-a-numerical-implementation-specification.md](task-029-a-numerical-implementation-specification.md)
+
+Authoritative implementation specification:
+[`IJSS_Simulation/Documentation/numerical_implementation_specification.md`](../../IJSS_Simulation/Documentation/numerical_implementation_specification.md)
 
 ## Current result
 
-**SIMULATION ARCHITECTURE COMPLETE; EXECUTION NOT STARTED**
+**NUMERICAL IMPLEMENTATION SPECIFICATION COMPLETE; EXECUTION BLOCKED ON USER
+CONFIRMATION**
 
-Task-028 maps the two frozen theorem families to two independent, minimal
-simulation runs. The physical run is restricted to the detected local-validity
-interval. The privacy run is one explicit nominal/non-nominal existence witness
-under Definition 2. Four figures are planned from those two runs; no numerical
-data, parameters, curves, results, baseline, or stronger claim was generated.
+Task-029-A maps the frozen equations to planned Python and complete Simulink
+modules, fixes the integrated-state rule and controller interfaces, specifies
+`tau_num` and `tau_priv` event functions, separates frozen versus
+implementation parameters, defines real-data/Origin export contracts, and
+provides the Python--Simulink consistency procedure.
 
-The manuscript now contains a Section VII architecture skeleton only. The
-detailed experiment specification, parameter-decision table, legacy audit,
-baseline decision, and reviewer-risk mitigations are in the full handoff.
+No simulation, executable model, numerical value, data, figure, result,
+parameter tuning, baseline, or comparison threshold was created. The historical
+simulation/HIL material remains `LEGACY / DO NOT REUSE`.
 
 ## Boundary
 
-`LOCAL-BEFORE-EXIT` remains unchanged. The controller, observation model,
-Definitions, Assumptions, equations, proofs, and Theorems 1--2 were not changed.
-Historical prescribed-time, active-power-sharing, global/all-time, and HIL
-material was classified as legacy and was not reused.
+`LOCAL-BEFORE-EXIT` remains unchanged. P1 and W1 remain independent. The
+manuscript, Blueprint, controller, observation model, equations, assumptions,
+states, proof-obligation statuses, and Theorems 1--2 were not changed. The
+pre-existing untracked `Standard Tex Usage/private.tex` remains untouched.
 
 ## Next action
 
-The user must confirm the plant/topology data, frozen-controller numerical
-gains, admissible initial state, compact-region representation, uncertainty
-scenario, privacy witness, solver, time step, horizon, and plot interval before
-Task-029 can begin.
+The user must confirm decisions U01--U16 in the implementation specification
+before Task-029-B may create or execute simulation code. The
+Python--Simulink acceptance threshold is explicitly unresolved and must not be
+invented.
 
-STOP: Awaiting user confirmation before Task-029.
+STOP: Awaiting user confirmation before Task-029-B Simulation Execution.

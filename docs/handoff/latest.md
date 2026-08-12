@@ -12,6 +12,11 @@ Full handoff: [task-026-ieee-theoretical-results.md](task-026-ieee-theoretical-r
 
 **SECTION VI THEORETICAL RESULTS COMPLETE**
 
+Task-026 typo fix completed: the missing `\mathrm` command in the Theorem 2
+public-history equality was corrected. Manuscript compilation and
+`git diff --check` both pass. There is no theorem-scope change and no
+simulation/experiment work has started.
+
 The designated IEEE manuscript now contains Section VI, `Theoretical Results`.
 It records the Section IV local physical analysis as Theorem 1 and the Section V
 local public-history construction as the independent Theorem 2. Each theorem has

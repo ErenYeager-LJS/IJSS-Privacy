@@ -1,5 +1,12 @@
 # Task-026 Handoff: IEEE Theoretical Results
 
+## Typo fix
+
+Task-026 typo fix completed. The missing `\mathrm` command in the Theorem 2
+public-history equality was corrected on both nominal and alternative
+observation terms. Manuscript compilation: **PASS**. `git diff --check`: **PASS**.
+No theorem-scope change was made, and no simulation/experiment work was started.
+
 ## Task and branch
 
 - Task: task-026-ieee-theoretical-results

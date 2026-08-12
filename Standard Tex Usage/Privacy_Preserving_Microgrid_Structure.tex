@@ -739,10 +739,130 @@ certificate nor a prescribed-time recovery result.
 \end{remark}
 
 Section~IV has therefore answered only the physical, local-before-exit part of
-the problem. The next stage turns to the private-realization construction and
-its passive observation equivalence without upgrading the physical result to a
+the problem. Section~V turns to the private-realization construction and its
+passive observation equivalence without upgrading the physical result to a
 global theorem; the physical and privacy conclusions remain separate
 theoretical results.
+
+%======================================================
+\section{Local Privacy Construction and Observation Equivalence}
+\label{sec:privacy_construction}
+
+\subsection{Privacy Problem Transition}
+
+The physical estimates above show that the specified closed loop is meaningful
+on a local interval before the first admissibility exit. The privacy question is
+different: it asks whether the complete passive public history determines the
+protected private initialization uniquely. The construction in this section is
+therefore formulated as a local existence argument under Definition~2. It does
+not require the physical comparison bound to become a global continuation
+theorem, and it does not claim secrecy against private-memory access,
+independent physical sensing, active attacks, or probabilistic disclosure.
+
+The protected quantity for DG $i$ is the initial virtual coordination command
+\begin{equation}
+S_i=\begin{bmatrix}c_i^V(0)&c_i^\omega(0)\end{bmatrix}^{T}.
+\label{eq:protected_initial_command}
+\end{equation}
+The retained privacy statement is existence-based: for at least one admissible
+non-nominal value $S_i'\neq S_i$, the public messages and public metadata in
+$\mathcal O_{\mathrm{adv}}[0,t]$ are identical to those of the nominal
+realization on a common local interval. This is an observation-equivalence
+statement, not cryptographic secrecy or differential privacy.
+
+\subsection{Alternative Initialization Construction}
+
+The alternative realization is initialized by keeping the public message fixed
+and moving the private component. For the protected channel pair,
+\begin{equation}
+p_i'(0)=p_i(0),
+\qquad
+q_i'(0)=2S_i'-p_i(0),
+\qquad
+S_i'\neq S_i.
+\label{eq:alternative_initialization}
+\end{equation}
+Thus the eavesdropper sees the same initial public payload, while the protected
+private initialization differs. The admissibility of \eqref{eq:alternative_initialization}
+is not assumed. It follows only for sufficiently small nonzero perturbations
+inside the stated privacy-domain margins, so that the alternative split is
+nonzero, the private weights remain strictly inside their declared bounds, and
+the plant and wrapper variables remain in the relevant local regular domain.
+
+The construction is network compatible rather than single-message based. Once a
+non-nominal local perturbation is selected, the physical states evolve through
+the same plant interface, the public trajectories are constrained to match the
+nominal public trajectories, and the hidden private paths and weights absorb the
+remaining degrees of freedom. Consequently, the alternative is a coupled local
+realization of the same public protocol, not a post hoc relabeling of one
+transmitted signal.
+
+\subsection{Public-History Equivalence Framework}
+
+Public-history equivalence is enforced at the level of Definition~2. For an
+interval $[0,\tau)$, the desired equality is
+\begin{equation}
+\mathcal O_{\mathrm{adv}}[0,t]
+=\mathcal O'_{\mathrm{adv}}[0,t],
+\qquad 0\leq t<\tau.
+\label{eq:local_public_history_equality}
+\end{equation}
+Because the disclosed graph, references, schedules, timing information, and
+declared public controller parameters are the same in the two realizations,
+\eqref{eq:local_public_history_equality} reduces to equality of all transmitted
+public message histories $p_j^V$ and $p_j^\omega$ for every DG. The private
+substates, private weights, residuals, locally reconstructed commands, and raw
+physical trajectories may differ, but they are outside the declared passive
+observation channel.
+
+The public/private wrapper provides the algebraic degrees of freedom needed to
+maintain the same public trajectory. Along an admissible alternative private
+path $q_j'{}^\nu(t)$, the public-dynamics matching condition fixes one private
+weight, and the private-dynamics equation fixes the other. These forced weights
+are legal only while their denominators remain nonzero and the resulting values
+stay in the strict declared weight intervals. This is why the privacy statement
+is local and tied to a retained stopping boundary.
+
+\subsection{Finite Stopping Boundary}
+
+Let $\tau_{\mathrm{priv}}$ denote the earliest retained privacy stopping event
+for the alternative realization. It is the first time, if any, at which one of
+the following local regularity requirements fails: the finite seed interval
+ends, the alternative independent state exits $\mathcal D_{\min}$, an affected
+private split reaches zero, a private weight reaches its declared boundary, a
+physical/funnel/input boundary is reached, or another specified regular-domain
+singularity is encountered. The local privacy construction is stated only on
+\begin{equation}
+0\leq t<\tau_{\mathrm{priv}}.
+\label{eq:privacy_stopping_interval}
+\end{equation}
+No conclusion is made at or after $\tau_{\mathrm{priv}}$.
+
+This stopping boundary has two roles. First, it prevents the finite-seed lower
+margin of the privacy schedule from being interpreted beyond the interval on
+which it is declared. Second, it prevents strict denominator and weight-margin
+conditions from being converted into all-time invariance claims. The
+construction can be restarted from strict interior times, but only while the
+alternative realization remains inside the same local regular domain.
+
+\subsection{Publication-Facing Proof Structure}
+
+The privacy proof in the final results section should be read in the following
+order. First, choose a sufficiently small nonzero perturbation of the protected
+initial command so that \eqref{eq:alternative_initialization} is admissible on a
+common initial interval and produces a genuine $S_i'\neq S_i$. Second, construct
+the private path and forced private weights so that every public trajectory
+matches the nominal public trajectory on that interval. Third, use the strict
+interiority of the denominators, weights, plant variables, funnels, and actuator
+inputs to continue the alternative realization until the retained stopping
+boundary. Fourth, combine this complete public-history equality with
+Definition~2.
+
+This organization supplies the manuscript architecture for the local
+public-history indistinguishability result. It does not state that result as a
+theorem here, does not assert uniqueness failure for every possible protected
+value, and does not extend the observation-equivalence claim beyond the finite
+stopping boundary.
 
 
 % Later manuscript sections are intentionally deferred until their review gates.

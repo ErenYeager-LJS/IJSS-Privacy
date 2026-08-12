@@ -1,39 +1,39 @@
 # Latest Handoff
 
-Current task: `task-024-ieee-manuscript-architecture-and-tikz`
+Current task: `task-025-ieee-privacy-construction`
 
-Branch: `task-024-ieee-manuscript-architecture-and-tikz`
+Branch: `task-025-ieee-privacy-construction`
 
 PR: pending creation
 
-Full handoff: [task-024-ieee-manuscript-architecture-and-tikz.md](task-024-ieee-manuscript-architecture-and-tikz.md)
+Full handoff: [task-025-ieee-privacy-construction.md](task-025-ieee-privacy-construction.md)
 
 ## Current result
 
-**PUBLICATION-LAYER AUDIT AND THREE TIKZ SKELETON FIGURES COMPLETE**
+**SECTION V PRIVACY CONSTRUCTION ARCHITECTURE COMPLETE**
 
-Sections I--IV now use reviewer-facing transitions and terminology while
-retaining the `LOCAL-BEFORE-EXIT` theorem boundary. Three compilable TikZ figures
-show the overall framework, public/private information decomposition, and
-local-before-exit geometry. Visible internal PO/ES proof-ledger references were
-removed without changing their mathematical content.
+The designated IEEE manuscript now contains Section V, `Local Privacy
+Construction and Observation Equivalence`. The section builds the manuscript
+architecture for the local privacy construction: problem transition, alternative
+initialization, public-history equivalence framework, finite stopping boundary,
+and publication-facing proof structure.
 
-The terminology is normalized to `selected compact bootstrap region
-\mathcal K_0`. Scope remarks state that the compact region is not assumed
-invariant and that the comparison bound is not a prescribed-time recovery
-result. Section IV closes with a transition to, but does not begin, the privacy
-construction.
+The privacy result remains existence-based and local. It is stated only as a
+construction architecture up to the finite-seed/regular-domain stopping
+boundary. No Theorem 2, Section VI theorem statement, global continuation,
+all-time privacy, cryptographic-secrecy claim, differential-privacy claim, or
+simulation content was added.
 
 ## Verification
 
-IEEEtran compilation succeeded and produced a six-page PDF. All three TikZ
-figures compiled and were visually inspected without figure overflow.
-`git diff --check` passed. No controller, state, observation model, Lyapunov
-function, theorem scope, proof-obligation status, or frozen equation meaning
-changed.
+IEEEtran compilation succeeded and produced a seven-page PDF. Section V was
+visually rendered and checked. `git diff --check` passed. No controller, state,
+observation model, Lyapunov function, theorem scope, proof-obligation status, or
+frozen equation meaning changed.
 
 ## Next action
 
-Review and approve Task-024. Do not begin Section V automatically.
+Review and approve Task-025. Do not begin Theorem 2, Section VI, or simulation
+work automatically.
 
 Simulation/Experiment work has NOT started and requires user intervention before commencement.

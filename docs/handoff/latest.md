@@ -1,44 +1,40 @@
 # Latest Handoff
 
-Current task: `task-026-ieee-theoretical-results`
+Current task: `task-027-ieee-literature-positioning-and-citation-integration`
 
-Branch: `task-026-ieee-theoretical-results`
+Branch: `task-027-ieee-literature-positioning-and-citation-integration`
 
 PR: pending creation
 
-Full handoff: [task-026-ieee-theoretical-results.md](task-026-ieee-theoretical-results.md)
+Full handoff: [task-027-ieee-literature-positioning-and-citation-integration.md](task-027-ieee-literature-positioning-and-citation-integration.md)
 
 ## Current result
 
-**SECTION VI THEORETICAL RESULTS COMPLETE**
+**LITERATURE POSITIONING AND CITATION INTEGRATION COMPLETE**
 
-Task-026 typo fix completed: the missing `\mathrm` command in the Theorem 2
-public-history equality was corrected. Manuscript compilation and
-`git diff --check` both pass. There is no theorem-scope change and no
-simulation/experiment work has started.
+The repository reference assets were inventoried. The active manuscript now
+uses eight DOI-verified references across four bounded literature directions:
+distributed microgrid secondary control, cyber/privacy context,
+privacy-preserving distributed control, and prescribed-performance control.
+All eight cited keys have entries, and all eight entries are cited.
 
-The designated IEEE manuscript now contains Section VI, `Theoretical Results`.
-It records the Section IV local physical analysis as Theorem 1 and the Section V
-local public-history construction as the independent Theorem 2. Each theorem has
-a compact publication-facing proof sketch and an explicit boundary remark.
-
-Theorem 1 remains a local-before-exit physical result. Theorem 2 remains an
-existence-based local observation-equivalence result up to the retained privacy
-stopping boundary. Neither theorem implies the other, and no combined theorem,
-global continuation, prescribed-time recovery, power-sharing, residual-decay, or
-all-time privacy claim was added.
+The Introduction received a compact literature-positioning backbone. Section II
+received only source attribution for the hierarchical model and distributed
+cyber graph. Sections III--VI and both theorem statements were not modified.
 
 ## Verification
 
-IEEEtran compilation succeeded and produced an eight-page PDF. Section VI was
-visually rendered and checked, with no new Section VI overfull warning.
-`git diff --check` passed. No controller, state, observation model, assumption,
-Lyapunov function, theorem scope, proof-obligation status, or frozen equation
-meaning changed.
+IEEEtran/pdfLaTeX compilation passed. Citation closure and `git diff --check`
+passed. The theorem boundary remains `LOCAL-BEFORE-EXIT`; no global,
+forward-invariance, all-time privacy, cryptographic, differential-privacy,
+prescribed-time recovery, active-power-sharing, or composite theorem was added.
+
+The pre-existing untracked `Standard Tex Usage/private.tex` was inspected
+read-only and remains untracked.
 
 ## Next action
 
-Review and approve Task-026. Do not begin Section VII, Discussion, Conclusion,
-or simulation work automatically.
+Review Task-027 and verify the literature choices before any further manuscript
+section or experiment work.
 
-Simulation/Experiment work has NOT started and requires user intervention before commencement.
+Literature positioning completed. No simulation/experiment work has started.

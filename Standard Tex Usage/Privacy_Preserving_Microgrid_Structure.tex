@@ -102,9 +102,11 @@ Islanded AC microgrid, distributed secondary control, public/private coordinatio
 %======================================================
 \section{Introduction}
 
-Islanded AC microgrids rely on distributed secondary control to coordinate inverter-based units while preserving acceptable voltage and frequency behavior. The communication layer is part of this control loop: public coordination states are exchanged among neighboring units, whereas local controller variables and physical measurements may remain private. A useful analysis therefore has to describe both the physical closed loop and the information that is available to an observer of the communication network.
+Islanded AC microgrids rely on hierarchical control to coordinate inverter-based units, with the secondary layer compensating deviations left by primary droop control \cite{Guerrero2011,Bidram2012}. Distributed implementations replace a central coordinator with neighbor-to-neighbor information exchange and have been used for secondary voltage regulation and coordination \cite{Lantao2019,Bu2025}. The communication layer is therefore part of the control loop: public coordination states are exchanged among neighboring units, whereas local controller variables and physical measurements may remain private. A useful analysis has to describe both the physical closed loop and the information available to an observer of that communication network.
 
-The two requirements are not interchangeable. A controller can be physically regular on an admissible operating region without preventing multiple private explanations of the same communication record. Conversely, a state decomposition that hides local variables does not by itself establish that the coupled microgrid equations remain well posed, that the prescribed-performance coordinates are regular, or that the implemented inputs remain feasible on the design region. The resulting proof problem is a coupled one, but the physical and observation-equivalence arguments must remain logically separate.
+Communication dependence also exposes coordination data to passive observation. Privacy-preserving distributed-control research spans mechanisms with materially different guarantees; in particular, state-decomposition methods create alternative internal realizations while preserving declared public coordination behavior \cite{SD,SD-MSR,YeCaoChowCai2024}. Such an observation-equivalence objective is distinct from encryption and differential privacy. It is also distinct from cyber-resilience against an adversary that modifies messages. The present passive model addresses only what can be inferred from the declared public history.
+
+Physical regulation and observation equivalence are not interchangeable. A controller can be physically regular on an admissible operating region without preventing multiple private explanations of the same communication record. Conversely, a state decomposition that hides local variables does not by itself establish that the coupled microgrid equations remain well posed, that the prescribed-performance coordinates are regular, or that the implemented inputs remain feasible on the design region. Prescribed-performance transformations provide a systematic way to encode transient-error envelopes in nonlinear control \cite{Bechlioulis2008}; this concept must not be confused with prescribed-time secondary-control results, whose claims concern convergence by a designer-selected time \cite{Bu2025}. The resulting proof problem is coupled, but its physical and observation-equivalence arguments must remain logically separate.
 
 This paper asks whether a distributed secondary controller can retain a rigorous local physical analysis while preventing unique reconstruction of protected virtual coordination data from the complete passive public history. We address this question using a public/private virtual coordination layer, a fixed connected cyber graph, and an explicitly bounded observation model. The controller, plant equations, prescribed-performance construction, and privacy mechanism are held fixed throughout the analysis. Physical estimates are stated on the selected compact bootstrap region $\mathcal K_0$ before the first admissibility exit, and the privacy construction stops at the earliest finite-seed or regular-domain boundary.
 
@@ -156,7 +158,7 @@ not observation channels.}
 
 \subsection{Islanded Microgrid and Droop Model}
 
-Consider an islanded AC microgrid containing $N$ inverter-based distributed generators (DGs), indexed by $\mathcal V=\{1,\ldots,N\}$. For DG $i$, let $V_i$, $\omega_i$, and $\delta_i$ denote the voltage amplitude, angular frequency, and phase angle, respectively. The voltage and frequency channel states are
+Consider an islanded AC microgrid containing $N$ inverter-based distributed generators (DGs), indexed by $\mathcal V=\{1,\ldots,N\}$. The hierarchical separation between primary droop regulation and secondary coordination follows the standard microgrid-control organization in \cite{Guerrero2011,Bidram2012}. For DG $i$, let $V_i$, $\omega_i$, and $\delta_i$ denote the voltage amplitude, angular frequency, and phase angle, respectively. The voltage and frequency channel states are
 \begin{equation}
 \bm{x}_i^V=
 \begin{bmatrix}x_{i,1}^V & x_{i,2}^V\end{bmatrix}^{\!T}
@@ -165,7 +167,7 @@ Consider an islanded AC microgrid containing $N$ inverter-based distributed gene
 \qquad \dot\delta_i=\omega_i.
 \label{eq:physical_states}
 \end{equation}
-The reduced droop dynamics are
+The reduced droop dynamics used in this work are
 \begin{align}
 \tau_{P_i}\dot\omega_i
 &=-(\omega_i-\omega_{\mathrm{ref}})
@@ -225,7 +227,7 @@ No public or private coordination state enters \eqref{eq:voltage_input_affine}--
 
 \subsection{Electrical and Cyber Graphs}
 
-The electrical graph $\mathcal G_e$ determines the power-flow coupling in \eqref{eq:active_power_flow}--\eqref{eq:reactive_power_flow}. Communication is described separately by a fixed, connected, undirected cyber graph $\mathcal G_c=(\mathcal V,\mathcal E_c)$. Its symmetric adjacency weights and Laplacian are
+The electrical graph $\mathcal G_e$ determines the power-flow coupling in \eqref{eq:active_power_flow}--\eqref{eq:reactive_power_flow}. In line with distributed secondary-control architectures \cite{Lantao2019,Bu2025}, communication is described separately by a fixed, connected, undirected cyber graph $\mathcal G_c=(\mathcal V,\mathcal E_c)$. Its symmetric adjacency weights and Laplacian are
 \begin{equation}
 a_{ij}=a_{ji}>0\quad\text{if }(i,j)\in\mathcal E_c,
 \qquad
@@ -972,8 +974,51 @@ associated with these two results; no simulation design is specified here.
 
 %======================================================
 \begin{thebibliography}{99}
-\bibitem{ref1}
-Author. Title. Journal, Year.
+\bibitem{Guerrero2011}
+J. M. Guerrero, J. C. Vasquez, J. Matas, L. G. de Vicuna, and M. Castilla,
+``Hierarchical control of droop-controlled AC and DC microgrids---A general
+approach toward standardization,'' \emph{IEEE Trans. Ind. Electron.}, vol. 58,
+no. 1, pp. 158--172, Jan. 2011, doi: 10.1109/TIE.2010.2066534.
+
+\bibitem{Bidram2012}
+A. Bidram and A. Davoudi, ``Hierarchical structure of microgrids control
+system,'' \emph{IEEE Trans. Smart Grid}, vol. 3, no. 4, pp. 1963--1976,
+Dec. 2012, doi: 10.1109/TSG.2012.2197425.
+
+\bibitem{Lantao2019}
+L. Xing, Y. Mishra, F. Guo, P. Lin, Y. Yang, G. Ledwich, and Y.-C. Tian,
+``Distributed secondary control for current sharing and voltage restoration
+in DC microgrid,'' \emph{IEEE Trans. Smart Grid}, vol. 11, no. 3,
+pp. 2487--2497, May 2020, doi: 10.1109/TSG.2019.2956515.
+
+\bibitem{Bu2025}
+S. Bu, Q. Teng, and H. Li, ``Distributed prescribed-time secondary control
+for islanded microgrids under adaptive dynamic event-triggered mechanism,''
+\emph{Electr. Power Syst. Res.}, vol. 252, Art. no. 112433, Jan. 2026,
+doi: 10.1016/j.epsr.2025.112433.
+
+\bibitem{SD}
+Y. Wang, ``Privacy-preserving average consensus via state decomposition,''
+\emph{IEEE Trans. Autom. Control}, vol. 64, no. 11, pp. 4711--4716,
+Nov. 2019, doi: 10.1109/TAC.2019.2902731.
+
+\bibitem{SD-MSR}
+Y. Zhang, Z. Peng, G. Wen, J. Wang, and T. Huang, ``Privacy preserving-based
+resilient consensus for multiagent systems via state decomposition,''
+\emph{IEEE Trans. Control Netw. Syst.}, vol. 10, no. 3, pp. 1172--1183,
+Sep. 2023, doi: 10.1109/TCNS.2022.3182234.
+
+\bibitem{YeCaoChowCai2024}
+F. Ye, X. Cao, M.-Y. Chow, and L. Cai, ``Privacy-preserving average consensus:
+Fundamental analysis and a generic framework design,'' \emph{IEEE Trans. Inf.
+Theory}, vol. 70, no. 4, pp. 2870--2885, Apr. 2024,
+doi: 10.1109/TIT.2024.3370311.
+
+\bibitem{Bechlioulis2008}
+C. P. Bechlioulis and G. A. Rovithakis, ``Robust adaptive control of feedback
+linearizable MIMO nonlinear systems with prescribed performance,''
+\emph{IEEE Trans. Autom. Control}, vol. 53, no. 9, pp. 2090--2099,
+Oct. 2008, doi: 10.1109/TAC.2008.929402.
 
 \end{thebibliography}
 \end{document}

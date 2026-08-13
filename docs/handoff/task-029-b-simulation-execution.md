@@ -2,33 +2,29 @@
 
 ## Status
 
-**BLOCKED**
+**PASS WITH ISSUES**
 
-Task-029-B was audited against the Task-029-A numerical implementation
-contract. The request authorizes execution, but no executable numerical
-instance has been confirmed. The detailed report is:
+Manifest `9e81ce3e9621f78a` supports an illustrative three-DG per-unit case. Python
+P1/W1 runs, raw data, Origin CSV tables, F1--F4 in PDF/SVG/PNG, executable
+Simulink P1 reproduction, and 24-state Python--Simulink validation are complete.
 
-`IJSS_Simulation/Documentation/task_029_b_execution_report.md`
+Key results:
 
-No P1 or W1 simulation was run. No Python implementation, MATLAB/Simulink
-model, parameter manifest, data, figure, or numerical result was created.
+- P1: `tau_num=0.9696157164357533 s`, trigger `Vdot_domain`.
+- W1: `tau_priv=0.2 s`, public-history residual `0.0`, nonzero protected
+  command difference `8.520521035959294e-4`.
+- Python--Simulink: max absolute error `2.6578e-9`, RMS `1.0731e-10`, PASS
+  against the `1e-5` implementation threshold.
 
-## Blocking gate
+Remaining issue: W1 is Python-only in this task; `main.slx` currently executes
+P1, and its functional equation core is a Level-2 MATLAB S-function with named
+subsystems documenting ownership.
 
-U01--U16 remain unresolved: plant and graph data, references and coefficients,
-controller/PPC/privacy gains and margins, actuator/domain representation,
-initial state, privacy witness, solver/event settings, comparison convention,
-post-event policy, and baseline decision. These values cannot be inferred from
-the frozen symbolic manuscript without inventing a numerical experiment.
+Full report:
+[`task_029_b_execution_report.md`](../../IJSS_Simulation/Documentation/task_029_b_execution_report.md)
 
-## Boundary preservation
+The theorem boundary remains `LOCAL-BEFORE-EXIT`. No manuscript, controller,
+equation, observation model, theorem, assumption, state, or PO status changed.
+The pre-existing untracked `Standard Tex Usage/private.tex` remains untouched.
 
-`LOCAL-BEFORE-EXIT` is unchanged. Theorem 1 and Theorem 2 remain independent.
-No global continuation, invariance, asymptotic, prescribed-time, active-power,
-universal-privacy, cryptographic, differential-privacy, or composite claim was
-added. Historical simulation/HIL material remains `LEGACY / DO NOT REUSE`.
-
-The user-owned untracked `Standard Tex Usage/private.tex` remains untouched.
-
-STOP: Awaiting explicit numerical-instance confirmation before resuming
-Task-029-B execution.
+STOP: Awaiting Task-030 review gate.

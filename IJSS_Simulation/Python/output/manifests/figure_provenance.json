@@ -1,0 +1,32 @@
+{
+  "F1": {
+    "run": "P1_RUN_001",
+    "valid_interval": [
+      0,
+      0.9696157164357533
+    ]
+  },
+  "F2": {
+    "run": "P1_RUN_001",
+    "valid_interval": [
+      0,
+      0.9696157164357533
+    ]
+  },
+  "F3": {
+    "run": "W1_RUN_001",
+    "valid_interval": [
+      0,
+      0.2
+    ]
+  },
+  "F4": {
+    "run": "W1_RUN_001",
+    "valid_interval": [
+      0,
+      0.2
+    ],
+    "visibility": "internal diagnostics, not observer-visible"
+  },
+  "manifest_id": "9e81ce3e9621f78a"
+}

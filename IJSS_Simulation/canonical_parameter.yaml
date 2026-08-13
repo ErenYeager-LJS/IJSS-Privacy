@@ -1,0 +1,91 @@
+metadata:
+  case_name: illustrative_3dg_local_case
+  classification: Illustrative numerical instance
+  units: per-unit electrical quantities and seconds
+  reason: Selected as a small, transparent inverter-based microgrid example; no value is presented as measured hardware data.
+network:
+  N: 3
+  electrical_susceptance:
+    - [0.0, 2.0, 0.0]
+    - [2.0, 0.0, 1.5]
+    - [0.0, 1.5, 0.0]
+  cyber_adjacency:
+    - [0.0, 1.0, 0.0]
+    - [1.0, 0.0, 1.0]
+    - [0.0, 1.0, 0.0]
+  pinning: [1.0, 0.0, 1.0]
+plant:
+  V_ref: 1.0
+  omega_ref: 0.0
+  tau_P: [0.20, 0.22, 0.18]
+  tau_Q: [0.25, 0.23, 0.27]
+  k_P: [0.08, 0.09, 0.08]
+  k_Q: [0.10, 0.11, 0.10]
+  k_V: [0.30, 0.32, 0.28]
+  P_d: [0.20, 0.18, 0.22]
+  Q_d: [0.06, 0.05, 0.07]
+  P_load: [0.20, 0.18, 0.22]
+  Q_load: [0.06, 0.05, 0.07]
+  uncertainty_amplitude_V: [0.002, 0.0015, 0.001]
+  uncertainty_amplitude_omega: [0.001, 0.0012, 0.0008]
+controller:
+  k1_V: 3.0
+  k2_V: 4.0
+  kc_V: 0.10
+  k1_omega: 3.5
+  kc_omega: 0.10
+ppc:
+  rho0_V: [0.10, 0.10, 0.10]
+  rhoinf_V: [0.025, 0.025, 0.025]
+  rho0_omega: [0.05, 0.05, 0.05]
+  rhoinf_omega: [0.012, 0.012, 0.012]
+  T_V: 2.0
+  T_omega: 2.0
+privacy:
+  lambda_V: [2.0, 2.0, 2.0]
+  lambda_omega: [2.0, 2.0, 2.0]
+  w12_V: [1.0, 1.0, 1.0]
+  w21_V: [1.0, 1.0, 1.0]
+  w12_omega: [1.0, 1.0, 1.0]
+  w21_omega: [1.0, 1.0, 1.0]
+  weight_lower: 0.20
+  weight_upper: 3.00
+  gamma_V: 0.20
+  gamma_omega: 0.20
+  T_s: 0.80
+domain:
+  V: [0.85, 1.15]
+  Vdot_abs: 0.50
+  omega_abs: 0.20
+  delta_abs: 0.50
+  state_abs_K0: 4.0
+  actuator_abs_V: 10.0
+  actuator_abs_omega: 10.0
+  denominator_min: 1.0e-8
+initial:
+  V: [1.020, 0.985, 1.010]
+  Vdot: [0.0, 0.0, 0.0]
+  omega: [0.010, -0.006, 0.004]
+  delta: [0.020, -0.010, 0.000]
+  public_offset_V: [0.030, -0.025, 0.020]
+  public_offset_omega: [0.020, -0.015, 0.010]
+witness:
+  protected_agent: 0
+  physical_voltage_perturbation: 1.0e-4
+  private_path_decay: 1.0
+solver:
+  horizon_P1: 4.0
+  horizon_W1: 0.20
+  output_step: 0.005
+  rtol: 1.0e-9
+  atol: 1.0e-11
+  max_step: 0.005
+  event_tolerance: 1.0e-8
+comparison:
+  local_rate: 0.10
+  local_budget: 5.0
+  regularizer: 1.0e-10
+  python_simulink_threshold: 1.0e-5
+plotting:
+  dpi: 300
+  column_width_in: 7.0

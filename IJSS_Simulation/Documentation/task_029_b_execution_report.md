@@ -2,121 +2,151 @@
 
 ## Task-029-B Status
 
-**BLOCKED**
+**PASS WITH ISSUES**
 
-The execution request authorizes simulation in principle, but the required
-numerical-instance gate is not closed. No scientifically defensible P1 or W1
-run can begin from the current repository state.
+Python P1/W1 execution, real-data exports, four figure groups, an executable
+Simulink P1 model, and Python--Simulink consistency validation are complete.
+The remaining issue is that the alternative W1 witness has not been implemented
+as a separate Simulink mode; it is reproduced in the transparent Python
+reference implementation only. The Simulink equation core is concentrated in
+a Level-2 MATLAB S-function, while named subsystems document ownership groups.
 
-## 1. Repository and Parameter Audit
+## 1. Simulation Parameter Setup
 
-The authoritative manuscript, frozen Equation Specification, traceability
-matrix, Task-028 architecture, and Task-029-A implementation contract were
-audited. The repository contains no tracked Python implementation, MATLAB
-script, Simulink model, canonical parameter manifest, numerical data, or figure
-source. The historical simulation/HIL material in
-`Standard Tex Usage/IJSS_tex.tex` remains `LEGACY / DO NOT REUSE`.
+The single source of truth is `canonical_parameter.yaml`, manifest
+`9e81ce3e9621f78a`. It defines a three-DG, lossless, per-unit illustrative
+numerical instance. Every value is a simulation parameter, not measured
+hardware data. The parameter choices and units/reasons are recorded in the
+manifest.
 
-The pre-existing untracked `Standard Tex Usage/private.tex` was not read,
-modified, staged, or used as an implementation source.
+An initial choice `k_c^V=0.35`, `k_c^omega=0.30` was superseded after the
+ES-41-consistent initialization exposed proximity to the ES-21a singular
+surface. The accepted values are both `0.10`. The complete non-aesthetic reason
+and invalidated manifest IDs are in `parameter_change_log.md`.
 
-## 2. Confirmed Numerical Configuration
+## 2. Python Implementation
 
-No numerical configuration is confirmed. The following required decisions from
-Task-029-A remain unresolved:
+The Python reference integrates only the 24 independent coordinates for three
+DGs. Plant, lossless power flow, graph errors, PPC maps, frozen commands,
+privacy wrapper, local events, diagnostics, witness construction, raw-data
+retention, Origin export, and plotting are implemented as separate modules.
 
-`U01` DG count/ratings/units; `U02` electrical topology and loads; `U03` cyber
-topology and pinning; `U04` plant coefficients and references; `U05` uncertainty
-signals and bounds; `U06` controller and certificate gains; `U07` PPC schedules;
-`U08` privacy schedules, rates, and weight margins; `U09` actuator sets;
-`U10` numerical `D_min` and `K_0`; `U11` nominal initial state; `U12` protected
-agent/channel and witness; `U13` solver and event settings; `U14`
-Python--Simulink comparison convention and threshold; `U15` post-event policy;
-and `U16` baseline decision.
+Identity audit:
 
-No `confirmed_parameters` manifest or manifest hash exists.
+- maximum `hat(c)-(p+q)/2`, `r-hat(c)+c`, and `u-hat(c)` residual:
+  `4.440892098500626e-16`;
+- electrical and cyber graph objects remain distinct;
+- public logger fields are `time,pV,pomega,declared_metadata`;
+- private leakage flag: `false`.
 
-## 3. Python Implementation
+## 3. P1 Simulation Result
 
-Not started. No Python source or executable reference implementation exists.
+- Run ID: `P1_RUN_001`
+- Manifest: `9e81ce3e9621f78a`
+- Solver: SciPy RK45, `rtol=1e-9`, `atol=1e-11`, `max_step=0.005 s`
+- Stopping event: `Vdot_domain`
+- `tau_num = 0.9696157164357533 s`
+- Event margin at localization: approximately `-3.33e-16`
 
-## 4. P1 Physical Simulation
+The selected numerical trajectory illustrates local physical behavior only on
+the displayed pre-exit interval. The exit is not interpreted as instability.
 
-Not executed. There is no `P1_RUN_001`, no stopping event, no
-`tau_num`, and no output data.
+## 4. W1 Privacy Witness Result
 
-## 5. W1 Privacy Witness Simulation
+- Run ID: `W1_RUN_001`
+- Manifest: `9e81ce3e9621f78a`
+- Protected agent: DG 1
+- Construction: `V_1(0)` alternative perturbation `1e-4 p.u.`, public initial
+  states held equal, ES-41 alternative `q(0)`, explicit private `q'` dynamics,
+  and ES-60 forced public-matching weights
+- Nonzero protected voltage-command difference:
+  `8.520521035959294e-4 p.u.`
+- Public-history residual: `0.0`
+- Stopping event: finite declared witness interval end
+- `tau_priv = 0.2 s`
 
-Not executed. There is no `W1_RUN_001`, no numerically confirmed
-non-nominal witness, no stopping event, no `tau_priv`, and no public-history
-residual.
+All checked weight, split/denominator, and funnel margins remain positive on
+the reported samples. This is one numerical existence witness, not arbitrary or
+all-time privacy.
 
-## 6. Event and Local-Validity Audit
+## 5. Generated Figures
 
-The event semantics are specified in the Task-029-A contract, but no numerical
-representation of `D_min`, `K_0`, actuator domains, denominator margins, or
-finite-seed schedule has been supplied. Consequently no event function can be
-implemented without inventing a domain or changing the frozen interpretation.
+F1--F4 are exported in PDF, SVG, and 300-dpi PNG under both manuscript and
+Origin figure folders. Visual QA found and repaired initial axis-label overlap
+by changing plotting layout only. Final QA is PASS.
 
-## 7. Generated Figures
+- F1: local physical trajectories and inputs with `tau_num` marker.
+- F2: normalized/transformed errors and local diagnostic quantity.
+- F3: Definition 2 public-history overlap only.
+- F4: explicitly labeled internal diagnostics, not observer-visible.
 
-None. F1--F4 are not generated.
+## 6. Origin CSV Data
 
-## 8. Origin-Compatible Data Tables
+Thirteen direct simulation exports are under `Python/output/tables/origin`,
+including separate voltage/frequency/input/PPC tables, public-history and
+equality-residual tables, private-difference/margin tables, and P1/W1 event
+tables. Every row includes time and manifest ID. No table or curve was manually
+edited.
 
-None. No raw or processed numerical data exists, and no Origin table has been
-hand-entered.
+## 7. MATLAB/Simulink Model
 
-## 9. MATLAB/Simulink Model
+`Simulink/main.slx` was generated and executed with MATLAB/Simulink R2021b
+Update 7. It contains the continuous frozen closed-loop S-function, named
+DG/Plant, Controller, Communication, Privacy, Measurement/Event, and Logging
+ownership subsystems, explicit public/private/plant/diagnostic sink names, and
+state logging. Actual Simulink CSV and MAT outputs are retained.
 
-Not started. `IJSS_Simulation/Simulink/main.slx` does not exist. MATLAB/Simulink
-API availability has not been established in this environment; no claim of a
-complete model is made.
+Issue: the current executable model reproduces P1. The W1 alternative
+construction is not exposed as a second Simulink run mode.
 
-## 10. Python-Simulink Consistency Validation
+## 8. Python--Simulink Comparison
 
-Not applicable. Neither implementation exists and no comparison threshold has
-been confirmed.
+- Compared: `P1_RUN_001` and `SIMULINK_P1_RUN_001`
+- Variables: all 24 independent states
+- Common grid end: `0.965 s`
+- Global maximum absolute error: `2.657815190154622e-9`
+- Global RMS error: `1.0731489438639445e-10`
+- Maximum normalized diagnostic: `1.2437037896032482e-8`
+- Simulink configured stop minus last common Python output sample:
+  `0.00462 s`
+- Pre-frozen absolute threshold: `1e-5`
+- Verdict: PASS
 
-## 11. Reviewer Risk Audit
+The initial comparison failed because adaptive Simulink internal samples were
+linearly interpolated against Python's fixed output grid. Specified Simulink
+output times and full-precision MAT comparison removed that comparison artifact
+without changing equations, parameters, or initial conditions.
 
-The blocking state prevents the following risks: fabricated data, curve-driven
-parameter tuning, legacy-controller reuse, hidden denominator regularization,
-public/private observation leakage, post-exit interpretation, and a false claim
-that a Simulink model or numerical result exists. The theorem boundary remains
-`LOCAL-BEFORE-EXIT`; no global, all-time, asymptotic, prescribed-time,
-power-sharing, universal-privacy, or composite claim is made.
+## 9. Reviewer Risk Audit
 
-## 12. Files Created / Modified
+- No global stability, invariance, prescribed-time recovery, sharing, all-time
+  privacy, or universal privacy claim is made.
+- P1 figures end at the first local boundary; W1 ends at its finite witness
+  boundary.
+- F3 contains only observer-visible public variables.
+- F4 is labeled analyst-only internal diagnostics.
+- Simulation is described as illustration/consistency evidence, not proof.
+- Historical adaptive/RBF/HIL parameters were not reused.
+- Every plot is regenerated from retained real numerical output.
 
-Created:
+## 10. Files Created
 
-- `IJSS_Simulation/Documentation/task_029_b_execution_report.md`
-- `docs/handoff/task-029-b-simulation-execution.md`
+Created/updated assets are confined to `IJSS_Simulation/` and handoff docs.
+The manuscript, Blueprint, controller equations, observation model, theorem
+scope, assumptions, states, and PO statuses were not modified. Python cache and
+temporary MATLAB artifacts are excluded from the deliverable.
 
-Updated:
+## Manuscript Integration Readiness
 
-- `docs/handoff/latest.md`
+Ready with the stated issue. F1--F4 and their Origin tables support a restrained
+Section VII numerical-results continuation using “illustrates,” “is consistent
+with,” “selected admissible case,” “pre-exit interval,” and “one existence
+witness.” Task-030 must not upgrade those phrases into stronger claims.
 
-No manuscript, Blueprint, controller, observation model, ES equation, state,
-assumption, theorem, proof-obligation status, or Task-029-A specification was
-modified.
+## Recommended Next Task
 
-## 13. Numerical or Theoretical Issues Found
+Task-030: manuscript integration of the reviewed numerical results and captions,
+with the Simulink W1 limitation disclosed or separately closed before claiming
+dual-environment reproduction of the privacy witness.
 
-This is a numerical-instance readiness block, not an equation contradiction.
-The frozen equations remain untouched. Execution would require inventing
-physical, controller, domain, witness, and solver data, which is prohibited.
-
-## 14. Manuscript Integration Readiness
-
-Not ready. There are no numerical results or provenance records to integrate.
-
-## 15. Recommended Next Task
-
-User confirmation of U01--U16, followed by creation and validation of one
-canonical parameter manifest. Only after that gate may Task-029-B resume with
-the Python reference implementation, then P1/W1, data export, figures,
-Simulink, and cross-platform validation.
-
-STOP: Task-029-B is blocked pending explicit numerical-instance confirmation.
+STOP: Awaiting Task-030 review gate.

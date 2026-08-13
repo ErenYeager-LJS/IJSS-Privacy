@@ -1,83 +1,68 @@
 # IJSS-Privacy Numerical Reproduction
 
-This directory contains the illustrative numerical instance for the frozen
-`LOCAL-BEFORE-EXIT` manuscript. Simulation illustrates the two local theorem
-families; it does not prove global continuation, invariance, convergence,
-prescribed-time recovery, power sharing, or universal privacy.
+This package provides an illustrative three-DG numerical instance for the
+frozen `LOCAL-BEFORE-EXIT` claim layer. It illustrates local behavior and one
+finite privacy witness; it does not establish global continuation, invariance,
+prescribed-time recovery, power sharing, or all-time privacy.
 
-## Runs
+## Single Parameter Source
 
-- `P1_RUN_001`: local physical trajectory, interpreted only before the detected
-  `Vdot_domain` exit at `tau_num = 0.9696157164357533 s`.
-- `W1_RUN_001`: one nominal/non-nominal existence witness, interpreted only on
-  `0 <= t < tau_priv = 0.2 s`.
-- `SIMULINK_P1_RUN_001`: Simulink reproduction of P1.
+`canonical_parameter.yaml` is authoritative. The Python and MATLAB/Simulink
+implementations both consume values derived from this file. Parameter changes
+and their non-aesthetic rationale are recorded in `Documentation/`.
 
-All runs use manifest `9e81ce3e9621f78a`, derived from
-`canonical_parameter.yaml`. Values are simulation parameters for an
-illustrative per-unit case, not measured hardware parameters.
+## Separated Data Pipeline
 
-## Requirements
-
-- Python 3.12 with NumPy, SciPy, Matplotlib, and PyYAML.
-- MATLAB/Simulink R2021b or compatible for `main.slx`.
-
-## Python
-
-From the repository root in PowerShell:
+From the repository root:
 
 ```powershell
 $env:PYTHONPATH="$PWD\IJSS_Simulation\Python\src"
-python IJSS_Simulation/Python/src/plotting/generate_outputs.py
+python IJSS_Simulation/Python/src/solver/run_all.py
+python IJSS_Simulation/Python/src/processing/build_processed_data.py
+python IJSS_Simulation/Python/src/export/export_origin.py
+python IJSS_Simulation/Python/src/plotting/generate_figures.py
 ```
 
-This regenerates raw P1/W1 solver output, Origin CSV tables, run manifests,
-and F1--F4 in PDF/SVG/PNG. Figure data flow is:
+The stages are intentionally one-way:
 
 ```text
-raw NPZ -> reconstructed diagnostics -> Origin CSV -> plotting code -> figure
+simulation -> raw NPZ -> processed diagnostics -> Origin CSV -> figures
 ```
 
-F3 contains only public `p^V,p^omega` histories. F4 contains internal analyst
-diagnostics and is explicitly not observer-visible.
+The plotting stage reads CSV only and never invokes a solver. Exactly four
+Origin-compatible CSV files correspond to exactly four figure groups. Each
+figure is exported as editable PDF/SVG plus a 300-dpi PNG preview.
 
-## MATLAB/Simulink
+## Simulink Model
 
-Regenerate the shared MATLAB parameter file:
+Regenerate the shared parameter MAT file, then build and execute the model:
 
 ```powershell
+$env:PYTHONPATH="$PWD\IJSS_Simulation\Python\src"
 python IJSS_Simulation/Python/src/solver/export_matlab_parameters.py
 ```
-
-Build and run the model:
 
 ```matlab
 run('IJSS_Simulation/MATLAB/scripts/build_and_run_simulink.m')
 ```
 
-The script creates and executes `Simulink/main.slx`. The continuous frozen RHS
-is in `MATLAB/functions/sfun_ijss_closed_loop.m`; named model subsystems expose
-the paper-equation ownership groups. The current Simulink run reproduces P1.
-W1 remains a Python-only existence-witness execution in this task.
+`Simulink/main.slx` is a true block diagram. Its top level exposes three DG
+subsystems, the electrical model, communication network, secondary controller,
+privacy mechanism, observation/logging, and scopes. The implementation uses
+basic Integrator, Sum, Gain, Product, trigonometric, switching, routing, Scope,
+and logging blocks. It contains no S-function and no MATLAB Function block.
 
-## Cross-Platform Validation
+The present Simulink execution reproduces P1. The non-nominal W1 construction
+remains a transparent Python execution and is not claimed as dual-environment
+reproduction. The block layout is RT-LAB-oriented, but actual RT-LAB target
+compilation and hardware execution remain future platform validation.
+
+## Validation
 
 ```powershell
 python IJSS_Simulation/Python/src/solver/validate_simulink.py
+python IJSS_Simulation/Python/src/solver/qa_outputs.py
 ```
 
-Results are in `Validation/python_vs_simulink/`. Comparison is restricted to
-the shared pre-exit grid and establishes implementation consistency only.
-
-## Provenance
-
-- Canonical source: `canonical_parameter.yaml`
-- Run manifests: `Python/output/manifests/`
-- Raw output: `Python/output/raw/`
-- Origin tables: `Python/output/tables/origin/`
-- Publication figures: `Python/output/figures/manuscript/`
-- Figure provenance: `Python/output/manifests/figure_provenance.json`
-- Parameter changes: `Documentation/parameter_change_log.md`
-
-No post-exit sample is used as manuscript evidence. The stopping marker is an
-interpretation boundary, not a diagnosis of instability or theorem failure.
+The comparison covers all 24 independent P1 states on the shared pre-exit
+grid. It establishes implementation consistency only.

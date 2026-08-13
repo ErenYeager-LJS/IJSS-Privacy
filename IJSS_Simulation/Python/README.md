@@ -1,14 +1,22 @@
 # Python Reference Implementation
 
-The integrated state is exactly
-`[V,Vdot,omega,delta,pV,qV,pomega,qomega]` for every DG. Powers, controller
-errors, PPC coordinates, commands, residuals, inputs, margins, and Lyapunov
-diagnostics are reconstructed from that state.
+The integrated state is
+`[V,Vdot,omega,delta,pV,qV,pomega,qomega]` for each DG. Power, graph errors,
+PPC coordinates, commands, residuals, inputs, margins, and local comparison
+diagnostics are reconstructed from these independent coordinates.
 
-`src/solver/run_physical.py` executes P1.
-`src/solver/run_privacy_witness.py` executes one W1 witness.
-`src/plotting/generate_outputs.py` regenerates all tables and figures.
-`src/solver/validate_simulink.py` compares P1 with Simulink.
+The package separates responsibilities:
 
-The public observation export contains only public messages and declared
-metadata. Private/internal tables are analyst diagnostics, not adversary input.
+- `src/model/`: plant, graph, power-flow, state, and diagnostic definitions.
+- `src/controller/`: prescribed-performance coordinates and frozen controller.
+- `src/privacy/`: privacy wrapper and finite witness construction.
+- `src/solver/`: P1/W1 execution and Python--Simulink validation.
+- `src/processing/`: raw-output reconstruction into figure data.
+- `src/export/`: Origin-compatible CSV export only.
+- `src/plotting/`: CSV-driven figure generation only.
+
+`generate_outputs.py` is a compatibility orchestrator for the four distinct
+stages; plotting modules themselves never call either solver.
+
+F3 contains observer-visible public messages only. F4 is explicitly an
+internal diagnostic and is not part of the passive adversary observation.

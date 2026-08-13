@@ -1,30 +1,32 @@
 # Latest Handoff
 
-Current task: `task-029-a-numerical-implementation-specification`
+Current task: `task-029-b-simulation-execution`
 
 Branch: `task-029-a-numerical-implementation-specification`
 
 PR: pending creation
 
 Full handoff:
-[task-029-a-numerical-implementation-specification.md](task-029-a-numerical-implementation-specification.md)
+[task-029-b-simulation-execution.md](task-029-b-simulation-execution.md)
 
 Authoritative implementation specification:
 [`IJSS_Simulation/Documentation/numerical_implementation_specification.md`](../../IJSS_Simulation/Documentation/numerical_implementation_specification.md)
 
 ## Current result
 
-**NUMERICAL IMPLEMENTATION SPECIFICATION COMPLETE; EXECUTION BLOCKED ON USER
-CONFIRMATION**
+**TASK-029-B EXECUTION BLOCKED ON NUMERICAL-INSTANCE CONFIRMATION**
 
-Task-029-A maps the frozen equations to planned Python and complete Simulink
-modules, fixes the integrated-state rule and controller interfaces, specifies
-`tau_num` and `tau_priv` event functions, separates frozen versus
-implementation parameters, defines real-data/Origin export contracts, and
-provides the Python--Simulink consistency procedure.
+Task-029-B audited the Task-029-A contract and found no confirmed U01--U16
+numerical instance, Python implementation, MATLAB/Simulink model, canonical
+parameter manifest, or executable output. P1 and W1 therefore were not run.
+
+The detailed blocking report is
+[`IJSS_Simulation/Documentation/task_029_b_execution_report.md`](../../IJSS_Simulation/Documentation/task_029_b_execution_report.md).
+The Task-029-A implementation contract remains at
+[`IJSS_Simulation/Documentation/numerical_implementation_specification.md`](../../IJSS_Simulation/Documentation/numerical_implementation_specification.md).
 
 No simulation, executable model, numerical value, data, figure, result,
-parameter tuning, baseline, or comparison threshold was created. The historical
+parameter tuning, baseline, or comparison threshold was created. Historical
 simulation/HIL material remains `LEGACY / DO NOT REUSE`.
 
 ## Boundary
@@ -36,9 +38,8 @@ pre-existing untracked `Standard Tex Usage/private.tex` remains untouched.
 
 ## Next action
 
-The user must confirm decisions U01--U16 in the implementation specification
-before Task-029-B may create or execute simulation code. The
-Python--Simulink acceptance threshold is explicitly unresolved and must not be
-invented.
+The user must explicitly confirm U01--U16 and provide a canonical parameter
+manifest before Task-029-B can resume. The Python--Simulink acceptance
+threshold remains unresolved and must not be invented.
 
-STOP: Awaiting user confirmation before Task-029-B Simulation Execution.
+STOP: Task-029-B is blocked pending explicit numerical-instance confirmation.

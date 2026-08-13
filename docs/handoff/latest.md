@@ -1,42 +1,44 @@
 # Latest Handoff
 
-Current task: `task-027-ieee-literature-positioning-and-citation-integration`
+Current task: `task-029-a-numerical-implementation-specification`
 
-Branch: `task-027-ieee-literature-positioning-and-citation-integration`
+Branch: `task-029-a-numerical-implementation-specification`
 
 PR: pending creation
 
-Full handoff: [task-027-ieee-literature-positioning-and-citation-integration.md](task-027-ieee-literature-positioning-and-citation-integration.md)
+Full handoff:
+[task-029-a-numerical-implementation-specification.md](task-029-a-numerical-implementation-specification.md)
+
+Authoritative implementation specification:
+[`IJSS_Simulation/Documentation/numerical_implementation_specification.md`](../../IJSS_Simulation/Documentation/numerical_implementation_specification.md)
 
 ## Current result
 
-**LITERATURE POSITIONING AND CITATION INTEGRATION COMPLETE**
+**NUMERICAL IMPLEMENTATION SPECIFICATION COMPLETE; EXECUTION BLOCKED ON USER
+CONFIRMATION**
 
-The repository reference assets were inventoried. The active manuscript now
-uses 12 DOI-verified references across four bounded literature directions:
-distributed microgrid secondary control, cyber/privacy context,
-privacy-preserving distributed control, and prescribed-performance control.
-All 12 cited keys have entries, and all 12 entries are cited. The four added
-references were recovered from the two designated historical TeX sources;
-external discovery was not required.
+Task-029-A maps the frozen equations to planned Python and complete Simulink
+modules, fixes the integrated-state rule and controller interfaces, specifies
+`tau_num` and `tau_priv` event functions, separates frozen versus
+implementation parameters, defines real-data/Origin export contracts, and
+provides the Python--Simulink consistency procedure.
 
-The Introduction received a compact literature-positioning backbone. Section II
-received only source attribution for the hierarchical model and distributed
-cyber graph. Sections III--VI and both theorem statements were not modified.
+No simulation, executable model, numerical value, data, figure, result,
+parameter tuning, baseline, or comparison threshold was created. The historical
+simulation/HIL material remains `LEGACY / DO NOT REUSE`.
 
-## Verification
+## Boundary
 
-IEEEtran/pdfLaTeX compilation passed. Citation closure and `git diff --check`
-passed. The theorem boundary remains `LOCAL-BEFORE-EXIT`; no global,
-forward-invariance, all-time privacy, cryptographic, differential-privacy,
-prescribed-time recovery, active-power-sharing, or composite theorem was added.
-
-The pre-existing untracked `Standard Tex Usage/private.tex` was inspected
-read-only and remains untracked.
+`LOCAL-BEFORE-EXIT` remains unchanged. P1 and W1 remain independent. The
+manuscript, Blueprint, controller, observation model, equations, assumptions,
+states, proof-obligation statuses, and Theorems 1--2 were not changed. The
+pre-existing untracked `Standard Tex Usage/private.tex` remains untouched.
 
 ## Next action
 
-Review Task-027 and verify the literature choices before any further manuscript
-section or experiment work.
+The user must confirm decisions U01--U16 in the implementation specification
+before Task-029-B may create or execute simulation code. The
+Python--Simulink acceptance threshold is explicitly unresolved and must not be
+invented.
 
-Literature positioning completed. No simulation/experiment work has started.
+STOP: Awaiting user confirmation before Task-029-B Simulation Execution.

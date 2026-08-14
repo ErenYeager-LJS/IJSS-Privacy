@@ -1,10 +1,10 @@
 {
-  "manifest_id": "9e81ce3e9621f78a",
-  "protected_difference_V": 0.0008520521035959294,
+  "manifest_id": "f27c2278f5bdb77b",
+  "protected_difference_V": 4.8089758009073336e-09,
   "public_history_residual": 0.0,
   "run_id": "W1_RUN_001",
-  "samples": 41,
+  "samples": 101,
   "stopping_event": "finite_seed_end",
   "success": true,
-  "tau_priv": 0.2
+  "tau_priv": 0.5
 }

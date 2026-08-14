@@ -1,0 +1,12 @@
+{
+  "atol": 1e-11,
+  "event_time": null,
+  "manifest_id": "f27c2278f5bdb77b",
+  "max_step": 0.005,
+  "minimum_margin": 0.14879999999999982,
+  "python": "3.12.4",
+  "rtol": 1e-09,
+  "run_id": "P1_RUN_001",
+  "solver": "scipy.solve_ivp/RK45 segmented at secondary activation",
+  "success": true
+}

@@ -1,0 +1,8 @@
+{
+  "manifest_id": "f27c2278f5bdb77b",
+  "processing": "raw NPZ to deterministic diagnostic arrays",
+  "sources": [
+    "P1_RUN_001",
+    "W1_RUN_001"
+  ]
+}

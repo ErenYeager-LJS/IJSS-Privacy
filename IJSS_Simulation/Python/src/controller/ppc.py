@@ -29,7 +29,8 @@ def coordinates(t, e0, channel, params):
     rho0 = np.asarray(p[f"rho0_{channel}"], dtype=float)
     rhoi = np.asarray(p[f"rhoinf_{channel}"], dtype=float)
     T = float(p[f"T_{'omega' if channel == 'omega' else 'V'}"])
-    rho, drho, ddrho = schedule(t, rho0, rhoi, T)
+    t_local = max(0.0, t-float(params.get("scenario", {}).get("secondary_activation_s", 0.0)))
+    rho, drho, ddrho = schedule(t_local, rho0, rhoi, T)
     sigma = e0/rho
     if np.any(np.abs(sigma) >= 1):
         raise FloatingPointError("PPC coordinate evaluated outside strict funnel")

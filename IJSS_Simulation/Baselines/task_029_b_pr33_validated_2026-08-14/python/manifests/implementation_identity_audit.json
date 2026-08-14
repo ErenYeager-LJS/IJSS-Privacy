@@ -1,0 +1,28 @@
+{
+  "electrical_cyber_distinct": true,
+  "event_id": "Vdot_domain",
+  "event_margins": {
+    "K0": 2.9570814577899958,
+    "V_domain": 0.10604371069042884,
+    "Vdot_domain": -3.3306690738754696e-16,
+    "actuator_V": 9.209648736264178,
+    "actuator_omega": 9.992807762694264,
+    "delta_domain": 0.4781172914668277,
+    "funnel_V": 0.3199313897833487,
+    "funnel_omega": 0.9747669609402329,
+    "omega_domain": 0.19919047934160072
+  },
+  "event_time": 0.9696157164357533,
+  "manifest_id": "9e81ce3e9621f78a",
+  "max_hat_minus_average": 4.440892098500626e-16,
+  "max_r_minus_hat_plus_c": 4.440892098500626e-16,
+  "max_u_minus_hat": 4.440892098500626e-16,
+  "private_leakage": false,
+  "public_logger_fields": [
+    "time",
+    "pV",
+    "pomega",
+    "declared_metadata"
+  ],
+  "run_id": "P1_RUN_001"
+}

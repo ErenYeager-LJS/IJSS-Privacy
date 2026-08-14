@@ -1,33 +1,31 @@
 {
-  "F1": {
-    "csv": "F1_local_physical_trajectories.csv",
-    "interval": [
-      0,
-      0.9696157164357533
-    ]
+  "F1_final": {
+    "csv": "F1_voltage_restoration_final.csv",
+    "scope": "selected four-DG local numerical case"
   },
-  "F2": {
-    "csv": "F2_local_validity_ppc_diagnostics.csv",
-    "interval": [
-      0,
-      0.9696157164357533
-    ]
+  "F2_final": {
+    "csv": "F2_frequency_restoration_final.csv",
+    "scope": "selected four-DG local numerical case"
   },
-  "F3": {
-    "csv": "F3_public_history_indistinguishability.csv",
+  "F3_final": {
+    "csv": "F3_active_power_sharing_final.csv",
+    "scope": "sharing-preservation diagnostic; no PO-14 claim"
+  },
+  "F4_final": {
+    "csv": "F4_public_history_indistinguishability_final.csv",
     "interval": [
       0,
-      0.2
+      0.5
     ],
-    "visibility": "public only"
+    "visibility": "observer-visible public only"
   },
-  "F4": {
-    "csv": "F4_hidden_private_differences.csv",
+  "F5_final": {
+    "csv": "F5_private_state_difference_final.csv",
     "interval": [
       0,
-      0.2
+      0.5
     ],
     "visibility": "internal diagnostics"
   },
-  "manifest_id": "9e81ce3e9621f78a"
+  "manifest_id": "f27c2278f5bdb77b"
 }

@@ -1,29 +1,34 @@
-# Illustrative Parameter Rationale
+# Illustrative Four-DG Parameter Rationale
 
-All values belong to manifest `9e81ce3e9621f78a`. They are simulation-design
-choices for a dimensionless/per-unit illustrative case and are not measured
-hardware parameters.
+All values belong to manifest `f27c2278f5bdb77b`. They define one selected
+local numerical case and are not measured hardware parameters.
 
-| Manifest group | Values/units | Selection reason |
+| Group | Values/units | Selection reason |
 |---|---|---|
-| DG count | `N=3` | Smallest nontrivial connected network that keeps public/private trajectories readable |
-| Electrical graph | path, susceptances `2.0,1.5 p.u.` | Connected lossless illustrative network with distinct line strengths |
-| Cyber graph/pins | unit-weight path; DG 1 and 3 pinned | Fixed connected undirected graph satisfying the frozen graph/pinning condition and distinct from the electrical graph |
-| References | `V_ref=1 p.u.`, `omega_ref=0 p.u.` deviation | Conventional per-unit nominal voltage and frequency-deviation coordinate |
-| Time constants | `tau_P=0.18--0.22 s`, `tau_Q=0.23--0.27 s` | Positive heterogeneous inverter-filter-scale simulation values |
-| Droop/voltage coefficients | `k_P=0.08--0.09`, `k_Q=0.10--0.11`, `k_V=0.28--0.32` in compatible p.u. units | Moderate heterogeneous positive values avoiding identical-agent symmetry |
-| Loads/setpoints | `P=0.18--0.22 p.u.`, `Q=0.05--0.07 p.u.` | Balanced initial illustrative loading; no hardware provenance claimed |
-| Uncertainty | amplitudes at most `0.002 p.u./s` with low-frequency sinusoids | Small deterministic locally bounded terms consistent with Assumption 1 |
-| Controller gains | `k1V=3 s^-1`, `k2V=4 s^-1`, `k1omega=3.5 s^-1`, `kcV=kcW=0.1` compatible units | Positive local damping choices; coordination gains remain separated from ES-21a singular values |
-| PPC radii | voltage `0.10 -> 0.025 p.u.`, frequency `0.05 -> 0.012 p.u.`, `T=2 s` | Strictly contain the selected initial errors; schedule times are not interpreted as recovery deadlines |
-| Privacy rates/weights | `lambda=2 s^-1`, nominal weights `1 s^-1`, legal interval `[0.2,3] s^-1`, `gamma=0.2 p.u.` | Positive interior values with room for the forced W1 weights |
-| Physical domain | `V in [0.85,1.15] p.u.`, `|Vdot|<0.5 p.u./s`, `|omega|<0.2 p.u.`, `|delta|<0.5 rad` | Explicit local illustrative operating box used only to detect interpretation exit |
-| Compact/input bounds | state infinity norm `<4`, input magnitudes `<10 p.u.` | Loose finite bootstrap/actuator bounds; not claimed as physical hardware limits |
-| Initial state | values listed in YAML, all strict-domain and funnel interior | Heterogeneous admissible perturbation about the reference |
-| Witness | DG 1 voltage perturbation `1e-4 p.u.` | Small nonzero construction yielding a legal finite local witness without search over alternatives |
-| Solver | RK45, `rtol=1e-9`, `atol=1e-11`, max step/output step `0.005 s` | Tight transparent reference integration and aligned cross-platform output grid |
-| Comparison | absolute threshold `1e-5`, regularizer `1e-10` | Pre-run implementation-consistency convention; never inserted into dynamics |
+| DG count and graphs | `N=4`; electrical/cyber chain | Restores the original four-DG manuscript configuration and keeps every DG explicit |
+| Engineering bases | `310 V`, `50 Hz`, `1000 W`, `500 var` | Matches the historical IJSS case and permits engineering-unit figures |
+| Rated active powers | `500, 600, 650, 700 W` | Encodes the declared capacity ratio `1:1.2:1.3:1.4` for the normalized sharing diagnostic |
+| Stage timing | droop only on `[0,5) s`; secondary ON at `5 s`; evaluation at `6.30 s` | Makes the two operating stages visible; `6.30 s` is an evaluation marker, not a proved deadline |
+| Configured horizon | `15 s` | Requested simulation StopTime; no admissibility exit is detected through this horizon in the selected run |
+| Evaluation tolerances | voltage `0.05 V`; frequency `0.005 Hz` | Declared case-specific reporting thresholds, not PPC boundaries or theorem bounds |
+| Electrical/droop parameters | values in the canonical YAML | Positive heterogeneous values consistent with the frozen model and four-DG scenario |
+| Privacy witness | DG 1 voltage perturbation `1e-10` in the internal normalized coordinate; attack window `0--0.50 s` | Nonzero local alternative on the supported finite interval; no all-time claim |
+| Solver | RK45, `rtol=1e-9`, `atol=1e-11`, `0.005 s` max/output step | Transparent reference integration and aligned cross-platform grid |
 
-The `K_0` and actuator numbers are numerical monitoring bounds only. Remaining
-inside them in this example is not described as invariance or hardware
-feasibility beyond the displayed local interval.
+The migration from three to four DGs, the engineering bases, the capacity
+ratings, and the two-stage timing are scenario/architecture corrections. They
+were not selected by fitting the plotted curves. Numerical power sharing is
+reported as a nonzero diagnostic and is not a PO-14 result.
+
+The final tuning uses `Q_load=[0.09,0.10,0.11,0.12]`, `k2_V=30`,
+`kc_V=kc_omega=0.02`, `k1_omega=2`, `rhoinf_V=0.03`, and privacy wrapper
+rates of `30`. These are changes to declared numerical values only. Their
+purpose is to make the droop-only deviation visible, obtain a smooth switched
+response, preserve positive pre-exit margins through `15 s`, and extend the
+legal finite privacy witness to `0.50 s`; they do not alter the frozen control
+or privacy equations.
+
+The Simulink display layer converts the internal normalized voltage and
+frequency-deviation coordinates to `V` and `Hz`. The four physical scopes are
+voltage, voltage error, frequency, and frequency error. No per-unit physical
+scope or per-unit voltage/frequency CSV column is retained.

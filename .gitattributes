@@ -3,3 +3,5 @@
 *.tex text eol=lf working-tree-encoding=UTF-8
 *.bib text eol=lf working-tree-encoding=UTF-8
 *.json text eol=lf working-tree-encoding=UTF-8
+IJSS_Simulation/Baselines/task_029_b_pr33_validated_2026-08-14/** -text whitespace=cr-at-eol
+*.svg whitespace=-trailing-space

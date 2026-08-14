@@ -15,8 +15,10 @@ The package separates responsibilities:
 - `src/export/`: Origin-compatible CSV export only.
 - `src/plotting/`: CSV-driven figure generation only.
 
-`generate_outputs.py` is a compatibility orchestrator for the four distinct
+`generate_outputs.py` is a compatibility orchestrator for the distinct
 stages; plotting modules themselves never call either solver.
 
-F3 contains observer-visible public messages only. F4 is explicitly an
-internal diagnostic and is not part of the passive adversary observation.
+F1--F3 report the four-DG physical case. F3 is an approximate sharing
+diagnostic, not a theorem result. F4 contains observer-visible public messages
+only. F5 is explicitly an internal diagnostic and is not part of the passive
+adversary observation.

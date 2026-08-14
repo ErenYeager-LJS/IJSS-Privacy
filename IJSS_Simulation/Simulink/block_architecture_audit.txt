@@ -1,0 +1,26 @@
+Model: main
+Total blocks: 472
+Abs: 2
+Bias: 6
+Clock: 4
+Constant: 30
+Demux: 10
+Gain: 60
+Inport: 86
+Integrator: 24
+MinMax: 4
+Mux: 19
+Outport: 79
+Product: 47
+RelationalOperator: 2
+Scope: 5
+SubSystem: 17
+Sum: 54
+Switch: 6
+Terminator: 5
+ToWorkspace: 4
+Trigonometry: 8
+S-Function blocks: 0
+MATLAB Function blocks: 0
+Scope blocks: 5
+Forbidden architecture count: 0

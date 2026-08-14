@@ -1,44 +1,37 @@
 # Latest Handoff
 
-Current task: `task-029-a-numerical-implementation-specification`
+Current task: `task-029-b-simulation-execution`
 
-Branch: `task-029-a-numerical-implementation-specification`
+Branch: `task-029-b-simulation-execution`
 
-PR: pending creation
+PR: existing branch; no new PR created in this revision
 
 Full handoff:
-[task-029-a-numerical-implementation-specification.md](task-029-a-numerical-implementation-specification.md)
+[task-029-b-simulation-execution.md](task-029-b-simulation-execution.md)
 
-Authoritative implementation specification:
-[`IJSS_Simulation/Documentation/numerical_implementation_specification.md`](../../IJSS_Simulation/Documentation/numerical_implementation_specification.md)
+## Current Result
 
-## Current result
+**TASK-029-B PASS WITH DISCLOSED PLATFORM LIMITATIONS**
 
-**NUMERICAL IMPLEMENTATION SPECIFICATION COMPLETE; EXECUTION BLOCKED ON USER
-CONFIRMATION**
+`main.slx` is now an executable basic-block P1 model with explicit DG,
+electrical, communication, secondary-controller, privacy, logging, and scope
+subsystems. The removed monolithic S-function has not been replaced by a
+MATLAB Function block. Five Scope blocks support later real-time observation.
 
-Task-029-A maps the frozen equations to planned Python and complete Simulink
-modules, fixes the integrated-state rule and controller interfaces, specifies
-`tau_num` and `tau_priv` event functions, separates frozen versus
-implementation parameters, defines real-data/Origin export contracts, and
-provides the Python--Simulink consistency procedure.
+The Python pipeline is separated into simulation, processing, CSV export, and
+figure generation. Four reviewer-oriented figures and four corresponding
+Origin CSV files were generated. Rendered visual QA passed after two review
+iterations. The 24-state Python--Simulink comparison passes with a maximum
+absolute error of `2.6577916534265e-9`.
 
-No simulation, executable model, numerical value, data, figure, result,
-parameter tuning, baseline, or comparison threshold was created. The historical
-simulation/HIL material remains `LEGACY / DO NOT REUSE`.
+## Boundaries
 
-## Boundary
+The theorem boundary remains `LOCAL-BEFORE-EXIT`. W1 remains Python-only.
+RT-LAB target compilation and hardware execution were not performed. No
+manuscript TeX, Blueprint, equation, controller, state, observation model,
+assumption, theorem, or proof-obligation status changed.
 
-`LOCAL-BEFORE-EXIT` remains unchanged. P1 and W1 remain independent. The
-manuscript, Blueprint, controller, observation model, equations, assumptions,
-states, proof-obligation statuses, and Theorems 1--2 were not changed. The
-pre-existing untracked `Standard Tex Usage/private.tex` remains untouched.
+## Stop Gate
 
-## Next action
-
-The user must confirm decisions U01--U16 in the implementation specification
-before Task-029-B may create or execute simulation code. The
-Python--Simulink acceptance threshold is explicitly unresolved and must not be
-invented.
-
-STOP: Awaiting user confirmation before Task-029-B Simulation Execution.
+Simulation revision is complete. Discussion, conclusion, and manuscript
+integration have not started.

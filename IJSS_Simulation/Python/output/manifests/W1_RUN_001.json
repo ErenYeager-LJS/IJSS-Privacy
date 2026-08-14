@@ -1,0 +1,10 @@
+{
+  "manifest_id": "9e81ce3e9621f78a",
+  "protected_difference_V": 0.0008520521035959294,
+  "public_history_residual": 0.0,
+  "run_id": "W1_RUN_001",
+  "samples": 41,
+  "stopping_event": "finite_seed_end",
+  "success": true,
+  "tau_priv": 0.2
+}

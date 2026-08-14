@@ -1,0 +1,33 @@
+{
+  "F1": {
+    "csv": "F1_local_physical_trajectories.csv",
+    "interval": [
+      0,
+      0.9696157164357533
+    ]
+  },
+  "F2": {
+    "csv": "F2_local_validity_ppc_diagnostics.csv",
+    "interval": [
+      0,
+      0.9696157164357533
+    ]
+  },
+  "F3": {
+    "csv": "F3_public_history_indistinguishability.csv",
+    "interval": [
+      0,
+      0.2
+    ],
+    "visibility": "public only"
+  },
+  "F4": {
+    "csv": "F4_hidden_private_differences.csv",
+    "interval": [
+      0,
+      0.2
+    ],
+    "visibility": "internal diagnostics"
+  },
+  "manifest_id": "9e81ce3e9621f78a"
+}

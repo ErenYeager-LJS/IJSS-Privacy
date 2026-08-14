@@ -1,0 +1,12 @@
+{
+  "atol": 1e-11,
+  "event_time": 0.9696157164357533,
+  "manifest_id": "9e81ce3e9621f78a",
+  "max_step": 0.005,
+  "minimum_margin": 0.03584386514881305,
+  "python": "3.12.4",
+  "rtol": 1e-09,
+  "run_id": "P1_RUN_001",
+  "solver": "scipy.solve_ivp/RK45",
+  "success": true
+}

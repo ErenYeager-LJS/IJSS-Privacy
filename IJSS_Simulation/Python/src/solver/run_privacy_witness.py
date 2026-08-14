@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json, sys
+import copy
 from pathlib import Path
 import numpy as np
 from scipy.integrate import solve_ivp
@@ -18,6 +19,7 @@ from solver.run_physical import initial_state
 
 def run():
     params=load_parameters(); n=int(params["network"]["N"]); cfg=params["solver"]
+    params=copy.deepcopy(params); params["scenario"]["secondary_activation_s"]=0.0
     t1=float(cfg["horizon_W1"]); grid=np.arange(0,t1+cfg["output_step"]/2,cfg["output_step"])
     x0=initial_state(params)
     nominal=solve_ivp(lambda t,x:rhs(t,x,params),(0,t1),x0,rtol=cfg["rtol"],atol=cfg["atol"],

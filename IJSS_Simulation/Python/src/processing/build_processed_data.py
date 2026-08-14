@@ -28,11 +28,19 @@ def process_physical(params):
     budget = float(params["comparison"]["local_budget"])
     v0 = float(records[0]["Vcl"])
     envelope = np.exp(-rate*t)*v0 + budget*(1-np.exp(-rate*t))/rate
+    vb=float(params["base"]["voltage_V"]); fb=float(params["base"]["frequency_Hz"])
+    pb=float(params["base"]["active_power_W"]); rated=np.asarray(params["base"]["active_power_rated_W"],float)
+    power=_stack(records,"P")*pb; normalized=power/rated
     return {
         "t": t, "V": _stack(records, "V"), "omega": _stack(records, "omega"),
+        "voltage_V": _stack(records,"V")*vb, "frequency_Hz": fb+_stack(records,"omega")*fb,
+        "active_power_W": power, "normalized_power": normalized,
+        "sharing_error": np.ptp(normalized,axis=1),
         "e0V": _stack(records, "e0V"), "e0W": _stack(records, "e0W"),
         "sigmaV": np.stack([r["ppcV"][2] for r in records]),
         "sigmaW": np.stack([r["ppcW"][2] for r in records]),
+        "rhoV": np.stack([r["ppcV"][0] for r in records]),
+        "rhoW": np.stack([r["ppcW"][0] for r in records]),
         "zetaV": np.stack([r["ppcV"][3] for r in records]),
         "zetaW": np.stack([r["ppcW"][3] for r in records]),
         "boundary_margin": margins, "Vcl": np.array([r["Vcl"] for r in records]),

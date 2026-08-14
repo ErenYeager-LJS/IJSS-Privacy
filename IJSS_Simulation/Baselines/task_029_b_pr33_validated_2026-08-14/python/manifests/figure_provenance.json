@@ -1,0 +1,31 @@
+{
+  "F1_final": {
+    "csv": "F1_voltage_restoration_final.csv",
+    "scope": "selected four-DG local numerical case"
+  },
+  "F2_final": {
+    "csv": "F2_frequency_restoration_final.csv",
+    "scope": "selected four-DG local numerical case"
+  },
+  "F3_final": {
+    "csv": "F3_active_power_sharing_final.csv",
+    "scope": "sharing-preservation diagnostic; no PO-14 claim"
+  },
+  "F4_final": {
+    "csv": "F4_public_history_indistinguishability_final.csv",
+    "interval": [
+      0,
+      0.5
+    ],
+    "visibility": "observer-visible public only"
+  },
+  "F5_final": {
+    "csv": "F5_private_state_difference_final.csv",
+    "interval": [
+      0,
+      0.5
+    ],
+    "visibility": "internal diagnostics"
+  },
+  "manifest_id": "f27c2278f5bdb77b"
+}

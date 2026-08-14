@@ -1,34 +1,54 @@
-# Task-029-B: Simulation Engineering Revision
+# Task-029-B Simulation Execution - PR #33
 
 ## Status
 
-**PASS WITH DISCLOSED PLATFORM LIMITATIONS**
+**VALIDATED BASELINE ARCHIVED — F1--F5 GENERATION COMPLETE**
 
-The P1 Simulink implementation is now a true basic-block diagram with three DG
-subsystems, electrical, communication, controller, privacy, logging, and scope
-layers. The architecture audit finds 24 Integrators, 5 Scopes, no S-function,
-no MATLAB Function block, and no monolithic function implementation.
+- PR: [#33](https://github.com/ErenYeager-LJS/IJSS-Privacy/pull/33)
+- Archive:
+  `IJSS_Simulation/Baselines/task_029_b_pr33_validated_2026-08-14`
 
-Python simulation, raw processing, Origin export, and plotting are separate.
-Exactly four manuscript figures in PDF/SVG/PNG and exactly four matching Origin
-CSV files were regenerated and visually inspected. P1/W1 numerical results and
-manifest `9e81ce3e9621f78a` are unchanged.
+- Four DGs are used across Python and Simulink.
+- Droop-only operation precedes the explicit secondary activation at `5 s`.
+- Five manuscript figures and the five exact Origin CSVs were regenerated.
+- `main.slx` is an executable basic-block R2021b model with 32 Integrators,
+  7 Scopes, and no S-function or MATLAB Function block.
+- StopTime is configured as `15 s`; V/Hz voltage/frequency scopes and separate
+  V/Hz error scopes are present.
+- No first exit is detected through `15 s` in the selected run; the correct
+  numerical statement is `t_exit > 15 s`, without an invariance claim.
+- The 32-state Python--Simulink comparison passes: maximum absolute error
+  `5.8557e-10` on `0--15 s` against the `1e-5` threshold.
+- Public-history residual is zero on the predefined finite W1 attack window
+  `0--0.50 s`.
 
-Python--Simulink validation across all 24 P1 states is PASS:
+Voltage/frequency tolerance entry and active-power sharing preservation are
+observed numerical behavior in the selected case. They are not prescribed-time
+recovery or active-power-sharing theorem claims. The theory remains
+`LOCAL-BEFORE-EXIT`.
 
-- maximum absolute error: `2.6577916534265e-9`;
-- RMS error: `1.0731365959751946e-10`;
-- threshold: `1e-5`.
+RT-LAB compilation/hardware execution and Simulink W1 reproduction were not
+performed. Manuscript TeX and all frozen theory artifacts remain unchanged.
 
-Limitations: W1 remains Python-only. The model is structured for later RT-LAB
-partitioning, but no RT-LAB target compilation or hardware execution was
-performed in this environment.
+Full report: [task_029_b_execution_report.md](../../IJSS_Simulation/Documentation/task_029_b_execution_report.md)
 
-Full report:
-[`task_029_b_execution_report.md`](../../IJSS_Simulation/Documentation/task_029_b_execution_report.md)
+STOP: Task-029-B revision complete. No manuscript or experiment extension was
+started.
 
-The manuscript, Blueprint, equations, controller, observation model,
-assumptions, theorem scope, states, and PO statuses remain unchanged. The
-pre-existing untracked `Standard Tex Usage/private.tex` remains untouched.
+## Phase 3 Publication Refinement
 
-STOP: Simulation revision complete; manuscript integration not started.
+The validated parameter tuple remains unchanged. Five final publication figure
+groups and five matching publication CSV files were added. F1/F2 use
+"Prescribed settling time" and "Observed restoration time"; F3 is explicitly
+an active-power sharing preservation diagnostic; F4 states its finite
+comparison interval without attack-window title language; F5 retains both
+voltage- and frequency-side private differences, with the latter transparently
+scaled by `10^12` for readability. No manuscript TeX or theory artifact changed.
+
+Detailed report:
+[task_029_b_phase_3_publication_report.md](../../IJSS_Simulation/Documentation/task_029_b_phase_3_publication_report.md)
+
+The archive contains the accepted F1--F5 files, matching CSVs, raw/processed
+results, manifests, parameter snapshot, Simulink outputs, validation results,
+and SHA-256 checksums. F5 retains `q^V`, scaled `q^omega`, protected-agent,
+and private-weight differences. No new simulation was run for this archive.
